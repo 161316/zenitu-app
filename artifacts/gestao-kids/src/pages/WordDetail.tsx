@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Lightbulb } from "lucide-react";
+import { ArrowLeft, Lightbulb, BookOpen } from "lucide-react";
 import { DICTIONARY } from "@/data/dictionary";
 import { MODULES } from "@/data/modules";
 
@@ -13,15 +13,19 @@ export default function WordDetail() {
 
   if (!entry) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Palavra não encontrada</p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
+        <BookOpen className="w-16 h-16 text-muted-foreground" />
+        <p className="text-lg font-bold text-foreground">Palavra não encontrada</p>
+        <p className="text-sm text-muted-foreground">Esta palavra ainda não está no dicionário.</p>
+        <button
+          onClick={() => setLocation("/dicionario")}
+          className="mt-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-bold text-sm"
+        >
+          Ver Dicionário
+        </button>
       </div>
     );
   }
-
-  const relatedEntries = entry.relatedWords
-    .map(rw => DICTIONARY.find(w => w.word === rw))
-    .filter(Boolean);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -75,7 +79,7 @@ export default function WordDetail() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.08 }}
             className="bg-primary/5 border border-primary/20 rounded-2xl p-6"
           >
             <h2 className="text-xs font-extrabold text-primary uppercase tracking-widest mb-3">
@@ -88,7 +92,7 @@ export default function WordDetail() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
+            transition={{ delay: 0.13 }}
             className="bg-amber-50 border border-amber-200 rounded-2xl p-6"
           >
             <h2 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-3">Exemplo na Prática</h2>
@@ -99,7 +103,7 @@ export default function WordDetail() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.18 }}
             className="bg-violet-50 border border-violet-200 rounded-2xl p-6"
           >
             <div className="flex items-center gap-2 mb-3">
@@ -109,30 +113,50 @@ export default function WordDetail() {
             <p className="text-violet-900 text-sm leading-relaxed">{entry.funFact}</p>
           </motion.div>
 
-          {/* Related Words */}
-          {relatedEntries.length > 0 && (
+          {/* Related Words — show ALL, full card if in dict, tag if not */}
+          {entry.relatedWords.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
+              transition={{ delay: 0.23 }}
               className="bg-card border border-card-border rounded-2xl p-6"
             >
-              <h2 className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest mb-4">Palavras Relacionadas</h2>
-              <div className="space-y-3">
-                {relatedEntries.map(related => related && (
-                  <button
-                    key={related.word}
-                    onClick={() => setLocation(`/dicionario/${encodeURIComponent(related.word)}`)}
-                    className="w-full text-left flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
-                    data-testid={`button-related-${related.word}`}
-                  >
-                    <span className="text-2xl">{related.emoji}</span>
-                    <div>
-                      <p className="font-extrabold text-foreground">{related.word}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{related.definition.split(".")[0]}.</p>
+              <h2 className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest mb-4">
+                Palavras Relacionadas
+              </h2>
+              <div className="space-y-2">
+                {entry.relatedWords.map(rw => {
+                  const related = DICTIONARY.find(w => w.word.toLowerCase() === rw.toLowerCase());
+                  if (related) {
+                    return (
+                      <button
+                        key={rw}
+                        onClick={() => setLocation(`/dicionario/${encodeURIComponent(related.word)}`)}
+                        className="w-full text-left flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors group"
+                        data-testid={`button-related-${rw}`}
+                      >
+                        <span className="text-2xl flex-shrink-0">{related.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-extrabold text-foreground group-hover:text-primary transition-colors">{related.word}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">{related.definition.split(".")[0]}.</p>
+                        </div>
+                        <ArrowLeft className="w-4 h-4 text-muted-foreground rotate-180 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </button>
+                    );
+                  }
+                  return (
+                    <div
+                      key={rw}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-muted/50"
+                    >
+                      <span className="text-2xl flex-shrink-0">📖</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-extrabold text-foreground">{rw}</p>
+                        <p className="text-xs text-muted-foreground">Conceito do universo de negócios</p>
+                      </div>
                     </div>
-                  </button>
-                ))}
+                  );
+                })}
               </div>
             </motion.div>
           )}
@@ -142,7 +166,7 @@ export default function WordDetail() {
             <motion.button
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.28 }}
               onClick={() => setLocation(`/modulo/${mod.id}`)}
               className="w-full rounded-2xl p-5 text-white flex items-center gap-3"
               style={{ background: `linear-gradient(135deg, ${mod.color}, ${mod.color}BB)` }}

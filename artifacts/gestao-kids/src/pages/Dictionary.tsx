@@ -60,10 +60,14 @@ export default function Dictionary() {
             />
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {/* Scrollable filter row - no clip */}
+          <div
+            className="flex gap-2 pb-2"
+            style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
+          >
             <button
               onClick={() => setSelectedModule("all")}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`flex-none px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${
                 selectedModule === "all"
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -76,7 +80,7 @@ export default function Dictionary() {
               <button
                 key={mod.id}
                 onClick={() => setSelectedModule(mod.id)}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                className={`flex-none px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${
                   selectedModule === mod.id
                     ? "text-white"
                     : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -84,13 +88,13 @@ export default function Dictionary() {
                 style={selectedModule === mod.id ? { backgroundColor: mod.color } : {}}
                 data-testid={`filter-module-${mod.id}`}
               >
-                {mod.emoji} {mod.title.split(" ").slice(0, 2).join(" ")}
+                {mod.emoji} {mod.title}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Results */}
+        {/* Results count */}
         <p className="text-sm text-muted-foreground mb-3 px-1">
           {filtered.length} {filtered.length === 1 ? "palavra encontrada" : "palavras encontradas"}
         </p>
@@ -103,7 +107,7 @@ export default function Dictionary() {
                 key={word.word}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.03 }}
+                transition={{ delay: idx * 0.02 }}
                 onClick={() => setLocation(`/dicionario/${encodeURIComponent(word.word)}`)}
                 className="w-full text-left bg-card border border-card-border rounded-2xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                 data-testid={`card-word-${word.word}`}
