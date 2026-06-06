@@ -1,8 +1,88 @@
+import { useState } from "react";
 import { useLocation, useParams } from "wouter";
-import { motion } from "framer-motion";
-import { ArrowLeft, Lightbulb, BookOpen } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Lightbulb, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { DICTIONARY } from "@/data/dictionary";
 import { MODULES } from "@/data/modules";
+
+function RelatedWordCard({ rw }: { rw: string }) {
+  const [, setLocation] = useLocation();
+  const [expanded, setExpanded] = useState(true);
+  const related = DICTIONARY.find(w => w.word.toLowerCase() === rw.toLowerCase());
+
+  if (!related) {
+    return (
+      <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
+        <span className="text-2xl flex-shrink-0">📖</span>
+        <div>
+          <p className="font-extrabold text-foreground">{rw}</p>
+          <p className="text-xs text-muted-foreground">Conceito do universo de negócios</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="border-2 border-border rounded-2xl overflow-hidden bg-card">
+      <div className="flex items-center gap-3 p-4">
+        <span className="text-3xl flex-shrink-0">{related.emoji}</span>
+        <div className="flex-1 min-w-0">
+          <p className="font-extrabold text-foreground text-base">{related.word}</p>
+          <p className="text-xs text-muted-foreground">{related.pronunciation}</p>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button
+            onClick={() => setLocation(`/dicionario/${encodeURIComponent(related.word)}`)}
+            className="text-xs font-bold text-primary hover:underline"
+            data-testid={`button-related-${rw}`}
+          >
+            Ver página →
+          </button>
+          <button
+            onClick={() => setExpanded(e => !e)}
+            className="p-1 rounded-lg hover:bg-muted transition-colors"
+          >
+            {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
+              <div>
+                <p className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest mb-1">Definição</p>
+                <p className="text-sm text-foreground leading-relaxed">{related.definition}</p>
+              </div>
+              <div>
+                <p className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest mb-1">Origem — {related.etymology}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{related.etymologyDetail}</p>
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                <p className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-1">Exemplo na prática</p>
+                <p className="text-sm text-amber-900 italic leading-relaxed">"{related.example}"</p>
+              </div>
+              <div className="bg-violet-50 border border-violet-200 rounded-xl p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Lightbulb className="w-3.5 h-3.5 text-violet-600" />
+                  <p className="text-xs font-extrabold text-violet-700 uppercase tracking-widest">Curiosidade</p>
+                </div>
+                <p className="text-sm text-violet-900 leading-relaxed">{related.funFact}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function WordDetail() {
   const params = useParams<{ word: string }>();
@@ -29,7 +109,6 @@ export default function WordDetail() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
       <div
         className="px-4 pt-8 pb-20 text-white"
         style={{
@@ -65,47 +144,24 @@ export default function WordDetail() {
 
       <div className="max-w-2xl mx-auto px-4 -mt-10">
         <div className="space-y-4">
-          {/* Definition */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-card border border-card-border rounded-2xl p-6 shadow-sm"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-2xl p-6 shadow-sm">
             <h2 className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest mb-3">Definição</h2>
             <p className="text-foreground text-base leading-relaxed font-medium">{entry.definition}</p>
           </motion.div>
 
-          {/* Etymology */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08 }}
-            className="bg-primary/5 border border-primary/20 rounded-2xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="bg-primary/5 border border-primary/20 rounded-2xl p-6">
             <h2 className="text-xs font-extrabold text-primary uppercase tracking-widest mb-3">
               Origem da Palavra — {entry.etymology}
             </h2>
             <p className="text-foreground text-sm leading-relaxed">{entry.etymologyDetail}</p>
           </motion.div>
 
-          {/* Example */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.13 }}
-            className="bg-amber-50 border border-amber-200 rounded-2xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }} className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
             <h2 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-3">Exemplo na Prática</h2>
             <p className="text-amber-900 text-sm leading-relaxed italic">"{entry.example}"</p>
           </motion.div>
 
-          {/* Fun Fact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.18 }}
-            className="bg-violet-50 border border-violet-200 rounded-2xl p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} className="bg-violet-50 border border-violet-200 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-3">
               <Lightbulb className="w-5 h-5 text-violet-600" />
               <h2 className="text-xs font-extrabold text-violet-700 uppercase tracking-widest">Curiosidade!</h2>
@@ -113,55 +169,19 @@ export default function WordDetail() {
             <p className="text-violet-900 text-sm leading-relaxed">{entry.funFact}</p>
           </motion.div>
 
-          {/* Related Words — show ALL, full card if in dict, tag if not */}
           {entry.relatedWords.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.23 }}
-              className="bg-card border border-card-border rounded-2xl p-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.23 }} className="bg-card border border-border rounded-2xl p-6">
               <h2 className="text-xs font-extrabold text-muted-foreground uppercase tracking-widest mb-4">
-                Palavras Relacionadas
+                Palavras Relacionadas — texto completo
               </h2>
-              <div className="space-y-2">
-                {entry.relatedWords.map(rw => {
-                  const related = DICTIONARY.find(w => w.word.toLowerCase() === rw.toLowerCase());
-                  if (related) {
-                    return (
-                      <button
-                        key={rw}
-                        onClick={() => setLocation(`/dicionario/${encodeURIComponent(related.word)}`)}
-                        className="w-full text-left flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors group"
-                        data-testid={`button-related-${rw}`}
-                      >
-                        <span className="text-2xl flex-shrink-0">{related.emoji}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-extrabold text-foreground group-hover:text-primary transition-colors">{related.word}</p>
-                          <p className="text-xs text-muted-foreground line-clamp-1">{related.definition.split(".")[0]}.</p>
-                        </div>
-                        <ArrowLeft className="w-4 h-4 text-muted-foreground rotate-180 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </button>
-                    );
-                  }
-                  return (
-                    <div
-                      key={rw}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-muted/50"
-                    >
-                      <span className="text-2xl flex-shrink-0">📖</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-extrabold text-foreground">{rw}</p>
-                        <p className="text-xs text-muted-foreground">Conceito do universo de negócios</p>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="space-y-3">
+                {entry.relatedWords.map(rw => (
+                  <RelatedWordCard key={rw} rw={rw} />
+                ))}
               </div>
             </motion.div>
           )}
 
-          {/* Back to module */}
           {mod && (
             <motion.button
               initial={{ opacity: 0, y: 20 }}

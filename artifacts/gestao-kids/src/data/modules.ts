@@ -7,6 +7,7 @@ export interface Lesson {
 
 export interface Module {
   id: string;
+  journeyId: string;
   title: string;
   subtitle: string;
   emoji: string;
@@ -26,6 +27,7 @@ export interface Module {
 export const MODULES: Module[] = [
   {
     id: "negocio",
+    journeyId: "fundamentos",
     title: "O que é um Negócio?",
     subtitle: "Entenda como as empresas nascem e funcionam",
     emoji: "🏪",
@@ -121,6 +123,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "financas",
+    journeyId: "fundamentos",
     title: "Dinheiro e Finanças",
     subtitle: "Aprenda a cuidar do dinheiro da sua empresa",
     emoji: "💰",
@@ -216,6 +219,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "marketing",
+    journeyId: "fundamentos",
     title: "Marketing e Vendas",
     subtitle: "Aprenda a divulgar e vender seu produto",
     emoji: "📣",
@@ -311,6 +315,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "lideranca",
+    journeyId: "fundamentos",
     title: "Liderança e Equipe",
     subtitle: "Saiba como liderar pessoas e trabalhar em equipe",
     emoji: "👥",
@@ -406,6 +411,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "planejamento",
+    journeyId: "fundamentos",
     title: "Planejamento Estratégico",
     subtitle: "Defina metas e trace o caminho para o sucesso",
     emoji: "🎯",
@@ -501,6 +507,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "inovacao",
+    journeyId: "fundamentos",
     title: "Inovação e Criatividade",
     subtitle: "Pense diferente e crie soluções novas",
     emoji: "💡",
@@ -596,6 +603,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "clientes",
+    journeyId: "fundamentos",
     title: "Clientes e Atendimento",
     subtitle: "Aprenda a conquistar e manter clientes",
     emoji: "🤝",
@@ -691,6 +699,7 @@ export const MODULES: Module[] = [
   },
   {
     id: "empreendedorismo",
+    journeyId: "fundamentos",
     title: "Empreendedorismo",
     subtitle: "Transforme suas ideias em negócios reais",
     emoji: "🚀",
