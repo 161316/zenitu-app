@@ -1,7 +1,7 @@
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Lock, ArrowRight, LayoutDashboard, User, Flame, Star, BookOpen, ChevronRight, Zap } from "lucide-react";
-import { MODULES } from "@/data/modules";
+import { Lock, ArrowRight, LayoutDashboard, User, Flame, Star, BookOpen, ChevronRight, Zap, RotateCcw } from "lucide-react";
+import { MODULES, getModuleById } from "@/data/modules";
 import { JOURNEYS } from "@/data/journeys";
 import { useProgress } from "@/hooks/useProgress";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,7 +20,7 @@ const STARS = Array.from({ length: 50 }, (_, i) => ({
 export default function Home() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
-  const { progress, levelInfo, getModuleProgress } = useProgress();
+  const { progress, levelInfo, getModuleProgress, getDueReviews } = useProgress();
   const { theme } = useTheme();
   const { tone, completedModules } = useTone();
 
@@ -59,6 +59,8 @@ export default function Home() {
     );
     return { done, total };
   }
+
+  const dueReviews = getDueReviews();
 
   // Find current active journey (first one unlocked but not 100%)
   const activeJourneyId = JOURNEYS.find(j => {
@@ -194,6 +196,49 @@ export default function Home() {
             </div>
             <Zap className="w-5 h-5 flex-shrink-0" style={{ color: currentMod.color }} />
           </motion.button>
+        )}
+
+        {/* Due Reviews */}
+        {dueReviews.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
+            <div className="flex items-center gap-2 mb-3">
+              <h2 className={`${headingFont} font-semibold text-xl`} style={{ color: theme.colors.text }}>
+                📅 Revisar Hoje
+              </h2>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full font-bold"
+                style={{ background: "#f59e0b22", color: "#f59e0b", border: "1px solid #f59e0b44" }}
+              >
+                {dueReviews.length} módulo{dueReviews.length > 1 ? "s" : ""}
+              </span>
+            </div>
+            <div className="rounded-2xl p-4 space-y-2" style={{ background: theme.colors.glassCard, border: `1px solid #f59e0b44` }}>
+              <p className="text-xs mb-3" style={{ color: theme.colors.textMuted }}>
+                Sua memória está pronta para reforçar esses conteúdos — revisar agora consolida o aprendizado! 🧠
+              </p>
+              {dueReviews.map(moduleId => {
+                const mod = getModuleById(moduleId);
+                if (!mod) return null;
+                return (
+                  <button
+                    key={moduleId}
+                    onClick={() => setLocation(`/pratica/${moduleId}?review=1`)}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:brightness-110"
+                    style={{ background: `${mod.color}15`, border: `1px solid ${mod.color}33` }}
+                  >
+                    <span className="text-xl">{mod.emoji}</span>
+                    <span className="flex-1 text-left text-sm font-semibold" style={{ color: theme.colors.text }}>
+                      {mod.title}
+                    </span>
+                    <div className="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full" style={{ background: mod.color, color: "#fff" }}>
+                      <RotateCcw className="w-3 h-3" />
+                      Revisar
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
         )}
 
         {/* Journey Cards */}

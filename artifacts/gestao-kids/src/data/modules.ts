@@ -80,7 +80,7 @@ export const MODULES: Module[] = [
         title: "Como nasce um negócio?",
         xpReward: 50,
         content: [
-          "Todo grande negócio começa com uma ideia simples. A Amazon começou como uma livraria online no quarto de Jeff Bezos. O Instagram começou como um aplicativo para compartilhar fotos com filtros. O Nubank começou porque seu fundador ficou irritado com as tarifas abusivas dos bancos tradicionais.",
+          "Todo grande negócio começa com uma ideia simples. A Amazon começou como uma livraria online na garagem de Jeff Bezos. O Instagram começou como um aplicativo para compartilhar fotos com filtros. O Nubank começou porque seu fundador ficou irritado com as tarifas abusivas dos bancos tradicionais.",
           "Um negócio nasce quando alguém percebe um problema que outras pessoas têm e pensa: eu consigo resolver isso! Essa percepção transforma uma simples observação em uma oportunidade de mercado. Problemas são, na verdade, oportunidades disfarçadas.",
           "Depois da ideia, vem o planejamento. O empreendedor precisa pensar: quem vai comprar? Quanto vai custar para fazer? Quanto vou cobrar? Como vou divulgar? Tudo isso forma o Plano de Negócios — o mapa que guia a empresa no começo.",
           "Por último, é hora de agir! Muitas pessoas ficam só na fase de planejar e nunca começam. Os empreendedores de sucesso começam pequeno, aprendem com os erros, melhoram o produto e vão crescendo aos poucos. Como dizia o fundador do LinkedIn: se você não está com vergonha da versão inicial do seu produto, você esperou tempo demais para lançar."

@@ -10,6 +10,11 @@ export interface Badge {
   unlockedAt?: string;
 }
 
+export interface ReviewEntry {
+  nextDate: string;
+  interval: number;
+}
+
 export interface Progress {
   xp: number;
   completedLessons: string[];
@@ -17,6 +22,7 @@ export interface Progress {
   streak: number;
   lastActivityDate: string;
   badges: string[];
+  reviewSchedule: Record<string, ReviewEntry>;
 }
 
 const DEFAULT_PROGRESS: Progress = {
@@ -26,6 +32,7 @@ const DEFAULT_PROGRESS: Progress = {
   streak: 0,
   lastActivityDate: "",
   badges: [],
+  reviewSchedule: {},
 };
 
 const LOCAL_KEY = "gestao-kids-progress-guest";
@@ -84,6 +91,10 @@ function computeStreak(p: Progress): Progress {
   return { ...p, streak: newStreak, lastActivityDate: today };
 }
 
+function addDays(days: number): string {
+  return new Date(Date.now() + days * 86400000).toISOString().split("T")[0];
+}
+
 export function useProgress() {
   const { user } = useAuth();
   const [progress, setProgress] = useState<Progress>(DEFAULT_PROGRESS);
@@ -96,14 +107,17 @@ export function useProgress() {
       fetch("/api/progress", { credentials: "include" })
         .then(r => r.ok ? r.json() : null)
         .then(data => {
-          if (data) setProgress({ ...DEFAULT_PROGRESS, ...data });
+          if (data) setProgress({ ...DEFAULT_PROGRESS, ...data, reviewSchedule: data.reviewSchedule ?? {} });
           setSynced(true);
         })
         .catch(() => setSynced(true));
     } else {
       try {
         const saved = localStorage.getItem(LOCAL_KEY);
-        if (saved) setProgress({ ...DEFAULT_PROGRESS, ...JSON.parse(saved) });
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setProgress({ ...DEFAULT_PROGRESS, ...parsed, reviewSchedule: parsed.reviewSchedule ?? {} });
+        }
       } catch {}
       setSynced(true);
     }
@@ -147,10 +161,15 @@ export function useProgress() {
   const completeChallenge = useCallback((moduleId: string, xpBonus: number) => {
     setProgress(prev => {
       if (prev.completedChallenges.includes(moduleId)) return prev;
+      const existing = prev.reviewSchedule?.[moduleId];
+      const reviewSchedule = existing
+        ? prev.reviewSchedule
+        : { ...prev.reviewSchedule, [moduleId]: { nextDate: addDays(3), interval: 3 } };
       let updated = {
         ...prev,
         xp: prev.xp + xpBonus,
         completedChallenges: [...prev.completedChallenges, moduleId],
+        reviewSchedule,
       };
       updated = computeStreak(updated);
       updated = computeBadges(updated);
@@ -158,6 +177,34 @@ export function useProgress() {
       return updated;
     });
   }, [saveProgress]);
+
+  const markReviewed = useCallback((moduleId: string, quality: "easy" | "medium" | "hard") => {
+    setProgress(prev => {
+      const existing = prev.reviewSchedule?.[moduleId] ?? { interval: 3 };
+      const multiplier = quality === "easy" ? 2.5 : quality === "medium" ? 1.5 : 1;
+      const newInterval = Math.min(30, Math.max(1, Math.round(existing.interval * multiplier)));
+      const updated = {
+        ...prev,
+        reviewSchedule: {
+          ...prev.reviewSchedule,
+          [moduleId]: { nextDate: addDays(newInterval), interval: newInterval },
+        },
+      };
+      saveProgress(updated);
+      return updated;
+    });
+  }, [saveProgress]);
+
+  const getDueReviews = useCallback((): string[] => {
+    const today = new Date().toISOString().split("T")[0];
+    return Object.entries(progress.reviewSchedule ?? {})
+      .filter(([, entry]) => entry.nextDate <= today)
+      .map(([moduleId]) => moduleId);
+  }, [progress.reviewSchedule]);
+
+  const getNextReviewDate = useCallback((moduleId: string): string | null => {
+    return progress.reviewSchedule?.[moduleId]?.nextDate ?? null;
+  }, [progress.reviewSchedule]);
 
   const isLessonComplete = useCallback((moduleId: string, lessonId: string) => {
     return progress.completedLessons.includes(`${moduleId}:${lessonId}`);
@@ -194,6 +241,9 @@ export function useProgress() {
     synced,
     completeLesson,
     completeChallenge,
+    markReviewed,
+    getDueReviews,
+    getNextReviewDate,
     isLessonComplete,
     isChallengeComplete,
     isModuleUnlocked,

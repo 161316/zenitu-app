@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { useLocation, useParams } from "wouter";
+import { useLocation, useParams, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle, ChevronRight, Lightbulb, Send, Loader2, RotateCcw } from "lucide-react";
 import { getModuleById } from "@/data/modules";
@@ -319,10 +319,12 @@ function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer }
 
 export default function Practice() {
   const params = useParams<{ moduleId: string }>();
+  const search = useSearch();
+  const isReview = new URLSearchParams(search).get("review") === "1";
   const [, setLocation] = useLocation();
   const mod = getModuleById(params.moduleId);
   const practices = getPracticesByModule(params.moduleId);
-  const { completeLesson, isLessonComplete } = useProgress();
+  const { completeLesson, isLessonComplete, markReviewed } = useProgress();
 
   const PRACTICE_LESSON_ID = "praticas";
 
@@ -332,6 +334,7 @@ export default function Practice() {
   const [totalXP, setTotalXP] = useState(0);
   const [showXP, setShowXP] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
+  const [reviewDone, setReviewDone] = useState(false);
 
   const alreadyDone = isLessonComplete(params.moduleId ?? "", PRACTICE_LESSON_ID);
 
@@ -381,20 +384,27 @@ export default function Practice() {
 
   const progressPct = ((current) / practices.length) * 100;
 
+  const writtenCount = practices.filter(p => p.type === "written").length;
+
   if (phase === "intro") {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <div className={`bg-gradient-to-br ${mod.bgGradient} px-4 pt-10 pb-20 text-center`}>
           <button
-            onClick={() => setLocation(`/modulo/${mod.id}`)}
+            onClick={() => setLocation(isReview ? "/" : `/modulo/${mod.id}`)}
             className="flex items-center gap-2 text-white/80 hover:text-white mb-8"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-semibold">Voltar</span>
           </button>
-          <div className="text-6xl mb-4">🧠</div>
-          <h1 className="text-3xl font-extrabold text-white">Sessão de Prática</h1>
+          <div className="text-6xl mb-4">{isReview ? "🔄" : "🧠"}</div>
+          <h1 className="text-3xl font-extrabold text-white">{isReview ? "Revisão Agendada" : "Sessão de Prática"}</h1>
           <p className="text-white/80 text-lg mt-2">{mod.title}</p>
+          {isReview && (
+            <div className="mt-3 inline-block bg-white/20 rounded-full px-4 py-1 text-sm text-white font-bold">
+              📅 Revisão do Desafio Final
+            </div>
+          )}
         </div>
 
         <div className="max-w-md mx-auto px-4 -mt-10 w-full">
@@ -415,7 +425,9 @@ export default function Practice() {
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 text-sm">✍️</div>
                 <div>
-                  <p className="font-bold text-sm">{practices.filter(p => p.type === "written").length} questão dissertativa</p>
+                  <p className="font-bold text-sm">
+                    {writtenCount} {writtenCount === 1 ? "questão dissertativa" : "questões dissertativas"}
+                  </p>
                   <p className="text-xs text-muted-foreground">Respondida por escrito e corrigida pelo seu tutor de IA</p>
                 </div>
               </div>
@@ -459,7 +471,14 @@ export default function Practice() {
   }
 
   if (phase === "done") {
-    const score = Math.round((correctCount / practices.filter(p => p.type !== "written").length) * 100);
+    const objCount = practices.filter(p => p.type !== "written").length;
+    const score = objCount > 0 ? Math.round((correctCount / objCount) * 100) : 100;
+
+    const handleQuality = (quality: "easy" | "medium" | "hard") => {
+      markReviewed(params.moduleId ?? "", quality);
+      setReviewDone(true);
+    };
+
     return (
       <div className="min-h-screen bg-background pb-12">
         {showXP && <XPAnimation amount={earnedXP} onDone={() => setShowXP(false)} />}
@@ -471,7 +490,7 @@ export default function Practice() {
           <h1 className="text-3xl font-extrabold text-white">
             {score >= 80 ? "Incrível!" : score >= 60 ? "Muito bem!" : "Continue assim!"}
           </h1>
-          <p className="text-white/80 mt-1">Prática concluída</p>
+          <p className="text-white/80 mt-1">{isReview ? "Revisão concluída!" : "Prática concluída"}</p>
         </div>
 
         <div className="max-w-md mx-auto px-4 -mt-10 space-y-4">
@@ -487,35 +506,95 @@ export default function Practice() {
                 <p className="text-xs text-muted-foreground font-semibold mt-1">XP ganhos</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-extrabold" style={{ color: mod.color }}>{correctCount}/{practices.filter(p => p.type !== "written").length}</p>
+                <p className="text-3xl font-extrabold" style={{ color: mod.color }}>{correctCount}/{objCount}</p>
                 <p className="text-xs text-muted-foreground font-semibold mt-1">Objetivas corretas</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-extrabold text-amber-500">✓</p>
-                <p className="text-xs text-muted-foreground font-semibold mt-1">Dissertativa feita</p>
+                <p className="text-xs text-muted-foreground font-semibold mt-1">
+                  {writtenCount === 1 ? "Dissertativa feita" : "Dissertativas feitas"}
+                </p>
               </div>
             </div>
           </motion.div>
 
+          {/* Review quality rating */}
+          {isReview && !reviewDone && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              className="bg-card rounded-3xl shadow-lg p-5"
+            >
+              <p className="text-sm font-extrabold text-foreground mb-1 text-center">Como foi essa revisão?</p>
+              <p className="text-xs text-muted-foreground text-center mb-4">Isso ajusta quando revisaremos esse módulo novamente</p>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  onClick={() => handleQuality("hard")}
+                  className="py-3 rounded-2xl font-bold text-sm border-2 border-red-200 text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                >
+                  😓 Difícil
+                  <p className="text-xs font-normal opacity-75 mt-0.5">Rever em breve</p>
+                </button>
+                <button
+                  onClick={() => handleQuality("medium")}
+                  className="py-3 rounded-2xl font-bold text-sm border-2 border-amber-200 text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors"
+                >
+                  🤔 OK
+                  <p className="text-xs font-normal opacity-75 mt-0.5">Mais alguns dias</p>
+                </button>
+                <button
+                  onClick={() => handleQuality("easy")}
+                  className="py-3 rounded-2xl font-bold text-sm border-2 border-green-200 text-green-600 bg-green-50 hover:bg-green-100 transition-colors"
+                >
+                  😊 Fácil
+                  <p className="text-xs font-normal opacity-75 mt-0.5">Próxima semana</p>
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {isReview && reviewDone && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-green-50 border border-green-200 rounded-2xl p-4 text-center"
+            >
+              <p className="text-green-700 font-bold">✓ Revisão registrada! Próxima data agendada.</p>
+            </motion.div>
+          )}
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
             className="grid grid-cols-2 gap-3"
           >
-            <button
-              onClick={() => setLocation(`/modulo/${mod.id}`)}
-              className="py-4 rounded-2xl border border-border font-bold text-foreground hover:bg-muted"
-            >
-              Voltar ao módulo
-            </button>
-            <button
-              onClick={() => setLocation(`/desafio/${mod.id}`)}
-              className="py-4 rounded-2xl font-extrabold text-white"
-              style={{ backgroundColor: mod.color }}
-            >
-              Desafio Final ⚡
-            </button>
+            {isReview ? (
+              <button
+                onClick={() => setLocation("/")}
+                className="col-span-2 py-4 rounded-2xl font-extrabold text-white"
+                style={{ backgroundColor: mod.color }}
+              >
+                Voltar ao início 🏠
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => setLocation(`/modulo/${mod.id}`)}
+                  className="py-4 rounded-2xl border border-border font-bold text-foreground hover:bg-muted"
+                >
+                  Voltar ao módulo
+                </button>
+                <button
+                  onClick={() => setLocation(`/desafio/${mod.id}`)}
+                  className="py-4 rounded-2xl font-extrabold text-white"
+                  style={{ backgroundColor: mod.color }}
+                >
+                  Desafio Final ⚡
+                </button>
+              </>
+            )}
           </motion.div>
         </div>
       </div>
