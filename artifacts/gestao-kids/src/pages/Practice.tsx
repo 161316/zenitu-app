@@ -6,6 +6,7 @@ import { getModuleById } from "@/data/modules";
 import { getPracticesByModule, type Practice } from "@/data/practices";
 import { useProgress } from "@/hooks/useProgress";
 import { XPAnimation } from "@/components/XPAnimation";
+import { ThemeBackground } from "@/components/ThemeBackground";
 
 type Phase = "intro" | "question" | "feedback" | "done";
 
@@ -388,7 +389,7 @@ export default function Practice() {
 
   if (phase === "intro") {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <ThemeBackground className="flex flex-col">
         <div className={`bg-gradient-to-br ${mod.bgGradient} px-4 pt-10 pb-20 text-center`}>
           <button
             onClick={() => setLocation(isReview ? "/" : `/modulo/${mod.id}`)}
@@ -466,7 +467,7 @@ export default function Practice() {
             <ChevronRight className="w-6 h-6" />
           </motion.button>
         </div>
-      </div>
+      </ThemeBackground>
     );
   }
 
@@ -480,7 +481,7 @@ export default function Practice() {
     };
 
     return (
-      <div className="min-h-screen bg-background pb-12">
+      <ThemeBackground className="pb-12">
         {showXP && <XPAnimation amount={earnedXP} onDone={() => setShowXP(false)} />}
 
         <div className={`bg-gradient-to-br ${mod.bgGradient} px-4 pt-10 pb-20 text-center`}>
@@ -597,12 +598,12 @@ export default function Practice() {
             )}
           </motion.div>
         </div>
-      </div>
+      </ThemeBackground>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <ThemeBackground className="pb-12">
       <div className={`bg-gradient-to-r ${mod.bgGradient} px-4 pt-8 pb-6`}>
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-4">
@@ -690,6 +691,6 @@ export default function Practice() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </ThemeBackground>
   );
 }

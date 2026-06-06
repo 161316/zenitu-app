@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Search, BookOpen } from "lucide-react";
 import { DICTIONARY } from "@/data/dictionary";
 import { MODULES } from "@/data/modules";
+import { ThemeBackground } from "@/components/ThemeBackground";
 
 export default function Dictionary() {
   const [, setLocation] = useLocation();
@@ -22,7 +23,7 @@ export default function Dictionary() {
   }, [search, selectedModule]);
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <ThemeBackground className="pb-20">
       {/* Header */}
       <div className="bg-gradient-to-br from-amber-400 to-orange-500 px-4 pt-8 pb-16 text-white">
         <div className="max-w-2xl mx-auto">
@@ -148,6 +149,6 @@ export default function Dictionary() {
           )}
         </div>
       </div>
-    </div>
+    </ThemeBackground>
   );
 }

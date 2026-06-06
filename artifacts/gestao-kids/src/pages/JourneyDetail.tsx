@@ -4,6 +4,7 @@ import { ArrowLeft, Lock, ChevronRight, Zap, BookOpen } from "lucide-react";
 import { MODULES } from "@/data/modules";
 import { getJourneyById, JOURNEYS } from "@/data/journeys";
 import { useProgress } from "@/hooks/useProgress";
+import { ThemeBackground } from "@/components/ThemeBackground";
 
 export default function JourneyDetail() {
   const params = useParams<{ journeyId: string }>();
@@ -41,7 +42,7 @@ export default function JourneyDetail() {
   const currentModuleIdx = journeyModules.findIndex(m => isModuleUnlocked(m.order) && getModuleProgress(m.id) < 100);
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <ThemeBackground className="pb-24">
       <div className={`bg-gradient-to-br ${journey.bgGradient} px-4 pt-8 pb-20 text-white`}>
         <div className="max-w-2xl mx-auto">
           <button
@@ -209,6 +210,6 @@ export default function JourneyDetail() {
           </div>
         </div>
       </div>
-    </div>
+    </ThemeBackground>
   );
 }

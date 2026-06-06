@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronRight, CheckCircle, Star } from "lucide-react";
+import { ArrowLeft, ChevronRight, CheckCircle, Star, Share2 } from "lucide-react";
 import { getLessonById, getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
 import { useTone } from "@/hooks/useTone";
 import { WordPopup, HighlightedText } from "@/components/WordPopup";
 import { XPAnimation } from "@/components/XPAnimation";
+import { ThemeBackground } from "@/components/ThemeBackground";
+import { ShareCardModal } from "@/components/ShareCard";
 
 export default function Lesson() {
   const params = useParams<{ moduleId: string; lessonId: string }>();
@@ -21,6 +23,7 @@ export default function Lesson() {
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [showXP, setShowXP] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
 
   const alreadyDone = isLessonComplete(params.moduleId, params.lessonId);
 
@@ -64,7 +67,7 @@ export default function Lesson() {
   const nextLesson = mod.lessons[lessonIdx + 1];
 
   return (
-    <div className="min-h-screen bg-background">
+    <ThemeBackground className="pb-6">
       {/* Header */}
       <div className={`bg-gradient-to-r ${mod.bgGradient} px-4 pt-8 pb-6`}>
         <div className="max-w-2xl mx-auto">
@@ -206,6 +209,16 @@ export default function Lesson() {
                 </button>
               )}
             </div>
+
+            {/* Share image button */}
+            <button
+              onClick={() => setShowShareCard(true)}
+              className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
+              style={{ background: `${mod.color}18`, border: `1.5px solid ${mod.color}44`, color: mod.color }}
+            >
+              <Share2 className="w-4 h-4" />
+              📸 Gerar imagem para postar
+            </button>
           </motion.div>
         ) : (
           <button
@@ -238,6 +251,19 @@ export default function Lesson() {
       {showXP && (
         <XPAnimation amount={lesson.xpReward} onDone={() => setShowXP(false)} />
       )}
-    </div>
+
+      {/* Share Card Modal */}
+      {showShareCard && (
+        <ShareCardModal
+          moduleId={mod.id}
+          moduleTitle={mod.title}
+          moduleEmoji={mod.emoji}
+          moduleColor={mod.color}
+          lessonTitle={lesson.title}
+          xpReward={lesson.xpReward}
+          onClose={() => setShowShareCard(false)}
+        />
+      )}
+    </ThemeBackground>
   );
 }

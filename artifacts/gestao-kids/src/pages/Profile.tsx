@@ -5,6 +5,8 @@ import { useProgress, ALL_BADGES } from "@/hooks/useProgress";
 import { useAuth } from "@/hooks/useAuth";
 import { MODULES } from "@/data/modules";
 import ThemeSelector from "@/components/ThemeSelector";
+import { ThemeBackground } from "@/components/ThemeBackground";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function Profile() {
   const [, setLocation] = useLocation();
@@ -30,10 +32,15 @@ export default function Profile() {
   const xpNeededForLevel = levelInfo.nextXP - (levelInfo.level === 1 ? 0 : [0,100,250,500,800,1200,1600][levelInfo.level - 1]);
   const levelPct = Math.min(100, Math.round((xpInLevel / xpNeededForLevel) * 100));
 
+  const { theme } = useTheme();
+
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <ThemeBackground className="pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-br from-violet-600 to-indigo-700 px-4 pt-8 pb-20 text-white">
+      <div
+        className="px-4 pt-8 pb-20 text-white"
+        style={{ background: theme.colors.ctaGradient }}
+      >
         <div className="max-w-2xl mx-auto">
           <button
             onClick={() => setLocation("/")}
@@ -232,6 +239,6 @@ export default function Profile() {
           Sair da conta
         </motion.button>
       </div>
-    </div>
+    </ThemeBackground>
   );
 }

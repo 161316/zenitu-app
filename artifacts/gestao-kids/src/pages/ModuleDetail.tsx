@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle, Zap, Lock, ChevronRight, Brain } from "lucide-r
 import { getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
 import { getPracticesByModule } from "@/data/practices";
+import { ThemeBackground } from "@/components/ThemeBackground";
 
 export default function ModuleDetail() {
   const params = useParams<{ id: string }>();
@@ -27,7 +28,7 @@ export default function ModuleDetail() {
   const challengeDone = isChallengeComplete(mod.id);
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <ThemeBackground className="pb-20">
       {/* Header */}
       <div className={`bg-gradient-to-br ${mod.bgGradient} text-white px-4 pt-10 pb-16`}>
         <div className="max-w-2xl mx-auto">
@@ -217,6 +218,6 @@ export default function ModuleDetail() {
           </div>
         </div>
       </div>
-    </div>
+    </ThemeBackground>
   );
 }

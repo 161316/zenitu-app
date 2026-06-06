@@ -6,6 +6,7 @@ import { getModuleById, MODULES } from "@/data/modules";
 import { getChallengeByModule } from "@/data/challenges";
 import { useProgress } from "@/hooks/useProgress";
 import { XPAnimation, Confetti } from "@/components/XPAnimation";
+import { ThemeBackground } from "@/components/ThemeBackground";
 
 const MAX_TIME = 20;
 const BASE_XP = 20;
@@ -178,7 +179,7 @@ export default function Challenge() {
 
   if (phase === "gameover") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-12">
+      <ThemeBackground className="flex flex-col items-center justify-center px-4 py-12">
         <motion.div
           initial={{ scale: 0.7, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -217,13 +218,13 @@ export default function Challenge() {
             </button>
           </div>
         </motion.div>
-      </div>
+      </ThemeBackground>
     );
   }
 
   if (phase === "result") {
     return (
-      <div className="min-h-screen bg-background pb-12">
+      <ThemeBackground className="pb-12">
         {passed && <Confetti />}
         {showXP && <XPAnimation amount={totalXP} onDone={() => setShowXP(false)} />}
 
@@ -387,14 +388,14 @@ export default function Challenge() {
             </button>
           </motion.div>
         </div>
-      </div>
+      </ThemeBackground>
     );
   }
 
   const isCorrect = selected === question.correct;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <ThemeBackground className="pb-20">
       <div className={`bg-gradient-to-r ${mod.bgGradient} px-4 pt-8 pb-6`}>
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-4">
@@ -593,6 +594,6 @@ export default function Challenge() {
       </div>
 
       {showXP && <XPAnimation amount={totalXP} onDone={() => setShowXP(false)} />}
-    </div>
+    </ThemeBackground>
   );
 }
