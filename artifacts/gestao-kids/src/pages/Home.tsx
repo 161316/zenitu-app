@@ -25,8 +25,8 @@ export default function Home() {
           >
             <div>
               <p className="text-violet-200 text-sm font-semibold uppercase tracking-widest">Sua jornada</p>
-              <h1 className="text-3xl font-extrabold mt-0.5">Vantio</h1>
-              <p className="text-violet-200 text-sm mt-0.5">Do iniciante ao Master</p>
+              <h1 className="text-3xl font-extrabold mt-0.5">Zenitu</h1>
+              <p className="text-violet-200 text-sm mt-0.5">Do zero ao master em negócios</p>
             </div>
             <button
               onClick={() => setLocation("/perfil")}
