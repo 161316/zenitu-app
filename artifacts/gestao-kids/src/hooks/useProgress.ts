@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { MODULES } from "@/data/modules";
+import { useAuth } from "./useAuth";
 
 export interface Badge {
   id: string;
@@ -27,7 +28,7 @@ const DEFAULT_PROGRESS: Progress = {
   badges: [],
 };
 
-const STORAGE_KEY = "gestao-kids-progress";
+const LOCAL_KEY = "gestao-kids-progress-guest";
 
 export const ALL_BADGES: Badge[] = [
   { id: "first-lesson", title: "Primeira Aula!", emoji: "🎯", description: "Completou sua primeira aula" },
@@ -57,54 +58,75 @@ function getLevel(xp: number): { level: number; title: string; nextXP: number } 
   return { level: 7, title: "Empresário Master", nextXP: 9999 };
 }
 
-export function useProgress() {
-  const [progress, setProgress] = useState<Progress>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? { ...DEFAULT_PROGRESS, ...JSON.parse(saved) } : DEFAULT_PROGRESS;
-    } catch {
-      return DEFAULT_PROGRESS;
-    }
+function computeBadges(p: Progress): Progress {
+  const badges = [...p.badges];
+  if (p.completedLessons.length >= 1 && !badges.includes("first-lesson")) badges.push("first-lesson");
+  if (p.completedChallenges.length >= 1 && !badges.includes("first-challenge")) badges.push("first-challenge");
+  if (p.xp >= 100 && !badges.includes("xp-100")) badges.push("xp-100");
+  if (p.xp >= 500 && !badges.includes("xp-500")) badges.push("xp-500");
+  if (p.xp >= 1000 && !badges.includes("xp-1000")) badges.push("xp-1000");
+  if (p.streak >= 3 && !badges.includes("streak-3")) badges.push("streak-3");
+  MODULES.forEach((mod, idx) => {
+    const allDone = mod.lessons.every(l => p.completedLessons.includes(`${mod.id}:${l.id}`));
+    const badgeId = `module-${idx + 1}`;
+    if (allDone && !badges.includes(badgeId)) badges.push(badgeId);
   });
+  const allModules = MODULES.every((_, idx) => badges.includes(`module-${idx + 1}`));
+  if (allModules && !badges.includes("all-modules")) badges.push("all-modules");
+  return { ...p, badges };
+}
+
+function computeStreak(p: Progress): Progress {
+  const today = new Date().toISOString().split("T")[0];
+  if (p.lastActivityDate === today) return p;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
+  const newStreak = p.lastActivityDate === yesterday ? p.streak + 1 : 1;
+  return { ...p, streak: newStreak, lastActivityDate: today };
+}
+
+export function useProgress() {
+  const { user } = useAuth();
+  const [progress, setProgress] = useState<Progress>(DEFAULT_PROGRESS);
+  const [synced, setSynced] = useState(false);
+  const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setSynced(false);
+    if (user) {
+      fetch("/api/progress", { credentials: "include" })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data) setProgress({ ...DEFAULT_PROGRESS, ...data });
+          setSynced(true);
+        })
+        .catch(() => setSynced(true));
+    } else {
+      try {
+        const saved = localStorage.getItem(LOCAL_KEY);
+        if (saved) setProgress({ ...DEFAULT_PROGRESS, ...JSON.parse(saved) });
+      } catch {}
+      setSynced(true);
+    }
+  }, [user?.id]);
 
   const saveProgress = useCallback((newProgress: Progress) => {
     setProgress(newProgress);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newProgress));
-    } catch {
-      // ignore storage errors
+    if (user) {
+      if (saveTimeout.current) clearTimeout(saveTimeout.current);
+      saveTimeout.current = setTimeout(() => {
+        fetch("/api/progress", {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newProgress),
+        }).catch(() => {});
+      }, 500);
+    } else {
+      try {
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(newProgress));
+      } catch {}
     }
-  }, []);
-
-  const updateStreak = useCallback((p: Progress): Progress => {
-    const today = new Date().toISOString().split("T")[0];
-    if (p.lastActivityDate === today) return p;
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
-    const newStreak = p.lastActivityDate === yesterday ? p.streak + 1 : 1;
-    return { ...p, streak: newStreak, lastActivityDate: today };
-  }, []);
-
-  const checkBadges = useCallback((p: Progress): Progress => {
-    const badges = [...p.badges];
-
-    if (p.completedLessons.length >= 1 && !badges.includes("first-lesson")) badges.push("first-lesson");
-    if (p.completedChallenges.length >= 1 && !badges.includes("first-challenge")) badges.push("first-challenge");
-    if (p.xp >= 100 && !badges.includes("xp-100")) badges.push("xp-100");
-    if (p.xp >= 500 && !badges.includes("xp-500")) badges.push("xp-500");
-    if (p.xp >= 1000 && !badges.includes("xp-1000")) badges.push("xp-1000");
-    if (p.streak >= 3 && !badges.includes("streak-3")) badges.push("streak-3");
-
-    MODULES.forEach((mod, idx) => {
-      const allDone = mod.lessons.every(l => p.completedLessons.includes(`${mod.id}:${l.id}`));
-      const badgeId = `module-${idx + 1}`;
-      if (allDone && !badges.includes(badgeId)) badges.push(badgeId);
-    });
-
-    const allModules = MODULES.every((mod, idx) => badges.includes(`module-${idx + 1}`));
-    if (allModules && !badges.includes("all-modules")) badges.push("all-modules");
-
-    return { ...p, badges };
-  }, []);
+  }, [user]);
 
   const completeLesson = useCallback((moduleId: string, lessonId: string, xpReward: number) => {
     const lessonKey = `${moduleId}:${lessonId}`;
@@ -115,12 +137,12 @@ export function useProgress() {
         xp: prev.xp + xpReward,
         completedLessons: [...prev.completedLessons, lessonKey],
       };
-      updated = updateStreak(updated);
-      updated = checkBadges(updated);
+      updated = computeStreak(updated);
+      updated = computeBadges(updated);
       saveProgress(updated);
       return updated;
     });
-  }, [saveProgress, updateStreak, checkBadges]);
+  }, [saveProgress]);
 
   const completeChallenge = useCallback((moduleId: string, xpBonus: number) => {
     setProgress(prev => {
@@ -130,12 +152,12 @@ export function useProgress() {
         xp: prev.xp + xpBonus,
         completedChallenges: [...prev.completedChallenges, moduleId],
       };
-      updated = updateStreak(updated);
-      updated = checkBadges(updated);
+      updated = computeStreak(updated);
+      updated = computeBadges(updated);
       saveProgress(updated);
       return updated;
     });
-  }, [saveProgress, updateStreak, checkBadges]);
+  }, [saveProgress]);
 
   const isLessonComplete = useCallback((moduleId: string, lessonId: string) => {
     return progress.completedLessons.includes(`${moduleId}:${lessonId}`);
@@ -167,21 +189,9 @@ export function useProgress() {
   const unlockedBadges = ALL_BADGES.filter(b => progress.badges.includes(b.id));
   const totalLessons = MODULES.reduce((acc, m) => acc + m.lessons.length, 0);
 
-  useEffect(() => {
-    // Update streak on mount
-    const today = new Date().toISOString().split("T")[0];
-    if (progress.lastActivityDate !== today) {
-      const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
-      if (progress.lastActivityDate !== yesterday && progress.lastActivityDate !== "") {
-        // Streak broken
-        const updated = { ...progress, streak: 0 };
-        saveProgress(updated);
-      }
-    }
-  }, []);
-
   return {
     progress,
+    synced,
     completeLesson,
     completeChallenge,
     isLessonComplete,

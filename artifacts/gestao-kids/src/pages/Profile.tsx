@@ -1,11 +1,13 @@
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Flame, Trophy, BookOpen, CheckCircle, Zap } from "lucide-react";
+import { ArrowLeft, Star, Flame, Trophy, BookOpen, CheckCircle, Zap, LogOut } from "lucide-react";
 import { useProgress, ALL_BADGES } from "@/hooks/useProgress";
+import { useAuth } from "@/hooks/useAuth";
 import { MODULES } from "@/data/modules";
 
 export default function Profile() {
   const [, setLocation] = useLocation();
+  const { user, logout } = useAuth();
   const {
     progress,
     levelInfo,
@@ -13,6 +15,10 @@ export default function Profile() {
     getModuleProgress,
     totalLessons,
   } = useProgress();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const completedModules = MODULES.filter(mod =>
     mod.lessons.every(l => progress.completedLessons.includes(`${mod.id}:${l.id}`))
@@ -41,8 +47,9 @@ export default function Profile() {
             <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-5xl mx-auto mb-4">
               🏆
             </div>
-            <h1 className="text-2xl font-extrabold">Meu Perfil</h1>
-            <p className="text-violet-200 mt-1">Nível {levelInfo.level} — {levelInfo.title}</p>
+            <h1 className="text-2xl font-extrabold">{user?.name ?? "Meu Perfil"}</h1>
+            <p className="text-violet-200 mt-1">{user?.email}</p>
+            <p className="text-violet-100 font-bold mt-1">Nível {levelInfo.level} — {levelInfo.title}</p>
           </div>
         </div>
       </div>
@@ -201,6 +208,18 @@ export default function Profile() {
             })}
           </div>
         </motion.div>
+
+        {/* Logout Button */}
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 mt-2 mb-6 py-3 rounded-2xl border border-red-200 text-red-500 font-bold hover:bg-red-50 transition-colors"
+        >
+          <LogOut className="w-5 h-5" />
+          Sair da conta
+        </motion.button>
       </div>
     </div>
   );

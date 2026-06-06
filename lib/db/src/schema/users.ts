@@ -1,0 +1,42 @@
+import { pgTable, text, serial, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod/v4";
+
+export const usersTable = pgTable("users", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const progressTable = pgTable("user_progress", {
+  id: serial("id").primaryKey(),
+  userId: serial("user_id").references(() => usersTable.id, { onDelete: "cascade" }).notNull(),
+  xp: text("xp").default("0").notNull(),
+  completedLessons: jsonb("completed_lessons").$type<string[]>().default([]).notNull(),
+  completedChallenges: jsonb("completed_challenges").$type<string[]>().default([]).notNull(),
+  streak: text("streak").default("0").notNull(),
+  lastActivityDate: text("last_activity_date").default("").notNull(),
+  badges: jsonb("badges").$type<string[]>().default([]).notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertUserSchema = createInsertSchema(usersTable).omit({ id: true, createdAt: true, updatedAt: true });
+export const selectUserSchema = createSelectSchema(usersTable);
+
+export const registerSchema = z.object({
+  name: z.string().min(2, "Nome deve ter ao menos 2 caracteres").max(100),
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(8, "Senha deve ter ao menos 8 caracteres").max(72),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(1, "Senha obrigatória"),
+});
+
+export type User = typeof usersTable.$inferSelect;
+export type InsertUser = typeof usersTable.$inferInsert;
+export type UserProgress = typeof progressTable.$inferSelect;

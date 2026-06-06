@@ -1,14 +1,18 @@
 import { useLocation, useParams } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle, Circle, Zap, Trophy, Lock, ChevronRight } from "lucide-react";
+import { ArrowLeft, CheckCircle, Zap, Lock, ChevronRight, Brain } from "lucide-react";
 import { getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
+import { getPracticesByModule } from "@/data/practices";
 
 export default function ModuleDetail() {
   const params = useParams<{ id: string }>();
   const [, setLocation] = useLocation();
   const mod = getModuleById(params.id);
   const { progress, isLessonComplete, isChallengeComplete, getModuleProgress } = useProgress();
+  const practices = getPracticesByModule(params.id);
+  const hasPractices = practices.length > 0;
+  const practicesDone = isLessonComplete(params.id, "praticas");
 
   if (!mod) {
     return (
@@ -130,12 +134,44 @@ export default function ModuleDetail() {
           })}
         </div>
 
+        {/* Practice Card */}
+        {hasPractices && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="mt-4"
+          >
+            <button
+              onClick={() => setLocation(`/pratica/${mod.id}`)}
+              className={`w-full rounded-2xl p-5 flex items-center gap-4 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 ${
+                practicesDone
+                  ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white"
+                  : "bg-gradient-to-r from-violet-500 to-purple-600 text-white"
+              }`}
+            >
+              <div className="text-4xl">{practicesDone ? "🧠✅" : "🧠"}</div>
+              <div className="text-left flex-1">
+                <p className="font-extrabold text-lg">
+                  {practicesDone ? "Prática Concluída!" : "Sessão de Prática"}
+                </p>
+                <p className="text-white/80 text-sm">
+                  {practicesDone
+                    ? "Refaça para reforçar o aprendizado"
+                    : `${practices.length} questões: objetivas + dissertativa com tutor IA`}
+                </p>
+              </div>
+              <Brain className="w-5 h-5 text-white/70" />
+            </button>
+          </motion.div>
+        )}
+
         {/* Challenge Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-6"
+          className="mt-4"
         >
           <button
             onClick={() => allLessonsDone && setLocation(`/desafio/${mod.id}`)}
