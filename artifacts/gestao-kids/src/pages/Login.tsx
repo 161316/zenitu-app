@@ -156,6 +156,7 @@ export default function Login() {
             <AnimatePresence>
               {error && (
                 <motion.div
+                  key="error-message"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
