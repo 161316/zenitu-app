@@ -344,7 +344,7 @@ export const CHALLENGES: Challenge[] = [
           "As altas taxas de internet"
         ],
         correct: "O processo complicado e demorado para abrir conta em banco",
-        explanation: "David Vélez demorou meses para abrir uma conta bancária no Brasil e ficou indignado. Em vez de reclamar, criou o Nubank — hoje o maior banco digital do mundo, com 85 milhões de clientes!"
+        explanation: "David Vélez demorou meses para abrir uma conta bancária no Brasil e ficou indignado. Em vez de reclamar, criou o Nubank — hoje o maior banco digital do mundo, com mais de 100 milhões de clientes!"
       }
     ]
   },
