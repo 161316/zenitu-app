@@ -792,6 +792,352 @@ export const MODULES: Module[] = [
         ]
       }
     ]
+  },
+
+  // ─── JORNADA 2: GESTÃO ESTRATÉGICA ───────────────────────────────────────
+
+  {
+    id: "analise-estrategica",
+    journeyId: "gestao-estrategica",
+    title: "Ferramentas de Análise Estratégica",
+    subtitle: "As armas secretas dos consultores de elite",
+    emoji: "🎯",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 9,
+    tier: 1,
+    tierLabel: "Aprendiz",
+    tierEmoji: "📚",
+    tierColor: "#2563eb",
+    reviewConcepts: ["Cadeia de Valor", "Concorrência", "Estratégia"],
+    bossQuote: "A essência da estratégia é escolher o que não fazer. — Michael Porter",
+    nextModuleTeaser: "Próximo: mergulhe em finanças corporativas avançadas — como CEOs leem balanços e avaliam empresas.",
+    lessons: [
+      {
+        id: "swot-pratica",
+        title: "Análise SWOT na Prática",
+        xpReward: 75,
+        content: [
+          "A Análise SWOT é a ferramenta de estratégia mais utilizada no mundo corporativo. SWOT é a sigla em inglês para Strengths (Forças), Weaknesses (Fraquezas), Opportunities (Oportunidades) e Threats (Ameaças). As duas primeiras são internas — o que a própria empresa controla. As duas últimas são externas — o que o ambiente de mercado apresenta. Entender essa distinção é o ponto de partida para qualquer análise estratégica séria.",
+          "Vamos aplicar ao Nubank. Forças: marca forte, experiência digital superior, custo operacional 5x menor que bancos tradicionais, base de dados de 90 milhões de clientes. Fraquezas: ainda dependente de crédito (alta exposição a inadimplência), sem agências físicas (limita certos públicos), lucratividade recente e ainda instável em alguns mercados. Oportunidades: 50 milhões de brasileiros sem conta bancária, expansão para México e Colômbia, crescimento de pagamentos digitais pós-pandemia. Ameaças: Pix eliminando receita de tarifas, grandes bancos digitalizando rapidamente, regulação crescente do Banco Central.",
+          "Uma SWOT bem feita não é uma lista de palavras — é um instrumento de decisão. A pergunta estratégica é: como uso minhas Forças para capturar Oportunidades? Como corrijo Fraquezas antes que Ameaças as explorem? Consultores da McKinsey e BCG usam SWOT como ponto de partida, mas vão além: cruzam os quadrantes em uma matriz de estratégias (SO, ST, WO, WT) que gera iniciativas concretas de ação.",
+          "Armadilhas comuns que destroem a utilidade da SWOT: listar obviedades genéricas ('nosso produto é bom' não é uma força estratégica — 'margem bruta 40% acima da média do setor' é); confundir interno com externo; e fazer a análise uma vez e nunca revisar. Uma SWOT tem validade de seis meses em mercados dinâmicos. As empresas que a atualizam trimestralmente — como a Amazon, que tem ciclos de revisão estratégica constantes — conseguem reagir antes dos concorrentes."
+        ]
+      },
+      {
+        id: "5-forcas-porter",
+        title: "As 5 Forças de Porter",
+        xpReward: 75,
+        content: [
+          "Em 1979, Michael Porter publicou no Harvard Business Review um artigo que mudou para sempre como o mundo pensa sobre estratégia competitiva. Ele argumentou que a rentabilidade de uma indústria não depende apenas do esforço das empresas, mas de cinco forças estruturais que determinam a intensidade da concorrência. Entender essas forças é o que separa um gestor estratégico de um gestor operacional.",
+          "As cinco forças são: (1) Rivalidade entre concorrentes existentes — quão intensamente as empresas do setor competem entre si por preço, produto e clientes. (2) Ameaça de novos entrantes — quão fácil é para novas empresas entrar no mercado e roubar participação. (3) Poder de barganha dos fornecedores — quanto os fornecedores conseguem ditar preços e condições. (4) Poder de barganha dos compradores — quanta pressão os clientes conseguem exercer sobre preços. (5) Ameaça de produtos substitutos — quão facilmente o cliente pode trocar seu produto por uma alternativa diferente.",
+          "Aplicando ao setor de streaming: rivalidade é altíssima (Netflix, Disney+, Amazon, Max, Apple TV+ disputando o mesmo tempo de tela). Novos entrantes têm barreira alta (produzir conteúdo original custa bilhões). Fornecedores (estúdios e criadores) têm poder médio-alto — por isso a Netflix gastou US$17 bilhões em conteúdo em 2023. Compradores têm poder crescente — cancelamento é a um clique. Substitutos abundam: YouTube, TikTok, jogos, podcasts. Resultado: margens sob pressão crescente. Isso explica por que a Netflix passou a cobrar por compartilhamento de senhas — tentando aumentar receita num ambiente cada vez mais competitivo.",
+          "Para usar Porter estrategicamente: primeiro, mapeie cada força do seu setor de 1 (fraca) a 5 (forte). Depois, identifique as forças mais ameaçadoras e pergunte: o que posso fazer para me proteger delas? Uma empresa pode construir barreiras de entrada (patentes, escala, contratos de longo prazo com clientes), reduzir dependência de fornecedores específicos (múltiplos fornecedores), ou criar custo de troca alto para o cliente (ecossistemas integrados como o da Apple). Estratégia é, essencialmente, moldar essas forças ao seu favor."
+        ]
+      },
+      {
+        id: "pestel-tam",
+        title: "Mapeando Macro e Mercado: PESTEL e TAM",
+        xpReward: 75,
+        content: [
+          "Se a SWOT olha a empresa e o Porter olha o setor, o PESTEL olha o ambiente macro que afeta todos os negócios. PESTEL mapeia seis dimensões: Político (estabilidade governamental, regulação, políticas fiscais), Econômico (crescimento do PIB, taxa de juros, inflação, câmbio), Social (demografia, tendências de comportamento, valores culturais), Tecnológico (inovações, automação, ritmo de mudança digital), Ambiental (legislação climática, escassez de recursos, ESG), Legal (legislação trabalhista, proteção ao consumidor, LGPD). Um evento em qualquer um desses fatores pode transformar — ou destruir — um modelo de negócio.",
+          "Exemplo concreto: a alta da taxa Selic no Brasil (fator Econômico) em 2022-2023 afetou todo o ecossistema de startups. Com juros em 13,75% ao ano, o dinheiro que estava barato e disponível para investir em startups de alto risco migrou para renda fixa segura. Mais de 70 startups brasileiras demitem em massa. A Loft, avaliada em US$2,9 bilhões em 2021, enfrentou cortes severos. Isso não foi falha de produto — foi consequência de um fator PESTEL que as empresas não souberam prever ou se proteger adequadamente.",
+          "TAM, SAM e SOM são as métricas de tamanho de mercado que todo investidor e estrategista precisa dominar. TAM (Total Addressable Market) é o mercado total disponível se você vendesse para todos os clientes possíveis. SAM (Serviceable Addressable Market) é a parcela que sua solução atual consegue servir. SOM (Serviceable Obtainable Market) é o que você realisticamente vai capturar nos próximos 2-3 anos. Para o iFood no Brasil: TAM poderia ser todo gasto com alimentação fora de casa (R$300 bilhões/ano). SAM seria o segmento de delivery por app em cidades com cobertura (R$40 bilhões). SOM atual é de aproximadamente R$12 bilhões em GMV. Essas métricas definem se um negócio tem potencial de escala.",
+          "A combinação SWOT + Porter + PESTEL forma o toolkit básico de qualquer analista estratégico. Consultoras como McKinsey, Bain e BCG cobram de R$500.000 a R$5 milhões por projetos de estratégia que aplicam exatamente essas ferramentas — mais dados proprietários e experiência de setor. O que torna esses consultores valiosos não é conhecer os frameworks, mas saber combiná-los para gerar insights únicos sobre situações específicas. É exatamente o que você está aprendendo a fazer."
+        ]
+      },
+      {
+        id: "missao-estrategia",
+        title: "Missão Prática: analisando a Netflix no Brasil",
+        xpReward: 100,
+        content: [
+          "Você foi contratado como analista estratégico junior de uma consultoria para avaliar a posição competitiva da Netflix no Brasil e propor uma recomendação estratégica para os próximos dois anos. O cliente quer saber: a Netflix deveria investir mais em conteúdo nacional, reduzir preços, ou diversificar para outros serviços? Use os três frameworks que acabou de aprender.",
+          "SWOT da Netflix Brasil: Forças — maior base de assinantes (14 milhões no Brasil), reputação de qualidade, algoritmo de recomendação superior, capacidade de produção local (Vai Rir?, Round 6 em coprodução). Fraquezas — preço premium dificulta penetração em classes C/D, ausência de conteúdo ao vivo (esportes, notícias), custo de conteúdo impossível de reduzir sem perder qualidade. Oportunidades — 60 milhões de smartphones sem Netflix instalado, crescimento da internet rural (Starlink), co-produções com Globo e Bandeirantes. Ameaças — Globoplay crescendo 40% ao ano com Premiere (futebol), Disney+ e HBO Max com IPs imbatíveis, pirataria resiliente.",
+          "Porter para streaming no Brasil: rivalidade altíssima (6+ plataformas competindo). Novos entrantes com barreira crescente (custo de conteúdo). Fornecedores (Globo, Record, Warner) com poder real — negociar direitos de conteúdo custa fortunas. Compradores com poder máximo — churn (cancelamento) instantâneo a qualquer momento. Substitutos abundam: YouTube (gratuito), TikTok, Twitch. Conclusão Porter: indústria com margens estruturalmente pressionadas. PESTEL relevante: Selic alta comprime renda disponível das famílias (fator Econômico), regulação de streaming em discussão no Congresso (fator Político/Legal).",
+          "Recomendação estratégica: a análise integrada aponta para INVESTIMENTO EM CONTEÚDO NACIONAL + PARCERIA DE FUTEBOL. Justificativa: a principal ameaça (Globoplay com futebol) explora a principal fraqueza (ausência de esportes). A resposta não é reduzir preço — isso destrói margem sem diferenciar. É criar conteúdo que nenhum concorrente tem: séries brasileiras exclusivas de alto impacto + direitos de competições esportivas regionais que a Globo não domina (NBB, Basquete, CBF). TAM do esporte brasileiro é R$5 bilhões/ano e crescendo. Essa recomendação usa Força (capacidade de produção) para capturar Oportunidade (demanda por conteúdo nacional) e neutralizar a maior Ameaça (Globoplay). É estratégia integrada, não intuição."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "financas-corporativas",
+    journeyId: "gestao-estrategica",
+    title: "Finanças Corporativas Avançadas",
+    subtitle: "Como CEOs leem números e tomam decisões de bilhões",
+    emoji: "📈",
+    color: "#1d4ed8",
+    bgGradient: "from-indigo-600 to-blue-800",
+    order: 10,
+    tier: 2,
+    tierLabel: "Aprendiz",
+    tierEmoji: "📚",
+    tierColor: "#2563eb",
+    reviewConcepts: ["Lucro", "Fluxo de Caixa", "Break-even"],
+    bossQuote: "Contabilidade é a linguagem dos negócios. — Warren Buffett",
+    nextModuleTeaser: "Próximo: entre na jornada de Liderança Corporativa e aprenda a liderar pessoas de alto desempenho com OKRs e cultura organizacional.",
+    lessons: [
+      {
+        id: "dre-balanco",
+        title: "DRE e Balanço Patrimonial: a radiografia financeira",
+        xpReward: 75,
+        content: [
+          "Todo CFO (Chief Financial Officer) de uma empresa precisa dominar dois documentos fundamentais: o Demonstrativo de Resultados do Exercício (DRE) e o Balanço Patrimonial. O DRE mostra o que aconteceu com o dinheiro em um período — é o filme da empresa. O Balanço mostra a fotografia da empresa num momento específico: o que ela tem (Ativos), o que deve (Passivos) e o que pertence aos sócios (Patrimônio Líquido). São linguagens obrigatórias para qualquer pessoa que queira trabalhar em gestão, finanças ou empreendedorismo.",
+          "O DRE começa pela Receita Bruta (tudo que entrou de vendas), subtrai impostos e devoluções para chegar à Receita Líquida, subtrai o Custo dos Produtos Vendidos (CPV) para chegar ao Lucro Bruto, subtrai as despesas operacionais (marketing, administrativo, pesquisa) para chegar ao EBIT (lucro operacional), e depois deduz juros e impostos para chegar ao Lucro Líquido. Cada linha dessa cascata revela algo específico sobre a saúde do negócio. Uma empresa com Receita alta mas Lucro Bruto baixo tem problema de precificação ou custo de produção. Uma empresa com Lucro Bruto alto mas EBIT baixo tem despesas operacionais descontroladas.",
+          "O Balanço Patrimonial segue a equação fundamental: Ativos = Passivos + Patrimônio Líquido. Ativos são o que a empresa possui: caixa, contas a receber, estoques, máquinas, imóveis, marcas (intangíveis). Passivos são o que ela deve: fornecedores, empréstimos, impostos a pagar, salários. Patrimônio Líquido é o que sobrou para os sócios — a diferença entre o que a empresa tem e o que ela deve. Se o PL é negativo, a empresa está tecnicamente insolvente: deve mais do que possui.",
+          "Indicadores financeiros calculados a partir desses documentos são o vocabulário do mundo corporativo. EBITDA (lucro antes de juros, impostos, depreciação e amortização) é o indicador mais usado para comparar empresas de setores diferentes. Margem Líquida (Lucro Líquido ÷ Receita) mostra quanto de cada real vendido vira lucro real. ROE (Return on Equity) mede quanto os sócios ganham sobre o capital investido. Um ROE de 20% significa que para cada R$100 investido pelos sócios, a empresa gerou R$20 de lucro — excelente em praticamente qualquer setor."
+        ]
+      },
+      {
+        id: "valuation",
+        title: "Valuation: quanto vale uma empresa?",
+        xpReward: 75,
+        content: [
+          "Valuation é o processo de determinar o valor econômico de uma empresa. É o que bancos de investimento fazem quando uma empresa quer abrir capital na Bolsa, o que fundos de venture capital fazem antes de investir em startups, o que compradores avaliam antes de adquirir um negócio. Entender valuation é entender a lógica por trás de toda grande transação financeira — por que a Microsoft pagou US$69 bilhões pela Activision, por que o Nubank foi avaliado em US$45 bilhões no IPO, por que a lanchonete do bairro foi vendida por R$250.000.",
+          "O método mais rigoroso é o DCF (Discounted Cash Flow — Fluxo de Caixa Descontado). A lógica é simples: o valor de qualquer empresa é o total de caixa que ela vai gerar no futuro, trazido a valor presente com uma taxa de desconto que reflete o risco. Se uma empresa vai gerar R$100.000 de caixa livre por ano pelos próximos 10 anos, e a taxa de desconto adequada (custo de capital) é 12% ao ano, o valor presente dessas entradas é aproximadamente R$565.000 — não R$1 milhão. O dinheiro futuro vale menos que o dinheiro hoje por causa do risco e da inflação.",
+          "Múltiplos de mercado são o método mais rápido e amplamente usado por analistas. O mais comum é o Múltiplo de EBITDA: valor da empresa ÷ EBITDA. Se empresas similares do setor de varejo são vendidas por 8x EBITDA, e sua empresa tem EBITDA de R$2 milhões, o valuation de referência é R$16 milhões. Outros múltiplos comuns: P/L (Preço/Lucro) para ações na bolsa, EV/Receita para startups em crescimento ainda sem lucro. A Salesforce foi avaliada por anos a mais de 20x receita — porque o mercado precificava o crescimento futuro, não o resultado presente.",
+          "Startups usam lógicas de valuation diferentes das empresas estabelecidas. Uma startup em estágio inicial pode ser avaliada sem receita alguma — com base no tamanho do mercado endereçável, na força do time fundador e na tração inicial (usuários ativos, taxa de crescimento). O Airbnb não tinha lucro quando foi avaliado em US$10 bilhões — mas tinha crescimento de 300% ao ano e um modelo de negócio com potencial global comprovado. Valuation não é ciência exata: é a arte de quantificar o futuro com rigor analítico e bom julgamento estratégico."
+        ]
+      },
+      {
+        id: "alavancagem",
+        title: "Alavancagem financeira e gestão de risco",
+        xpReward: 75,
+        content: [
+          "Alavancagem financeira é usar capital de terceiros (dívida) para amplificar o retorno sobre o capital próprio. É como um pé de cabra: aumenta o que você consegue mover com a mesma força. Funciona brilhantemente quando as coisas vão bem — e pode ser catastrófico quando vão mal. Compreender alavancagem é fundamental porque ela está por trás de todas as grandes fortunas construídas rapidamente e de todas as falências espetaculares da história corporativa.",
+          "Exemplo numérico direto: você tem R$100.000 para comprar um imóvel comercial e alugar. Cenário A (sem alavancagem): paga R$100.000 à vista, aluga por R$10.000/ano — retorno de 10% sobre seu capital. Cenário B (com alavancagem): paga R$30.000 de entrada, toma R$70.000 de empréstimo a 8% ao ano (custo de R$5.600/ano). Aluga por R$10.000 e paga R$5.600 de juros — sobram R$4.400 líquidos sobre R$30.000 investidos = retorno de 14,7%. A alavancagem aumentou seu retorno de 10% para 14,7%. Se o imóvel se valoriza 20%, no Cenário A você ganha R$20.000 (20% do capital). No Cenário B, ganha os mesmos R$20.000 mas sobre R$30.000 investidos — retorno de 66%.",
+          "O lado perigoso: se o imóvel desvalorizar 30% no Cenário A, você perde R$30.000 (30% do capital). No Cenário B, perde R$30.000 sobre R$30.000 investidos — perdeu 100% do capital próprio e ainda deve o banco. É por isso que a crise financeira de 2008 foi tão devastadora: bancos americanos estavam alavancados em 30x ou mais. Quando os ativos (hipotecas) perderam valor, o capital próprio evaporou em dias. O Lehman Brothers, fundado em 1850, faliu em setembro de 2008 com alavancagem de 31x.",
+          "Gestão de risco financeiro é o conjunto de práticas que protege a empresa de eventos adversos. Empresas saudáveis monitoram três indicadores de alavancagem: Dívida Líquida/EBITDA (quanto tempo levaria para pagar toda a dívida com o caixa operacional — abaixo de 3x é saudável para maioria dos setores), Índice de Cobertura de Juros (EBIT ÷ Despesa de Juros — acima de 3x significa que a empresa ganha pelo menos 3 vezes o que paga de juros), e Índice de Liquidez Corrente (Ativo Circulante ÷ Passivo Circulante — acima de 1,5 significa que tem folga para honrar compromissos de curto prazo). Monitorar esses índices é o que separa empresas resilientes das que quebram na primeira crise."
+        ]
+      },
+      {
+        id: "missao-financas-corp",
+        title: "Missão Prática: avaliando uma startup para investimento",
+        xpReward: 100,
+        content: [
+          "Você é analista de um fundo de venture capital e recebeu o pitch de uma startup de EdTech brasileira: a EducaMax. Ela oferece cursos profissionalizantes online para trabalhadores da indústria e quer R$5 milhões em troca de 20% da empresa (implicando valuation de R$25 milhões). Sua tarefa: analisar a proposta financeira e recomendar investir ou não — com justificativa baseada nos frameworks que aprendeu.",
+          "Dados financeiros da EducaMax: Receita atual R$800.000/ano, crescendo 80% ao mês (acelerado, mas ainda em fase inicial). EBITDA negativo: -R$200.000/mês (queimando R$2,4 milhões/ano). CAC (Custo de Aquisição de Cliente) R$120. LTV (Lifetime Value — receita total que um cliente gera) R$600. Margem bruta 65% (boa para SaaS/EdTech). Time: ex-Google, ex-Sebrae, ex-Fundação Getúlio Vargas. Mercado: 40 milhões de trabalhadores industriais, penetração atual de EdTech de 2%.",
+          "Análise do valuation: com receita de R$800.000 e crescendo 80% ao mês, a receita anualizada em 12 meses será de aproximadamente R$5-7 milhões se o ritmo se mantiver. Um valuation de R$25 milhões implica múltiplo de EV/Receita de ~31x atual — alto, mas comparável a EdTechs globais em crescimento acelerado (Duolingo foi avaliada a 40x receita no IPO). O múltiplo se justifica se o crescimento se sustentar. LTV/CAC de 5x (R$600 ÷ R$120) é excelente — indica que cada R$1 investido em aquisição traz R$5 de valor. Margem bruta de 65% é consistente com negócios escaláveis.",
+          "Recomendação e estrutura do deal: INVESTIR, com condições. A EducaMax apresenta os fundamentos de um negócio escalável: unit economics saudáveis, mercado grande e sub-penetrado, time qualificado. O risco principal é o burn rate (R$2,4M/ano) — os R$5M dão 25 meses de runway, suficiente para atingir break-even se CAC continuar caindo com escala. Estrutura sugerida: R$5M em duas tranches — R$3M imediatos e R$2M condicionados à EducaMax atingir R$3M de ARR (receita anual recorrente) em 12 meses. Essa estrutura protege o investidor de risco de execução enquanto capitaliza adequadamente a empresa para crescer. Esse tipo de análise e negociação é o trabalho real de analistas de VC no Brasil — e você acaba de fazê-lo."
+        ]
+      }
+    ]
+  },
+
+  // ─── JORNADA 3: LIDERANÇA CORPORATIVA ───────────────────────────────────
+
+  {
+    id: "lideranca-executiva",
+    journeyId: "lideranca-corporativa",
+    title: "Liderança Executiva e Cultura Organizacional",
+    subtitle: "Construa equipes que performam no alto nível",
+    emoji: "🏢",
+    color: "#d97706",
+    bgGradient: "from-amber-500 to-orange-600",
+    order: 11,
+    tier: 1,
+    tierLabel: "Explorador",
+    tierEmoji: "🔭",
+    tierColor: "#d97706",
+    reviewConcepts: ["Liderança", "Equipes", "Planejamento Estratégico"],
+    bossQuote: "A cultura come a estratégia no café da manhã. — Peter Drucker",
+    nextModuleTeaser: "Próximo: domine marketing digital e growth hacking — as alavancas de crescimento que startups unicórnio usam.",
+    lessons: [
+      {
+        id: "estilos-lideranca",
+        title: "Estilos de Liderança: do comando ao coaching",
+        xpReward: 100,
+        content: [
+          "A pesquisa mais influente sobre estilos de liderança foi conduzida por Daniel Goleman, o criador do conceito de Inteligência Emocional. Goleman identificou seis estilos distintos que líderes eficazes dominam e alternam conforme o contexto. O insight central é que não existe um único estilo correto — existe o estilo correto para cada situação e para cada pessoa liderada. Líderes rígidos que usam apenas um estilo têm performance consistentemente inferior aos que navegam entre diferentes abordagens.",
+          "Os seis estilos: (1) Coercitivo — 'faça o que eu digo.' Útil em crises imediatas, mas destrói moral e criatividade se usado cronicamente. (2) Visionário — 'venha comigo.' Inspira com uma visão clara e deixa autonomia no caminho. É o estilo com maior impacto positivo no clima organizacional. (3) Afiliativo — 'as pessoas primeiro.' Constrói harmonia e vínculos, mas pode tolerar baixa performance. (4) Democrático — 'o que você acha?' Gera engajamento e boas ideias, mas é lento para decisões urgentes. (5) Marcador de Ritmo — 'faça como eu faço.' Funciona para times de alta performance, mas sobrecarrega equipes medianas. (6) Coaching — 'tente desta forma.' Desenvolve as pessoas para o longo prazo. Pouco usado por líderes impacientes.",
+          "OKRs (Objectives and Key Results) é o sistema de metas que o Google adotou em 1999 e que hoje é usado por Amazon, Spotify, LinkedIn, Airbnb e milhares de outras empresas de alto crescimento. O Objective (Objetivo) é qualitativo e inspirador — 'Tornar nossa marca referência em sustentabilidade no varejo brasileiro'. Os Key Results (Resultados-Chave) são quantitativos e verificáveis — '1. Atingir NPS de 70 nos clientes corporativos; 2. Reduzir emissões de carbono em 30%; 3. Publicar relatório ESG auditado.' A mágica dos OKRs: alinham toda a organização em torno das mesmas prioridades, criam transparência radical e permitem identificar o que está bloqueando o progresso.",
+          "Cultura organizacional é o conjunto de valores, comportamentos e práticas que definem 'como as coisas funcionam aqui'. É o que uma empresa faz quando ninguém está olhando. A cultura da Amazon está codificada nos 16 Leadership Principles que todo funcionário conhece de cor. A cultura da Netflix está no famoso Culture Deck de 2009 que viralizou globalmente — com princípios como 'Liberdade com Responsabilidade' e 'Contexto, não controle'. Culturas fortes não eliminam conflito — gerenciam-no construtivamente. Quando a cultura é clara, líderes gastam menos tempo explicando decisões e mais tempo executando."
+        ]
+      },
+      {
+        id: "gestao-conflitos",
+        title: "Gestão de Conflitos e Times de Alta Performance",
+        xpReward: 100,
+        content: [
+          "Patrick Lencioni, autor de 'Os Cinco Desafios das Equipes', identificou a pirâmide de disfunções que destrói times: ausência de confiança → medo de conflito → falta de comprometimento → fuga de responsabilidade → desatenção aos resultados. A maioria dos líderes tenta resolver o último item (resultados ruins) sem atacar a causa raiz (ausência de confiança). Times de alta performance não evitam conflito — eles conflitam produtivamente, com respeito mútuo e foco em soluções.",
+          "Google conduziu um estudo de dois anos (Projeto Aristóteles) para descobrir o que tornava times eficazes. A descoberta surpreendeu até os próprios pesquisadores: o fator número um não era a inteligência dos membros, nem as qualificações, nem a personalidade do líder. Era a Segurança Psicológica — a crença de que é seguro assumir riscos interpessoais sem medo de punição ou humilhação. Times com alta segurança psicológica cometem mais erros confessados (e por isso aprendem mais rápido), têm maior inovação e entregam resultados 35% superiores em projetos complexos.",
+          "Dar feedback de alta qualidade é uma das habilidades mais raras e valiosas em gestão. O modelo SBI (Situation, Behavior, Impact) estrutura feedbacks difíceis de forma não defensiva: descreva a Situação específica ('na reunião de quarta-feira com o cliente'), o Comportamento observado ('você interrompeu o cliente três vezes enquanto ele apresentava suas preocupações') e o Impacto concreto ('ele ficou visivelmente desconfortável e reduziu o escopo do contrato proposto'). Sem julgamento de caráter, sem generalização, sem emoção. Apenas fatos e consequências. Esse modelo é ensinado em Harvard, INSEAD e em programas de liderança das maiores empresas do mundo.",
+          "Times de alto desempenho têm quatro características em comum, segundo pesquisas da Gallup e McKinsey: clareza de papéis (cada pessoa sabe exatamente o que é responsável), accountability mútua (cobram uns aos outros, não apenas ao líder), diversidade cognitiva (pensamentos diferentes geram soluções melhores), e rituais de aprendizagem (retrospectivas, debriefs, celebração de aprendizados de falhas). Um gestor que constrói times com essas quatro características multiplica o impacto da sua organização — e isso é o que diferencia um líder operacional de um líder estratégico."
+        ]
+      },
+      {
+        id: "missao-lideranca",
+        title: "Missão Prática: reestruturando uma equipe em crise",
+        xpReward: 125,
+        content: [
+          "Você acaba de ser promovido a Diretor de Operações da Logistics.io, startup de logística com 45 funcionários. O time de tecnologia (12 pessoas) está entregando com atraso, a rotatividade é de 40% ao ano (altíssima — a média do setor é 15%) e o clima interno está classificado em 4,5/10 no Glassdoor. O CEO quer uma solução em 90 dias. Use os frameworks de liderança para montar seu plano de ação.",
+          "Diagnóstico (semanas 1-2): antes de agir, entenda. Realize 1-on-1s de 30 minutos com cada membro da equipe usando perguntas abertas: 'O que te dá energia no trabalho? O que te esgota? O que você mudaria se fosse gestor hoje? O que te faria considerar sair?' Paralelamente, analise os dados: quais projetos atrasaram? Por quê? Há dependências bloqueantes não resolvidas? Revise as métricas de processo (velocidade de entrega, bugs em produção, tempo de resposta). O diagnóstico bem feito economiza semanas de tentativa e erro.",
+          "Intervenções estruturais (semanas 3-6): com base nos 1-on-1s, você descobriu três problemas raiz: (1) ausência de OKRs claros — cada pessoa tinha uma lista diferente de prioridades; (2) reuniões excessivas (média de 4h/dia por desenvolvedor, impedindo trabalho focado); (3) ausência de reconhecimento — ninguém sabia quando havia entregado bem. Ações: implementar OKRs trimestrais com check-ins semanais de 15 minutos (não 1 hora); criar 'dias sem reunião' (terças e quintas até as 14h são bloqueadas para foco); implementar ritual semanal de reconhecimento público de contribuições.",
+          "Resultado esperado em 90 dias e aprendizado: redução de atraso de entregas de 40% para abaixo de 15%, melhora do clima para acima de 7/10 e sinalização de redução de turnover (resultados de turnover levam 6-12 meses para aparecer nas estatísticas). O aprendizado mais importante desta missão: a maioria dos problemas de time não são problemas de habilidade técnica — são problemas de sistema, clareza e reconhecimento. Líderes que atacam processos antes de pessoas resolvem mais rápido, com menos trauma organizacional e mais resultados duradouros."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "marketing-growth",
+    journeyId: "lideranca-corporativa",
+    title: "Marketing Digital e Growth Strategy",
+    subtitle: "As alavancas de crescimento que unicórnios usam",
+    emoji: "📣",
+    color: "#ea580c",
+    bgGradient: "from-orange-500 to-red-600",
+    order: 12,
+    tier: 2,
+    tierLabel: "Explorador",
+    tierEmoji: "🔭",
+    tierColor: "#d97706",
+    reviewConcepts: ["Marketing", "Clientes", "Canais de Distribuição"],
+    bossQuote: "Se você está não envergonhado da v1 do seu produto, você lançou tarde demais. — Reid Hoffman",
+    nextModuleTeaser: "Próximo: entre na jornada Master Executivo — governança, ESG e o futuro dos negócios com IA.",
+    lessons: [
+      {
+        id: "funil-conversao",
+        title: "Funil de Conversão e Jornada do Cliente Digital",
+        xpReward: 100,
+        content: [
+          "O funil de marketing é o modelo que descreve a jornada do cliente desde o primeiro contato com a marca até a compra e recomendação. No topo do funil (TOFU — Top of Funnel) estão os visitantes que nem sabem que precisam do seu produto: o objetivo aqui é criar consciência. No meio do funil (MOFU) estão os leads interessados que estão considerando opções: o objetivo é educar e criar preferência. No fundo do funil (BOFU) estão os prospects prontos para comprar: o objetivo é converter. Depois da compra vem a retenção e a indicação — o estágio mais valioso e mais ignorado pela maioria das empresas.",
+          "Métricas do funil digital que todo gestor precisa dominar: CPA (Custo Por Aquisição) — quanto custa adquirir cada cliente pago. CTR (Click-Through Rate) — porcentagem de pessoas que clicaram num anúncio. Taxa de Conversão — porcentagem de visitantes que realizaram a ação desejada (compra, cadastro, download). ROAS (Return on Ad Spend) — receita gerada por cada real investido em publicidade. Uma campanha com ROAS de 4x significa que cada R$1 em anúncio gerou R$4 em receita. LTV/CAC maior que 3x é o benchmark mínimo para um negócio de assinatura saudável.",
+          "SEO (Search Engine Optimization) e Google Ads são os dois grandes canais de busca. SEO é orgânico — você cria conteúdo valioso que aparece naturalmente nas buscas sem pagar por clique. É lento para construir (3-6 meses para ver resultados) mas gera tráfego de altíssima qualidade a custo marginal zero. Google Ads é pago — você paga por cada clique ou por cada mil impressões. É imediato mas para quando você para de pagar. A estratégia vencedora combina os dois: Ads para resultados imediatos e testes de hipótese, SEO para construir ativo de longo prazo. O Nubank, por exemplo, tem um blog com conteúdo financeiro que gera milhões de visitas orgânicas por mês — reduzindo drasticamente seu CAC.",
+          "Email marketing e automação de marketing continuam sendo os canais com maior ROI em marketing digital — em média, R$42 retornados para cada R$1 investido, segundo dados da DMA. A chave não é volume (mandar mil emails genéricos), mas relevância (mandar o email certo, para a pessoa certa, no momento certo). Ferramentas como RD Station, HubSpot e Mailchimp permitem criar jornadas automatizadas: quando alguém baixa um e-book, recebe automaticamente uma sequência de emails educativos sobre o tema ao longo de 10 dias, com uma oferta de produto no momento de maior interesse. Essa automação, bem configurada, trabalha para você 24 horas por dia."
+        ]
+      },
+      {
+        id: "growth-hacking",
+        title: "Growth Hacking: crescimento exponencial com recursos limitados",
+        xpReward: 100,
+        content: [
+          "Growth Hacking é a mentalidade e o conjunto de táticas que startups usam para crescer exponencialmente com orçamentos limitados, combinando criatividade, dados e experimentação rápida. O termo foi cunhado por Sean Ellis em 2010 ao perceber que startups precisavam de profissionais obcecados com crescimento — não com marca ou awarness genérico, mas com métricas concretas de aquisição e retenção de usuários. O growth hacker não pergunta 'como vou anunciar isso?' mas sim 'qual alavanca específica vai mover o número que importa?'",
+          "Os casos mais icônicos de growth hacking: Hotmail colocou no rodapé de cada email enviado 'PS: I Love You. Get your free email at Hotmail' com um link de cadastro. Em 18 meses saiu de zero para 12 milhões de usuários. Dropbox criou um programa de indicação em que quem indicava um amigo ganhava 500MB extra de armazenamento grátis — o que é praticamente custo zero para a empresa, mas altamente valioso para o usuário. Cresceu de 100.000 para 4 milhões de usuários em 15 meses. Airbnb integrou com o Craigslist (plataforma de classificados) para publicar automaticamente suas listagens — acessando 50 milhões de usuários sem pagar um centavo em publicidade. Instagram cresceu parcialmente porque os usuários compartilhavam fotos no Facebook e Twitter, onde aparecia 'compartilhado via Instagram' — publicidade gratuita a cada post.",
+          "O framework AARRR (Acquisition, Activation, Retention, Revenue, Referral — apelidado de 'Métricas Pirata') criado por Dave McClure mapeia toda a jornada do usuário em cinco estágios mensuráveis. Aquisição: como as pessoas chegam ao produto? Ativação: qual é o momento 'aha!' em que o usuário percebe o valor? Retenção: as pessoas voltam? Com qual frequência? Revenue: como e quando o usuário paga? Referral: os usuários recomendam o produto espontaneamente? A maioria das empresas investe quase todo o orçamento em Aquisição e ignora os outros estágios — especialmente Ativação e Retenção, que determinam se o dinheiro gasto em aquisição foi bem aplicado.",
+          "Cultura de experimentação é a base do growth: formular uma hipótese ('se mudarmos o botão de CTA de azul para laranja, a conversão vai aumentar 15%'), criar um teste A/B, medir o resultado com significância estatística e escalar o que funciona. Empresas como Amazon, Google e Booking.com rodam centenas de experimentos simultâneos todos os dias. A Amazon tem uma famosa regra de 'One-Way vs Two-Way Doors': decisões irreversíveis (abrir uma nova fábrica) exigem deliberação longa. Decisões reversíveis (testar uma nova funcionalidade com 10% dos usuários) devem ser tomadas rápido e com dados mínimos. A velocidade de experimentação é vantagem competitiva real."
+        ]
+      },
+      {
+        id: "missao-growth",
+        title: "Missão Prática: plano de growth para um app de saúde",
+        xpReward: 125,
+        content: [
+          "A FitBrasil é um app de treinos e nutrição com 50.000 usuários cadastrados mas apenas 8.000 usuários ativos mensais (MAU) — uma taxa de retenção de 16%, muito abaixo do benchmark de 30-40% para apps de saúde. O CEO quer triplicar o MAU em 6 meses sem aumentar o orçamento de marketing. Você lidera o time de growth. Como faria?",
+          "Diagnóstico com framework AARRR: Aquisição está funcionando (50K cadastros). O problema está em Ativação e Retenção. Análise dos dados: 70% dos usuários que baixam o app nunca completam o primeiro treino. Dos que completam, 60% não voltam na semana seguinte. O momento 'aha!' (quando o usuário percebe o valor real do app) não está acontecendo rápido o suficiente. Hipótese: o onboarding (processo de boas-vindas) é muito longo e genérico, e o app não cria hábito nas primeiras semanas.",
+          "Plano de growth em três frentes: (1) Otimização de Ativação: reduzir o onboarding de 8 etapas para 3 (nome, objetivo de saúde, disponibilidade de horário). Criar um treino personalizado para a primeira sessão que pode ser completado em 12 minutos. Meta: elevar a taxa de usuários que completam o primeiro treino de 30% para 70%. (2) Gamificação de Retenção: implementar sistema de streaks (sequência de dias), badges de conquista e ranking semanal entre amigos. Notificações inteligentes baseadas no horário de treino histórico de cada usuário. Meta: elevar retenção semana 1 de 40% para 65%. (3) Loop viral de Referral: integrar compartilhamento de treinos concluídos no Instagram Stories com branding do FitBrasil. Programa de indicação: indique 3 amigos, ganhe 1 mês premium.",
+          "Métricas de sucesso e aprendizado: se o plano funcionar, o MAU deve crescer de 8K para 20K+ em 6 meses sem aumento de orçamento — puramente por melhorar a jornada do usuário e ativar o loop viral. O aprendizado central desta missão: a maioria das empresas de app perdem usuários não porque o produto é ruim, mas porque falham em mostrar o valor certo, para a pessoa certa, no momento certo. Growth não é publicidade — é design de jornada. E a grande alavanca de crescimento mais subutilizada não é aquisição: é retenção. Um ponto percentual a mais de retenção ao longo de 12 meses vale muito mais do que dobrar o orçamento de anúncios."
+        ]
+      }
+    ]
+  },
+
+  // ─── JORNADA 4: MASTER EXECUTIVO ──────────────────────────────────────────
+
+  {
+    id: "governanca-esg",
+    journeyId: "master-executivo",
+    title: "Governança Corporativa e ESG",
+    subtitle: "Os pilares que definem empresas de classe mundial",
+    emoji: "🏛️",
+    color: "#e11d48",
+    bgGradient: "from-rose-600 to-red-700",
+    order: 13,
+    tier: 1,
+    tierLabel: "Master",
+    tierEmoji: "🚀",
+    tierColor: "#e11d48",
+    reviewConcepts: ["Estrutura Corporativa", "Estratégia", "Liderança Executiva"],
+    bossQuote: "A governança não é sobre evitar riscos — é sobre assumir os riscos certos, com transparência e responsabilidade.",
+    nextModuleTeaser: "Próximo: O Futuro dos Negócios com IA — como inteligência artificial, plataformas digitais e disrupção vão remodelar o mundo.",
+    lessons: [
+      {
+        id: "board-governanca",
+        title: "O Conselho de Administração e a Governança Corporativa",
+        xpReward: 125,
+        content: [
+          "Governança corporativa é o sistema pelo qual empresas são dirigidas, monitoradas e controladas. É o conjunto de mecanismos que garante que os interesses dos acionistas (proprietários), do conselho, da diretoria executiva e de outros stakeholders sejam equilibrados e que a empresa opere com transparência, ética e eficiência de longo prazo. Nos últimos 30 anos, escândalos como Enron (EUA), Odebrecht (Brasil) e Wirecard (Alemanha) — todos com bilhões em fraude — demonstraram o custo devastador de governança fraca. Cada um deles destruiu não apenas a empresa, mas reputações, empregos e a confiança em mercados inteiros.",
+          "O Conselho de Administração (Board of Directors) é o órgão máximo de uma empresa de capital aberto. Sua função é supervisionar a gestão executiva (o CEO e sua equipe), aprovar a estratégia de longo prazo, garantir a integridade dos controles internos e representar os interesses dos acionistas. Um Board eficaz tem: independência (conselheiros sem vínculos com a gestão), diversidade (gênero, experiência, background geográfico), e engajamento ativo (não apenas aprovar tudo que a diretoria propõe). O Board que questiona, desafia e exige accountability da gestão é o que cria valor duradouro. O Board que apenas homologa decisões é onde nascem os escândalos.",
+          "Os quatro pilares do Instituto Brasileiro de Governança Corporativa (IBGC) são: Transparência (divulgação de informações além do exigido por lei), Equidade (tratamento justo de todos os acionistas, inclusive minoritários), Prestação de Contas (responsabilização dos agentes por seus atos), e Responsabilidade Corporativa (consideração do impacto nos stakeholders — funcionários, fornecedores, comunidade, meio ambiente). Empresas que adotam esses pilares têm custo de capital menor (investidores cobram prêmio de risco menor por empresas mais transparentes), menor risco de litígios e reputação mais sólida para atrair talentos e parceiros.",
+          "No Brasil, o Novo Mercado da B3 é o nível máximo de governança: exige que 100% das ações sejam ordinárias (com direito a voto), que o Board tenha pelo menos 20% de conselheiros independentes, e que a empresa publique demonstrações financeiras em inglês segundo padrões internacionais (IFRS). Empresas no Novo Mercado como Lojas Renner, WEG e Localiza têm, historicamente, valuation e performance superiores à média do Ibovespa. A governança não é custo — é investimento que se paga através de maior acesso a capital, melhores talentos e decisões estratégicas mais sólidas."
+        ]
+      },
+      {
+        id: "esg-impacto",
+        title: "ESG: da tendência ao imperativo estratégico",
+        xpReward: 125,
+        content: [
+          "ESG — Environmental, Social and Governance — passou de conceito de nicho para imperativo estratégico global em menos de uma década. Em 2006, apenas 63 institucionalistas assinaram os Princípios para Investimento Responsável da ONU. Em 2023, os signatários representavam mais de US$120 trilhões em ativos sob gestão — mais do que o PIB de todos os países do mundo combinados. Larry Fink, CEO da BlackRock (maior gestora de ativos do planeta, com US$9 trilhões), escreve anualmente uma carta aberta aos CEOs de todas as empresas em que investe, cobrando planos concretos de transição para net zero e metas sociais mensuráveis. ESG não é mais filantropia corporativa — é critério de acesso a capital.",
+          "O pilar Ambiental (E) abrange as práticas de uma empresa em relação ao meio ambiente: emissões de carbono, uso de água, gestão de resíduos, impacto na biodiversidade. A Agenda 2030 da ONU e o Acordo de Paris (reduzir emissões para limitar o aquecimento global a 1,5°C) criaram um framework regulatório que afeta diretamente o planejamento estratégico de empresas com operações em qualquer país desenvolvido. A Europa já exige que empresas que vendem no mercado europeu divulguem seu 'carbon footprint' de forma auditada. Empresas brasileiras exportadoras — do agronegócio à indústria — estão sob crescente pressão para demonstrar práticas sustentáveis na cadeia de suprimentos inteira.",
+          "O pilar Social (S) vai além de RSC (Responsabilidade Social Corporativa) antiga: abrange diversidade e inclusão na força de trabalho, condições de trabalho em toda a cadeia de fornecimento, impacto nas comunidades locais, e privacidade e segurança de dados dos usuários. Empresas que ignoram o 'S' do ESG pagam um preço crescente: dificuldade de recrutar talentos (Geração Z recusa trabalhar em empresas sem propósito), crises de reputação nas redes sociais, boicotes de consumidores e, cada vez mais, exclusão de portfólios de grandes fundos. A Magazine Luiza se tornou referência global em diversidade racial ao anunciar programa de trainees exclusivo para pessoas negras — resultado: reputação elevada, recrutamento facilitado e cobertura de mídia de US$200M+ em earned media.",
+          "Como mensurar e reportar ESG: os frameworks mais adotados globalmente são GRI (Global Reporting Initiative), SASB (Sustainability Accounting Standards Board) e, a partir de 2025, os IFRS Sustainability Disclosure Standards obrigatórios para grandes empresas em vários países. No Brasil, a CVM (Comissão de Valores Mobiliários) tornou obrigatória a divulgação de informações ESG para empresas listadas na B3 a partir de 2024. Para pequenas e médias empresas, a estratégia mais prática é começar por medir o que impacta mais diretamente o negócio — consumo de energia, gestão de resíduos, índice de satisfação dos funcionários — e criar um plano de melhoria anual. A credibilidade vem de metas concretas e progresso verificável, não de declarações genéricas."
+        ]
+      },
+      {
+        id: "missao-governanca",
+        title: "Missão Executiva: construindo o Board de uma empresa em crescimento",
+        xpReward: 150,
+        content: [
+          "A AgriTech.io é uma startup brasileira de tecnologia agrícola com R$25 milhões de receita, 120 funcionários e planos de abrir capital na B3 em três anos. O CEO fundador reconhece que precisa de governança profissional para atrair investidores institucionais e preparar a empresa para o IPO. Ele te contratou como consultora de governança para estruturar o Conselho de Administração e o programa ESG da empresa.",
+          "Estrutura de Board recomendada: 7 conselheiros (número ímpar evita impasse em votações). Composição proposta: 2 fundadores (CEO e CTO — representam a visão original), 2 investidores institucionais (VC e private equity que já participaram do último round), 3 conselheiros independentes (sem vínculo com a empresa ou investidores). Perfis para os independentes: (1) executivo sênior do agronegócio com rede de relacionamentos em cooperativas e traders; (2) CFO experiente com vivência em IPOs e mercado de capitais; (3) especialista em ESG e sustentabilidade agrícola — fundamental dado que o cliente da AgriTech são fazendeiros que precisarão de certificações para exportar. Comitês mínimos: Auditoria (fiscal e controles internos), Remuneração (avaliar compensação do CEO e diretoria) e ESG.",
+          "Programa ESG prioritário para uma AgriTech: no pilar Ambiental, medir e reportar o impacto da tecnologia da empresa na redução de uso de defensivos e água pelos clientes (agricultores) — transformar externalidade positiva em vantagem competitiva e diferencial de pricing. No pilar Social, mapear toda a cadeia de fornecimento dos clientes para garantir ausência de trabalho análogo à escravidão (requisito crescente de exportadores para Europa e EUA) e criar programa de capacitação de pequenos agricultores no uso da tecnologia. No pilar Governança, implementar os quatro pilares do IBGC, criar política de gestão de riscos e canal de denúncias anônimas.",
+          "Preparo para IPO e aprendizado: com esse Board e programa ESG, a AgriTech.io terá as condições básicas para listar no Novo Mercado da B3 em três anos. Isso significa: acesso a bilhões em capital de investidores institucionais, valuation premium (empresas com boa governança no Novo Mercado costumam negociar 20-30% acima de pares no mercado tradicional), e credibilidade para crescimento internacional. O aprendizado mais importante desta missão: governança e ESG não são custos de conformidade — são instrumentos estratégicos que constroem valor, reduzem risco e abrem portas que dinheiro sozinho não abre. Os líderes que entendem isso constroem empresas que atravessam décadas."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "futuro-ia",
+    journeyId: "master-executivo",
+    title: "O Futuro dos Negócios com Inteligência Artificial",
+    subtitle: "Como liderar na era das máquinas inteligentes",
+    emoji: "🤖",
+    color: "#9333ea",
+    bgGradient: "from-purple-700 to-violet-900",
+    order: 14,
+    tier: 2,
+    tierLabel: "Master",
+    tierEmoji: "🚀",
+    tierColor: "#e11d48",
+    reviewConcepts: ["Inovação", "Estratégia Global", "Disrupção"],
+    bossQuote: "A IA não vai substituir humanos. Humanos que usam IA vão substituir os que não usam. — Kai-Fu Lee",
+    nextModuleTeaser: "Você chegou ao ápice da jornada Master Executivo. Agora você pensa, fala e age como um líder global. 🌍",
+    lessons: [
+      {
+        id: "ia-vantagem-competitiva",
+        title: "Inteligência Artificial como Vantagem Competitiva",
+        xpReward: 125,
+        content: [
+          "Inteligência Artificial deixou de ser ficção científica ou ferramenta de gigantes da tecnologia para se tornar vantagem competitiva acessível a qualquer empresa que souber aplicá-la estrategicamente. O GPT-4 da OpenAI, o Gemini do Google e o Claude da Anthropic democratizaram capacidades que custavam dezenas de milhões de dólares para desenvolver internamente. Em 2024, uma PME brasileira pode usar IA para atendimento ao cliente, análise de dados financeiros, criação de conteúdo de marketing e previsão de demanda — tudo por menos de R$1.000 por mês em ferramentas. A questão não é mais 'podemos usar IA?' mas sim 'onde a IA cria mais valor no nosso modelo de negócio?'",
+          "Os casos de uso de IA com maior impacto em negócios já provados: (1) Customer Service — chatbots com IA reduzem custo de atendimento em 40-70% e atendem 24h/7 em múltiplos idiomas simultaneamente. O Banco Inter atende 80% das solicitações de seus 30 milhões de clientes via IA sem intervenção humana. (2) Personalização — a Netflix economiza US$1 bilhão por ano em conteúdo graças ao algoritmo que entende o que cada usuário quer antes de procurar. O Spotify criou o Discover Weekly com IA que analisou 30 bilhões de 'eventos de escuta' para criar playlists únicas para cada usuário. (3) Previsão de demanda — o Walmart usa IA para prever demanda em cada loja com 95% de precisão, reduzindo estoque em 20% e desperdício em 15%. (4) Detecção de fraudes — bancos como Itaú e Bradesco detectam fraudes em milissegundos analisando padrões de comportamento com IA.",
+          "Machine Learning (ML) é o subconjunto de IA onde o sistema aprende com dados sem ser explicitamente programado. Existem três tipos principais relevantes para negócios: Aprendizado Supervisionado (treinado com exemplos rotulados — ex: classificar emails como spam ou não-spam, prever preço de imóveis com base em dados históricos), Aprendizado Não-Supervisionado (encontra padrões em dados sem rótulos — ex: segmentar clientes em grupos por comportamento de compra) e Aprendizado por Reforço (aprende por tentativa e erro com recompensas — ex: robôs de armazém que otimizam rotas de movimentação de produtos). Gestores não precisam saber programar ML — precisam saber identificar problemas de negócio que ML pode resolver e como avaliá-los.",
+          "A estratégia de IA não começa com tecnologia — começa com dados. Empresas com os melhores datasets têm vantagem competitiva durável em IA, porque modelos de ML melhoram proporcionalmente à quantidade e qualidade dos dados com que são treinados. A Amazon construiu o recomendador mais sofisticado do e-commerce porque tem décadas de dados de comportamento de compra de centenas de milhões de usuários. O Google domina busca porque indexou a web e aprendeu o que bilhões de pessoas buscam e clicam. Para qualquer empresa: comece coletando e organizando dados de qualidade hoje. Os dados de hoje são a vantagem competitiva de 2030."
+        ]
+      },
+      {
+        id: "plataformas-disrupcao",
+        title: "Plataformas Digitais, Efeitos de Rede e Disrupção",
+        xpReward: 125,
+        content: [
+          "Plataformas digitais são modelos de negócio que criam valor conectando dois ou mais grupos de usuários — sem necessariamente produzir nada. O Airbnb não possui imóveis, mas conecta anfitriões e hóspedes. O iFood não tem restaurantes nem motoboys, mas conecta restaurantes e consumidores. O Mercado Livre não tem estoque, mas conecta compradores e vendedores. Essa lógica — criar valor orquestrando encontros entre agentes que antes precisavam de intermediários caros — gerou as empresas mais valiosas da história em menos de 20 anos: Apple, Google, Amazon, Meta, Alibaba, Tencent. Todas são plataformas.",
+          "Efeito de rede é o fenômeno onde um produto ou serviço se torna mais valioso à medida que mais pessoas o usam. O WhatsApp vale para você porque seus contatos estão lá. O LinkedIn vale porque profissionais e recrutadores estão presentes. O Visa vale porque estabelecimentos aceitam e consumidores carregam. Esse efeito cria um ciclo virtuoso que é extremamente difícil de quebrar: mais usuários → mais valor → mais usuários → monopólio virtual. Por isso a estratégia de startups de plataforma é crescer rápido, subsidiando usuários iniciais se necessário, para atingir 'massa crítica' — o ponto onde o efeito de rede começa a ser auto-sustentável. O Uber perdeu bilhões em subsídios de corridas no Brasil nos primeiros anos. O custo era deliberado: comprar participação de mercado rápido o suficiente para tornar-se o padrão.",
+          "Disrupção é o processo pelo qual um entrante menor e com recursos inferiores substitui um líder estabelecido ao atender inicialmente um segmento ignorado de forma mais simples e barata, melhorando progressivamente até conquistar o mercado principal. Clayton Christensen, professor de Harvard que criou a teoria da inovação disruptiva, documentou dezenas de casos: a fotografia digital destruiu a Kodak (que inventou a câmera digital mas temeu canibalizar seu negócio de filmes), a Netflix destruiu a Blockbuster (que tinha 9.000 lojas e era lucrativa quando a Netflix ainda não dava dinheiro), os smartphones destruíram câmeras compactas, GPS portátil e gravadores de voz como categorias inteiras de produtos.",
+          "Como se proteger da disrupção e como disromper: empresas estabelecidas podem criar unidades de negócio separadas para explorar tecnologias disruptivas sem as restrições dos processos e margens existentes (o que o Amazon fez com AWS — criando uma empresa de cloud dentro de uma varejista). Startups que querem disromper devem focar em segmentos super-servidos (onde o incumbente cobrar demais por mais do que o cliente precisa) ou não-servidos (sem alternativa acessível atual). O Nubank encontrou 50 milhões de brasileiros sem conta bancária e outros tantos insatisfeitos com tarifas abusivas — um mercado que os grandes bancos não tinham incentivo para servir bem. Esse é o ponto de entrada clássico de uma disrupção bem-sucedida."
+        ]
+      },
+      {
+        id: "missao-master-final",
+        title: "Missão Master Final: sua visão de futuro",
+        xpReward: 200,
+        content: [
+          "Você chegou ao ponto mais elevado da sua jornada no Zenitu. Passou por 14 módulos, aprendeu o que executivos de grandes empresas levam anos para acumular e agora você pensa, analisa e se comunica como um líder estratégico. Esta missão final não tem gabarito — tem perspectiva. Ela exige que você integre tudo e projete sua visão sobre o futuro dos negócios e o papel que pretende desempenhar nele.",
+          "Cenário 2030: inteligência artificial avançada está presente em 80% das decisões corporativas. Plataformas digitais dominam cinco setores que eram físicos (varejo, serviços financeiros, saúde, educação, mobilidade). A regulação de IA, dados e sustentabilidade está redefinindo o que é permitido e o que é necessário para operar globalmente. O Brasil tem a maior biodiversidade do planeta, uma das maiores populações jovens do mundo e uma economia de R$12 trilhões — mas ainda exporta predominantemente commodities e importa tecnologia. A pergunta estratégica: onde está a maior oportunidade para um líder brasileiro de nova geração nesse cenário?",
+          "Sua análise deve integrar: PESTEL (quais forças macro criam a janela de oportunidade?), Porter (qual estrutura de setor é mais favorável a novos entrantes com tecnologia?), SWOT pessoal (quais são suas forças únicas como brasileiro, jovem e com formação em gestão?), Valuation (qual é o potencial de mercado — TAM/SAM/SOM — da oportunidade que você identificou?), e OKRs pessoais (quais são seus três objetivos mensuráveis para os próximos dois anos para avançar nessa direção?). Escreva ou pense estruturadamente em cada dimensão.",
+          "O que os líderes que constroem legado têm em comum: propósito claro além do lucro (que problema real no mundo eles resolvem?), capacidade de articular uma visão convincente que atrai talentos e capital, disposição para atualizar constantemente o próprio modelo mental enquanto o mundo muda, e coragem para agir antes de ter certeza — porque no mundo de amanhã, a velocidade de aprendizado será mais valiosa do que qualquer conhecimento fixo. Você absorveu frameworks, vocabulário e lógica de negócios de nível executivo. A diferença entre saber e fazer só você pode cruzar. O próximo capítulo não está neste aplicativo — está nas decisões e ações que você vai tomar a partir de agora."
+        ]
+      }
+    ]
   }
 ];
 

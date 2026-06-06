@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronRight, CheckCircle, Star } from "lucide-react";
 import { getLessonById, getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
+import { useTone } from "@/hooks/useTone";
 import { WordPopup, HighlightedText } from "@/components/WordPopup";
 import { XPAnimation } from "@/components/XPAnimation";
 
@@ -11,6 +12,7 @@ export default function Lesson() {
   const params = useParams<{ moduleId: string; lessonId: string }>();
   const [, setLocation] = useLocation();
   const { completeLesson, isLessonComplete } = useProgress();
+  const { tone } = useTone();
 
   const mod = getModuleById(params.moduleId);
   const lesson = getLessonById(params.moduleId, params.lessonId);
@@ -154,39 +156,52 @@ export default function Lesson() {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-3"
           >
-            <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-center">
-              <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
-              <h2 className="text-xl font-extrabold text-green-800">Aula Concluída!</h2>
-              <p className="text-green-700 text-sm mt-1">
-                Você ganhou <span className="font-extrabold">{lesson.xpReward} XP</span>
+            <div className="rounded-2xl p-5 text-center relative overflow-hidden"
+              style={{ background: `${mod.color}15`, border: `1.5px solid ${mod.color}44` }}
+            >
+              <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at top, ${mod.color}18, transparent)` }} />
+              <CheckCircle className="w-12 h-12 mx-auto mb-3 relative z-10" style={{ color: mod.color }} />
+              <h2 className="text-xl font-extrabold relative z-10" style={{ color: mod.color }}>
+                {tone.lessonCompleteTitle}
+              </h2>
+              <p className="text-sm mt-1 relative z-10 text-foreground/80">
+                {tone.lessonCompleteMsg(lesson.xpReward)}
               </p>
+              {/* Tone indicator */}
+              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full relative z-10"
+                style={{ background: `${mod.color}22`, border: `1px solid ${mod.color}33` }}
+              >
+                <span className="text-xs">{tone.emoji}</span>
+                <span className="text-xs font-semibold" style={{ color: mod.color }}>Tom {tone.label}</span>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={handleFinish}
-                className="py-4 rounded-2xl border border-border font-bold text-foreground hover:bg-muted transition-colors"
+                className="py-4 rounded-2xl border font-bold transition-colors text-sm"
+                style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
                 data-testid="button-back-to-module"
               >
-                Voltar ao módulo
+                {tone.backLabel}
               </button>
               {nextLesson ? (
                 <button
                   onClick={() => setLocation(`/aula/${mod.id}/${nextLesson.id}`)}
-                  className="py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2"
+                  className="py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2 text-sm"
                   style={{ backgroundColor: mod.color }}
                   data-testid="button-next-lesson"
                 >
-                  Próxima aula
+                  {tone.nextLessonLabel}
                   <ChevronRight className="w-5 h-5" />
                 </button>
               ) : (
                 <button
                   onClick={() => setLocation(`/desafio/${mod.id}`)}
-                  className="py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500"
+                  className="py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 to-orange-500 text-sm"
                   data-testid="button-go-challenge"
                 >
-                  Desafio final!
+                  {tone.challengeLabel}
                   <Star className="w-5 h-5" />
                 </button>
               )}

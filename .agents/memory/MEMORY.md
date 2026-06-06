@@ -1,0 +1,2 @@
+- [Tone Progression System](tone-progression.md) — 4-tone system (casual→executivo) driven by completed modules count; files: data/tones.ts, hooks/useTone.ts.
+- [Journey & Module Architecture](journey-architecture.md) — 4 journeys (14 total modules), sequential unlock by journey; all data in data/modules.ts + data/journeys.ts.
