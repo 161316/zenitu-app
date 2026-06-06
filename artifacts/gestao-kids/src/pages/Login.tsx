@@ -181,6 +181,18 @@ export default function Login() {
                 </>
               )}
             </button>
+
+            {mode === "login" && (
+              <div className="text-center pt-1">
+                <a
+                  href="/esqueci-senha"
+                  className="text-xs font-semibold text-violet-500 hover:text-violet-700 transition-colors"
+                  onClick={e => { e.preventDefault(); window.location.href = "/esqueci-senha"; }}
+                >
+                  Esqueci minha senha
+                </a>
+              </div>
+            )}
           </form>
 
           {mode === "register" && (

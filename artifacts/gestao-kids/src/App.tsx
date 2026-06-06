@@ -1,4 +1,4 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,9 +15,13 @@ import Dictionary from "@/pages/Dictionary";
 import WordDetail from "@/pages/WordDetail";
 import Profile from "@/pages/Profile";
 import Admin from "@/pages/Admin";
+import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
 import { motion } from "framer-motion";
 
 const queryClient = new QueryClient();
+
+const PUBLIC_PATHS = ["/esqueci-senha", "/recuperar-senha"];
 
 function LoadingScreen() {
   return (
@@ -36,8 +40,19 @@ function LoadingScreen() {
 
 function AppRoutes() {
   const { user, loading } = useAuth();
+  const [location] = useLocation();
 
   if (loading) return <LoadingScreen />;
+
+  if (PUBLIC_PATHS.some(p => location.startsWith(p))) {
+    return (
+      <Switch>
+        <Route path="/esqueci-senha" component={ForgotPassword} />
+        <Route path="/recuperar-senha" component={ResetPassword} />
+      </Switch>
+    );
+  }
+
   if (!user) return <Login />;
 
   return (
