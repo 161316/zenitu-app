@@ -14,6 +14,13 @@ export interface Module {
   bgGradient: string;
   lessons: Lesson[];
   order: number;
+  tier: number;
+  tierLabel: string;
+  tierEmoji: string;
+  tierColor: string;
+  reviewConcepts: string[];
+  bossQuote: string;
+  nextModuleTeaser: string;
 }
 
 export const MODULES: Module[] = [
@@ -25,6 +32,13 @@ export const MODULES: Module[] = [
     color: "#6C3CE1",
     bgGradient: "from-violet-500 to-purple-700",
     order: 1,
+    tier: 1,
+    tierLabel: "Iniciante",
+    tierEmoji: "🌱",
+    tierColor: "#16a34a",
+    reviewConcepts: [],
+    bossQuote: "Se você pode sonhar, você pode realizar. — Walt Disney",
+    nextModuleTeaser: "Próximo: descubra como o dinheiro realmente funciona nos negócios e aprenda a calcular se sua empresa está ganhando ou perdendo!",
     lessons: [
       {
         id: "o-que-e-empresa",
@@ -80,6 +94,13 @@ export const MODULES: Module[] = [
     color: "#D97706",
     bgGradient: "from-amber-400 to-orange-500",
     order: 2,
+    tier: 2,
+    tierLabel: "Aprendiz",
+    tierEmoji: "📚",
+    tierColor: "#2563eb",
+    reviewConcepts: ["Produto", "Serviço", "Cliente"],
+    bossQuote: "Receita é vaidade, lucro é sanidade, caixa é realidade. — Ditado Financeiro",
+    nextModuleTeaser: "Próximo: aprenda a fazer o mundo conhecer e amar o que você vende — sem gastar uma fortuna!",
     lessons: [
       {
         id: "o-que-e-lucro",
@@ -135,6 +156,13 @@ export const MODULES: Module[] = [
     color: "#DB2777",
     bgGradient: "from-pink-500 to-rose-600",
     order: 3,
+    tier: 3,
+    tierLabel: "Explorador",
+    tierEmoji: "🔭",
+    tierColor: "#9333ea",
+    reviewConcepts: ["Receita", "Lucro", "Cliente Ideal"],
+    bossQuote: "Marketing é contar histórias verdadeiras que ressoam com o seu público. — Seth Godin",
+    nextModuleTeaser: "Próximo: descubra o segredo dos maiores líderes do mundo e como motivar pessoas a darem o seu melhor!",
     lessons: [
       {
         id: "o-que-e-marketing",
@@ -190,6 +218,13 @@ export const MODULES: Module[] = [
     color: "#059669",
     bgGradient: "from-emerald-500 to-teal-600",
     order: 4,
+    tier: 4,
+    tierLabel: "Construtor",
+    tierEmoji: "🏗️",
+    tierColor: "#0f766e",
+    reviewConcepts: ["Negócio", "Equipe", "Comunicação"],
+    bossQuote: "A função de um líder é produzir mais líderes, não mais seguidores. — Ralph Nader",
+    nextModuleTeaser: "Próximo: aprenda a criar estratégias que funcionam de verdade e definir metas que você realmente vai alcançar!",
     lessons: [
       {
         id: "o-que-e-lider",
@@ -245,6 +280,13 @@ export const MODULES: Module[] = [
     color: "#2563EB",
     bgGradient: "from-blue-500 to-indigo-600",
     order: 5,
+    tier: 5,
+    tierLabel: "Estrategista",
+    tierEmoji: "♟️",
+    tierColor: "#1d4ed8",
+    reviewConcepts: ["SWOT", "Metas", "Liderança"],
+    bossQuote: "Uma meta sem plano é apenas um desejo. — Antoine de Saint-Exupéry",
+    nextModuleTeaser: "Próximo: pense como os maiores inovadores do mundo e aprenda a criar soluções que ninguém pensou antes!",
     lessons: [
       {
         id: "o-que-e-estrategia",
@@ -300,6 +342,13 @@ export const MODULES: Module[] = [
     color: "#D97706",
     bgGradient: "from-yellow-400 to-amber-500",
     order: 6,
+    tier: 6,
+    tierLabel: "Inovador",
+    tierEmoji: "💡",
+    tierColor: "#d97706",
+    reviewConcepts: ["Produto", "Startup", "MVP"],
+    bossQuote: "Inovação é o que distingue um líder de um seguidor. — Steve Jobs",
+    nextModuleTeaser: "Próximo: descubra como conquistar, fidelizar e encantar clientes — transformando compradores em verdadeiros fãs!",
     lessons: [
       {
         id: "o-que-e-inovacao",
@@ -355,6 +404,13 @@ export const MODULES: Module[] = [
     color: "#7C3AED",
     bgGradient: "from-violet-500 to-purple-600",
     order: 7,
+    tier: 7,
+    tierLabel: "Especialista",
+    tierEmoji: "🎯",
+    tierColor: "#7c3aed",
+    reviewConcepts: ["Marketing", "LTV", "CAC"],
+    bossQuote: "Um cliente satisfeito é a melhor estratégia de negócios de todas. — Michael LeBoeuf",
+    nextModuleTeaser: "Próximo: o grande final! Aprenda o que separa os empreendedores comuns dos extraordinários!",
     lessons: [
       {
         id: "quem-e-cliente",
@@ -410,6 +466,13 @@ export const MODULES: Module[] = [
     color: "#DC2626",
     bgGradient: "from-red-500 to-rose-600",
     order: 8,
+    tier: 8,
+    tierLabel: "Master",
+    tierEmoji: "🚀",
+    tierColor: "#dc2626",
+    reviewConcepts: ["Todos os módulos anteriores"],
+    bossQuote: "O único lugar onde o sucesso vem antes do trabalho é no dicionário. — Vidal Sassoon",
+    nextModuleTeaser: "Você concluiu todos os módulos! Você é um verdadeiro Gestão Master! 🏆",
     lessons: [
       {
         id: "o-que-e-empreender",
