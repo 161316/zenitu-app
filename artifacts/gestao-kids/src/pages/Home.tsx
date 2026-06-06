@@ -25,7 +25,7 @@ export default function Home() {
           >
             <div>
               <p className="text-violet-200 text-sm font-semibold uppercase tracking-widest">Sua jornada</p>
-              <h1 className="text-3xl font-extrabold mt-0.5">Empreza</h1>
+              <h1 className="text-3xl font-extrabold mt-0.5">Vantio</h1>
               <p className="text-violet-200 text-sm mt-0.5">Do iniciante ao Master</p>
             </div>
             <button

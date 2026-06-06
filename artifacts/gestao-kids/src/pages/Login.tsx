@@ -54,7 +54,7 @@ export default function Login() {
         className="text-center mb-8"
       >
         <div className="text-6xl mb-3">🏆</div>
-        <h1 className="text-3xl font-extrabold text-white">Empreza</h1>
+        <h1 className="text-3xl font-extrabold text-white">Vantio</h1>
         <p className="text-violet-200 text-sm mt-1">Aprenda a empreender do seu jeito</p>
       </motion.div>
 
