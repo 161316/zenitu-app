@@ -4,6 +4,7 @@ import { ArrowLeft, Star, Flame, Trophy, BookOpen, CheckCircle, Zap, LogOut } fr
 import { useProgress, ALL_BADGES } from "@/hooks/useProgress";
 import { useAuth } from "@/hooks/useAuth";
 import { MODULES } from "@/data/modules";
+import ThemeSelector from "@/components/ThemeSelector";
 
 export default function Profile() {
   const [, setLocation] = useLocation();
@@ -209,13 +210,23 @@ export default function Profile() {
           </div>
         </motion.div>
 
+        {/* Theme Selector */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.28 }}
+          className="mt-4"
+        >
+          <ThemeSelector />
+        </motion.div>
+
         {/* Logout Button */}
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.35 }}
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 mt-2 mb-6 py-3 rounded-2xl border border-red-200 text-red-500 font-bold hover:bg-red-50 transition-colors"
+          className="w-full flex items-center justify-center gap-2 mt-4 mb-6 py-3 rounded-2xl border border-red-200 text-red-500 font-bold hover:bg-red-50 transition-colors"
         >
           <LogOut className="w-5 h-5" />
           Sair da conta

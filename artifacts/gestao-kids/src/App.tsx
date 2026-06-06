@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -18,6 +19,15 @@ import Admin from "@/pages/Admin";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 import { motion } from "framer-motion";
+
+function ThemeApplier({ children }: { children: React.ReactNode }) {
+  const { theme } = useTheme();
+  return (
+    <div style={{ fontFamily: `'${theme.fontBody}', sans-serif` }}>
+      {children}
+    </div>
+  );
+}
 
 const queryClient = new QueryClient();
 
@@ -84,9 +94,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <AppRoutes />
-          </WouterRouter>
+          <ThemeApplier>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <AppRoutes />
+            </WouterRouter>
+          </ThemeApplier>
         </AuthProvider>
         <Toaster />
       </TooltipProvider>
