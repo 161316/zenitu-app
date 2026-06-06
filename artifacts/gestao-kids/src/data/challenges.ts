@@ -43,10 +43,10 @@ export const CHALLENGES: Challenge[] = [
       {
         id: "neg-4",
         type: "fill",
-        question: "A Amazon começou como uma _____ online no quarto de Jeff Bezos.",
+        question: "A Amazon começou como uma _____ online na garagem de Jeff Bezos.",
         options: ["livraria", "loja de roupas", "farmácia"],
         correct: "livraria",
-        explanation: "Em 1994, Jeff Bezos fundou a Amazon como uma livraria online. Hoje é uma das maiores empresas do mundo, vendendo de tudo!"
+        explanation: "Em 1994, Jeff Bezos fundou a Amazon como uma livraria online — tudo começou na garagem da sua casa! Hoje é uma das maiores empresas do mundo, vendendo de tudo."
       },
       {
         id: "neg-5",
