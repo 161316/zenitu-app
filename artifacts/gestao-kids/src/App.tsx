@@ -14,6 +14,7 @@ import Practice from "@/pages/Practice";
 import Dictionary from "@/pages/Dictionary";
 import WordDetail from "@/pages/WordDetail";
 import Profile from "@/pages/Profile";
+import Admin from "@/pages/Admin";
 import { motion } from "framer-motion";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ function AppRoutes() {
       <Route path="/dicionario" component={Dictionary} />
       <Route path="/dicionario/:word" component={WordDetail} />
       <Route path="/perfil" component={Profile} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );

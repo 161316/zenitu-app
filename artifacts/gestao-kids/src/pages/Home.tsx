@@ -1,11 +1,13 @@
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Star, Trophy, Flame, Lock, ChevronRight, BookOpen, Zap } from "lucide-react";
+import { Star, Trophy, Flame, Lock, ChevronRight, BookOpen, Zap, LayoutDashboard } from "lucide-react";
 import { MODULES } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
   const { progress, levelInfo, getModuleProgress, isModuleUnlocked } = useProgress();
 
   const totalLessons = MODULES.reduce((acc, m) => acc + m.lessons.length, 0);
@@ -28,13 +30,24 @@ export default function Home() {
               <h1 className="text-3xl font-extrabold mt-0.5">Zenitu</h1>
               <p className="text-violet-200 text-sm mt-0.5">Do zero ao master em negócios</p>
             </div>
-            <button
-              onClick={() => setLocation("/perfil")}
-              className="bg-white/20 hover:bg-white/30 transition-colors rounded-2xl p-3"
-              data-testid="button-go-profile"
-            >
-              <Trophy className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              {user?.isAdmin && (
+                <button
+                  onClick={() => setLocation("/admin")}
+                  className="bg-white/20 hover:bg-white/30 transition-colors rounded-2xl p-3"
+                  title="Painel Admin"
+                >
+                  <LayoutDashboard className="w-6 h-6" />
+                </button>
+              )}
+              <button
+                onClick={() => setLocation("/perfil")}
+                className="bg-white/20 hover:bg-white/30 transition-colors rounded-2xl p-3"
+                data-testid="button-go-profile"
+              >
+                <Trophy className="w-6 h-6" />
+              </button>
+            </div>
           </motion.div>
 
           <motion.div

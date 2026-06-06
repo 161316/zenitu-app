@@ -12,6 +12,7 @@ declare module "express-session" {
     userId: number;
     userName: string;
     userEmail: string;
+    isAdmin: boolean;
   }
 }
 
@@ -44,7 +45,7 @@ router.post("/register", authLimiter, async (req, res) => {
     name,
     email: email.toLowerCase(),
     passwordHash,
-  }).returning({ id: usersTable.id, name: usersTable.name, email: usersTable.email });
+  }).returning({ id: usersTable.id, name: usersTable.name, email: usersTable.email, isAdmin: usersTable.isAdmin });
 
   if (!user) {
     res.status(500).json({ error: "Erro ao criar conta" });
@@ -56,8 +57,9 @@ router.post("/register", authLimiter, async (req, res) => {
   req.session.userId = user.id;
   req.session.userName = user.name;
   req.session.userEmail = user.email;
+  req.session.isAdmin = user.isAdmin;
 
-  res.status(201).json({ id: user.id, name: user.name, email: user.email });
+  res.status(201).json({ id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin });
 });
 
 router.post("/login", authLimiter, async (req, res) => {
@@ -84,8 +86,9 @@ router.post("/login", authLimiter, async (req, res) => {
   req.session.userId = user.id;
   req.session.userName = user.name;
   req.session.userEmail = user.email;
+  req.session.isAdmin = user.isAdmin;
 
-  res.json({ id: user.id, name: user.name, email: user.email });
+  res.json({ id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin });
 });
 
 router.post("/logout", (req, res) => {
@@ -103,6 +106,7 @@ router.get("/me", async (req, res) => {
     id: req.session.userId,
     name: req.session.userName,
     email: req.session.userEmail,
+    isAdmin: req.session.isAdmin ?? false,
   });
 });
 
