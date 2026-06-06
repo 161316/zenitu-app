@@ -104,6 +104,7 @@ router.post("/reset-password", resetLimiter, async (req, res) => {
 
   await db.execute(sql`UPDATE users SET password_hash = ${passwordHash}, updated_at = NOW() WHERE id = ${record.user_id}`);
   await db.execute(sql`UPDATE password_reset_tokens SET used_at = NOW() WHERE id = ${record.id}`);
+  await db.execute(sql`DELETE FROM session WHERE sess->>'userId' = ${String(record.user_id)}`);
 
   res.json({ ok: true });
 });
