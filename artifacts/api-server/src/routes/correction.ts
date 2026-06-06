@@ -1,5 +1,9 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
+import { z } from "zod/v4";
+import { sql } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
+import { db, correctionUsageTable } from "@workspace/db";
 
 const router = Router();
 
@@ -11,13 +15,65 @@ function requireAuth(req: any, res: any, next: any) {
   next();
 }
 
-router.post("/", requireAuth, async (req, res) => {
-  const { question, studentAnswer, moduleTitle, lessonTitle, questionType } = req.body;
+const ipLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Muitas requisições. Aguarde um momento." },
+});
 
-  if (!question || !studentAnswer) {
-    res.status(400).json({ error: "Dados incompletos" });
+const userLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  message: { error: "Muitas correções solicitadas. Aguarde um momento." },
+});
+
+const DAILY_LIMIT = 20;
+
+const correctionSchema = z.object({
+  question: z.string().min(1).max(500),
+  studentAnswer: z.string().min(1).max(1000),
+  moduleTitle: z.string().max(100).optional().default(""),
+  lessonTitle: z.string().max(100).optional().default(""),
+  questionType: z.enum(["written", "objective"]).optional().default("written"),
+});
+
+function todayUtc(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+router.post("/", ipLimiter, requireAuth, userLimiter, async (req, res) => {
+  const result = correctionSchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json({ error: "Dados inválidos ou muito longos." });
     return;
   }
+
+  const userId: number = req.session.userId!;
+  const today = todayUtc();
+
+  const rows = await db
+    .insert(correctionUsageTable)
+    .values({ userId, usageDate: today, callCount: 1 })
+    .onConflictDoUpdate({
+      target: [correctionUsageTable.userId, correctionUsageTable.usageDate],
+      set: { callCount: sql`correction_usage.call_count + 1` },
+      where: sql`correction_usage.call_count < ${DAILY_LIMIT}`,
+    })
+    .returning({ callCount: correctionUsageTable.callCount });
+
+  if (rows.length === 0) {
+    res.status(429).json({
+      error: `Limite diário de ${DAILY_LIMIT} correções atingido. Volte amanhã!`,
+    });
+    return;
+  }
+
+  const { question, studentAnswer, moduleTitle, lessonTitle, questionType } = result.data;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
