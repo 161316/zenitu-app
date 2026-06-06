@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
 import { db } from "@workspace/db";
 import { usersTable, progressTable, registerSchema, loginSchema } from "@workspace/db";
 import { eq } from "drizzle-orm";
@@ -14,7 +15,16 @@ declare module "express-session" {
   }
 }
 
-router.post("/register", async (req, res) => {
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  message: { error: "Muitas tentativas. Aguarde 15 minutos e tente novamente." },
+});
+
+router.post("/register", authLimiter, async (req, res) => {
   const result = registerSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ error: result.error.issues[0]?.message ?? "Dados inválidos" });
@@ -50,7 +60,7 @@ router.post("/register", async (req, res) => {
   res.status(201).json({ id: user.id, name: user.name, email: user.email });
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", authLimiter, async (req, res) => {
   const result = loginSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ error: result.error.issues[0]?.message ?? "Dados inválidos" });
