@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -68,59 +68,60 @@
 }
 
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
-  --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
 
-  --background: 248 60% 97%;
-  --foreground: 240 20% 12%;
-  --border: 248 25% 87%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 20% 12%;
-  --card-border: 248 25% 90%;
-  --sidebar: 248 50% 96%;
-  --sidebar-foreground: 240 20% 12%;
-  --sidebar-border: 248 25% 87%;
-  --sidebar-primary: 258 72% 55%;
+  /* Cosmic dark palette */
+  --background: 258 94% 7%;
+  --foreground: 270 80% 94%;
+  --border: 258 40% 22%;
+  --card: 258 75% 10%;
+  --card-foreground: 270 80% 94%;
+  --card-border: 258 40% 22%;
+  --sidebar: 258 80% 9%;
+  --sidebar-foreground: 270 80% 94%;
+  --sidebar-border: 258 40% 22%;
+  --sidebar-primary: 262 83% 74%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 258 60% 94%;
-  --sidebar-accent-foreground: 258 72% 38%;
-  --sidebar-ring: 258 72% 55%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 20% 12%;
-  --popover-border: 248 25% 87%;
-  --primary: 258 72% 55%;
+  --sidebar-accent: 258 60% 20%;
+  --sidebar-accent-foreground: 262 83% 85%;
+  --sidebar-ring: 262 83% 74%;
+  --popover: 258 75% 10%;
+  --popover-foreground: 270 80% 94%;
+  --popover-border: 258 40% 22%;
+  --primary: 262 83% 74%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 32 100% 55%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 248 30% 94%;
-  --muted-foreground: 240 12% 48%;
-  --accent: 145 65% 42%;
+  --secondary: 43 96% 56%;
+  --secondary-foreground: 258 94% 10%;
+  --muted: 258 50% 14%;
+  --muted-foreground: 258 35% 62%;
+  --accent: 160 84% 50%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
+  --destructive: 0 72% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 248 25% 87%;
-  --ring: 258 72% 55%;
-  --chart-1: 258 72% 55%;
-  --chart-2: 32 100% 55%;
-  --chart-3: 145 65% 42%;
-  --chart-4: 200 80% 50%;
-  --chart-5: 340 75% 55%;
+  --input: 258 40% 22%;
+  --ring: 262 83% 74%;
+  --chart-1: 262 83% 74%;
+  --chart-2: 43 96% 56%;
+  --chart-3: 160 84% 50%;
+  --chart-4: 200 75% 58%;
+  --chart-5: 340 70% 60%;
 
-  --app-font-sans: 'Nunito', sans-serif;
+  --app-font-sans: 'Space Grotesk', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 0.75rem;
-  --shadow-2xs: 0px 1px 2px 0px rgba(99, 58, 200, 0.06);
-  --shadow-xs: 0px 2px 4px 0px rgba(99, 58, 200, 0.08);
-  --shadow-sm: 0px 2px 6px 0px rgba(99, 58, 200, 0.10), 0px 1px 2px -1px rgba(99, 58, 200, 0.06);
-  --shadow: 0px 4px 12px 0px rgba(99, 58, 200, 0.12), 0px 2px 4px -1px rgba(99, 58, 200, 0.08);
-  --shadow-md: 0px 6px 20px 0px rgba(99, 58, 200, 0.14), 0px 2px 6px -2px rgba(99, 58, 200, 0.08);
-  --shadow-lg: 0px 10px 30px 0px rgba(99, 58, 200, 0.16), 0px 4px 8px -4px rgba(99, 58, 200, 0.10);
-  --shadow-xl: 0px 16px 48px 0px rgba(99, 58, 200, 0.18), 0px 8px 16px -8px rgba(99, 58, 200, 0.12);
-  --shadow-2xl: 0px 24px 64px 0px rgba(99, 58, 200, 0.22);
+  --shadow-2xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+  --shadow-xs: 0px 2px 4px 0px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0px 2px 6px 0px rgba(0, 0, 0, 0.40);
+  --shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0px 6px 20px 0px rgba(0, 0, 0, 0.50);
+  --shadow-lg: 0px 10px 30px 0px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0px 16px 48px 0px rgba(0, 0, 0, 0.60);
+  --shadow-2xl: 0px 24px 64px 0px rgba(0, 0, 0, 0.65);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -281,6 +282,11 @@
   .dict-word:hover {
     text-decoration-style: solid;
   }
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.15; transform: scale(0.8); }
+  100% { opacity: 0.85; transform: scale(1.2); }
 }
 
 @keyframes confetti-fall {

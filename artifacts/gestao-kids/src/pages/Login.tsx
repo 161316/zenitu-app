@@ -5,6 +5,39 @@ import { useAuth } from "@/hooks/useAuth";
 
 type Mode = "login" | "register";
 
+const STARS = Array.from({ length: 40 }, (_, i) => ({
+  id: i,
+  size: Math.random() * 2.5 + 0.5,
+  top: Math.random() * 100,
+  left: Math.random() * 100,
+  duration: Math.random() * 3 + 2,
+  opacity: Math.random() * 0.55 + 0.1,
+}));
+
+function AstronautMascot() {
+  return (
+    <motion.div
+      animate={{ y: [0, -10, 0] }}
+      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+      className="w-20 h-20 mx-auto mb-2"
+    >
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        <circle cx="50" cy="50" r="38" fill="rgba(167,139,250,0.12)" stroke="#a78bfa" strokeWidth="1.5"/>
+        <circle cx="50" cy="50" r="30" fill="#1a0533"/>
+        <path d="M36 46 Q50 57 64 46" stroke="#f0e6ff" strokeWidth="2.5" strokeLinecap="round"/>
+        <circle cx="40" cy="40" r="4" fill="#f0e6ff"/>
+        <circle cx="60" cy="40" r="4" fill="#f0e6ff"/>
+        <circle cx="41.5" cy="38.5" r="1.5" fill="#1a0533"/>
+        <circle cx="61.5" cy="38.5" r="1.5" fill="#1a0533"/>
+        <path d="M22 52 A28 28 0 0 1 78 52" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeDasharray="3 3"/>
+        <circle cx="86" cy="18" r="3" fill="#fbbf24"/>
+        <circle cx="14" cy="78" r="4" fill="#a78bfa"/>
+        <circle cx="78" cy="82" r="2.5" fill="#34d399"/>
+      </svg>
+    </motion.div>
+  );
+}
+
 export default function Login() {
   const { login, register } = useAuth();
   const [mode, setMode] = useState<Mode>("login");
@@ -46,35 +79,77 @@ export default function Login() {
     setPassword("");
   };
 
+  const inputStyle = {
+    background: "rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.14)",
+    color: "#f0e6ff",
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-600 via-purple-700 to-indigo-800 flex flex-col items-center justify-center px-4 py-12">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #0d0221 0%, #1a0533 60%, #120228 100%)" }}
+    >
+      {/* Stars */}
+      <div className="absolute inset-0 pointer-events-none">
+        {STARS.map(s => (
+          <div
+            key={s.id}
+            className="absolute rounded-full bg-white"
+            style={{
+              width: s.size,
+              height: s.size,
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              opacity: s.opacity,
+              animation: `twinkle ${s.duration}s ease-in-out infinite alternate`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Logo */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-8"
+        className="text-center mb-6 relative z-10"
       >
-        <div className="text-6xl mb-3">🏆</div>
-        <h1 className="text-3xl font-extrabold text-white">Zenitu</h1>
-        <p className="text-violet-200 text-sm mt-1">Do zero ao master em negócios</p>
+        <AstronautMascot />
+        <h1 className="font-['Fredoka'] font-semibold text-4xl text-white tracking-wide">ZENITU</h1>
+        <p className="text-[#9d8ec4] text-sm mt-1">Do zero ao master em negócios 🚀</p>
       </motion.div>
 
+      {/* Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.1 }}
-        className="w-full max-w-sm"
+        className="w-full max-w-sm relative z-10"
       >
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          <div className="flex border-b border-gray-100">
+        <div
+          className="rounded-3xl overflow-hidden shadow-2xl"
+          style={{
+            background: "rgba(255,255,255,0.07)",
+            backdropFilter: "blur(16px)",
+            border: "1px solid rgba(255,255,255,0.14)",
+          }}
+        >
+          {/* Tabs */}
+          <div className="flex" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
             {(["login", "register"] as Mode[]).map(m => (
               <button
                 key={m}
                 onClick={() => switchMode(m)}
-                className={`flex-1 py-4 text-sm font-extrabold transition-colors ${
+                className="flex-1 py-4 text-sm font-extrabold transition-colors"
+                style={
                   mode === m
-                    ? "text-violet-700 border-b-2 border-violet-600 bg-violet-50"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
+                    ? {
+                        color: "#a78bfa",
+                        borderBottom: "2px solid #a78bfa",
+                        background: "rgba(167,139,250,0.08)",
+                      }
+                    : { color: "#9d8ec4" }
+                }
               >
                 {m === "login" ? "Entrar" : "Criar Conta"}
               </button>
@@ -91,17 +166,18 @@ export default function Login() {
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">
+                  <label className="block text-xs font-bold text-[#9d8ec4] mb-1.5 uppercase tracking-wide">
                     Seu Nome
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9d8ec4]" />
                     <input
                       type="text"
                       value={name}
                       onChange={e => setName(e.target.value)}
                       placeholder="Como se chama?"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#a78bfa] placeholder-[#6b7a9f]"
+                      style={inputStyle}
                       autoComplete="name"
                     />
                   </div>
@@ -110,17 +186,18 @@ export default function Login() {
             </AnimatePresence>
 
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">
+              <label className="block text-xs font-bold text-[#9d8ec4] mb-1.5 uppercase tracking-wide">
                 E-mail
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9d8ec4]" />
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#a78bfa] placeholder-[#6b7a9f]"
+                  style={inputStyle}
                   autoComplete="email"
                   required
                 />
@@ -128,24 +205,25 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-1.5 uppercase tracking-wide">
+              <label className="block text-xs font-bold text-[#9d8ec4] mb-1.5 uppercase tracking-wide">
                 Senha
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9d8ec4]" />
                 <input
                   type={showPass ? "text" : "password"}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder={mode === "register" ? "Mínimo 8 caracteres" : "Sua senha"}
-                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent"
+                  className="w-full pl-10 pr-10 py-3 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#a78bfa] placeholder-[#6b7a9f]"
+                  style={inputStyle}
                   autoComplete={mode === "login" ? "current-password" : "new-password"}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(p => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9d8ec4] hover:text-[#f0e6ff]"
                   tabIndex={-1}
                 >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -160,10 +238,11 @@ export default function Login() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-3"
+                  className="flex items-center gap-2 rounded-xl p-3"
+                  style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.3)" }}
                 >
-                  <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
-                  <p className="text-red-700 text-sm font-medium">{error}</p>
+                  <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+                  <p className="text-red-300 text-sm font-medium">{error}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -171,7 +250,11 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-2xl font-extrabold text-white text-base bg-gradient-to-r from-violet-600 to-purple-700 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-2xl font-extrabold text-white text-base shadow-md transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:-translate-y-0.5"
+              style={{
+                background: "linear-gradient(135deg, #7c3aed, #a78bfa)",
+                boxShadow: "0 0 20px rgba(167,139,250,0.3)",
+              }}
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -187,7 +270,7 @@ export default function Login() {
               <div className="text-center pt-1">
                 <a
                   href="/esqueci-senha"
-                  className="text-xs font-semibold text-violet-500 hover:text-violet-700 transition-colors"
+                  className="text-xs font-semibold text-[#a78bfa] hover:text-[#c4b5fd] transition-colors"
                   onClick={e => { e.preventDefault(); window.location.href = "/esqueci-senha"; }}
                 >
                   Esqueci minha senha
@@ -198,9 +281,9 @@ export default function Login() {
 
           {mode === "register" && (
             <div className="px-6 pb-5">
-              <p className="text-xs text-gray-400 text-center leading-relaxed">
+              <p className="text-xs text-[#9d8ec4] text-center leading-relaxed">
                 🔒 Seus dados são protegidos conforme a{" "}
-                <span className="font-semibold text-gray-500">LGPD (Lei 13.709/2018)</span>.
+                <span className="font-semibold text-[#c4b5fd]">LGPD (Lei 13.709/2018)</span>.
                 Sua senha nunca é armazenada em texto claro.
               </p>
             </div>
@@ -212,7 +295,7 @@ export default function Login() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
           onClick={() => switchMode(mode === "login" ? "register" : "login")}
-          className="w-full mt-4 py-3 text-violet-200 text-sm font-semibold hover:text-white transition-colors"
+          className="w-full mt-4 py-3 text-[#9d8ec4] text-sm font-semibold hover:text-[#f0e6ff] transition-colors"
         >
           {mode === "login" ? "Não tem conta? Crie agora →" : "Já tem conta? Entre aqui →"}
         </motion.button>

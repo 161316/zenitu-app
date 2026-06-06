@@ -25,15 +25,22 @@ const PUBLIC_PATHS = ["/esqueci-senha", "/recuperar-senha"];
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-600 to-purple-800 flex flex-col items-center justify-center">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center"
+      style={{ background: "linear-gradient(180deg, #0d0221 0%, #1a0533 100%)" }}
+    >
       <motion.div
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-        className="text-6xl mb-4"
+        animate={{ y: [0, -12, 0] }}
+        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+        className="text-6xl mb-6"
       >
-        🏢
+        🚀
       </motion.div>
-      <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+      <p className="font-['Fredoka'] font-semibold text-2xl text-white mb-4 tracking-wide">ZENITU</p>
+      <div
+        className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin"
+        style={{ borderColor: "rgba(167,139,250,0.3)", borderTopColor: "#a78bfa" }}
+      />
     </div>
   );
 }
