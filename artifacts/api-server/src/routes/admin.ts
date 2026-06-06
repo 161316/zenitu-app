@@ -26,17 +26,21 @@ router.get("/stats", async (_req, res) => {
     .from(progressTable)
     .where(sql`${progressTable.updatedAt} >= ${sevenDaysAgo}`);
 
+  // Guard against non-numeric xp values that could have been stored before
+  // server-side validation was enforced. NULLIF ensures the CAST skips any
+  // row whose xp column does not look like a non-negative integer.
   const [xpResult] = await db
     .select({
-      totalXP: sql<number>`coalesce(sum(cast(${progressTable.xp} as integer)), 0)`,
-      avgXP: sql<number>`coalesce(avg(cast(${progressTable.xp} as integer)), 0)`,
+      totalXP: sql<number>`coalesce(sum(case when ${progressTable.xp} ~ '^[0-9]+$' then cast(${progressTable.xp} as integer) else 0 end), 0)`,
+      avgXP: sql<number>`coalesce(avg(case when ${progressTable.xp} ~ '^[0-9]+$' then cast(${progressTable.xp} as integer) else null end), 0)`,
     })
     .from(progressTable);
 
+  // Guard against non-array JSONB values that could crash jsonb_array_length.
   const [lessonsResult] = await db
     .select({
-      totalLessons: sql<number>`coalesce(sum(jsonb_array_length(${progressTable.completedLessons})), 0)`,
-      totalChallenges: sql<number>`coalesce(sum(jsonb_array_length(${progressTable.completedChallenges})), 0)`,
+      totalLessons: sql<number>`coalesce(sum(case when jsonb_typeof(${progressTable.completedLessons}) = 'array' then jsonb_array_length(${progressTable.completedLessons}) else 0 end), 0)`,
+      totalChallenges: sql<number>`coalesce(sum(case when jsonb_typeof(${progressTable.completedChallenges}) = 'array' then jsonb_array_length(${progressTable.completedChallenges}) else 0 end), 0)`,
     })
     .from(progressTable);
 
@@ -46,6 +50,7 @@ router.get("/stats", async (_req, res) => {
       badges: progressTable.badges,
     })
     .from(progressTable)
+    .where(sql`${progressTable.xp} ~ '^[0-9]+$'`)
     .orderBy(sql`cast(${progressTable.xp} as integer) desc`)
     .limit(5);
 

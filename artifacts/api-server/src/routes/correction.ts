@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
-import { z } from "zod/v4";
 import { sql } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { db, correctionUsageTable } from "@workspace/db";
@@ -34,21 +33,19 @@ const userLimiter = rateLimit({
 
 const DAILY_LIMIT = 20;
 
-const correctionSchema = z.object({
-  question: z.string().min(1).max(500),
-  studentAnswer: z.string().min(1).max(1000),
-  moduleTitle: z.string().max(100).optional().default(""),
-  lessonTitle: z.string().max(100).optional().default(""),
-  questionType: z.enum(["written", "objective"]).optional().default("written"),
-});
-
 function todayUtc(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 router.post("/", ipLimiter, requireAuth, userLimiter, async (req, res) => {
-  const result = correctionSchema.safeParse(req.body);
-  if (!result.success) {
+  const body = req.body ?? {};
+  const { question, studentAnswer } = body;
+  const moduleTitle: string = typeof body.moduleTitle === "string" && body.moduleTitle.length <= 100 ? body.moduleTitle : "";
+  const lessonTitle: string = typeof body.lessonTitle === "string" && body.lessonTitle.length <= 100 ? body.lessonTitle : "";
+  const questionType: string = body.questionType === "objective" ? "objective" : "written";
+
+  if (typeof question !== "string" || question.length < 1 || question.length > 500 ||
+      typeof studentAnswer !== "string" || studentAnswer.length < 1 || studentAnswer.length > 1000) {
     res.status(400).json({ error: "Dados inválidos ou muito longos." });
     return;
   }
@@ -72,8 +69,6 @@ router.post("/", ipLimiter, requireAuth, userLimiter, async (req, res) => {
     });
     return;
   }
-
-  const { question, studentAnswer, moduleTitle, lessonTitle, questionType } = result.data;
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");

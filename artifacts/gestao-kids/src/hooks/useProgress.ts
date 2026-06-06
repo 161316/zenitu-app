@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MODULES } from "@/data/modules";
 import { useAuth } from "./useAuth";
 
@@ -65,6 +65,8 @@ function getLevel(xp: number): { level: number; title: string; nextXP: number } 
   return { level: 7, title: "Empresário Master", nextXP: 9999 };
 }
 
+// ── Guest-only helpers (local state + localStorage) ──────────────────────────
+
 function computeBadges(p: Progress): Progress {
   const badges = [...p.badges];
   if (p.completedLessons.length >= 1 && !badges.includes("first-lesson")) badges.push("first-lesson");
@@ -95,12 +97,20 @@ function addDays(days: number): string {
   return new Date(Date.now() + days * 86400000).toISOString().split("T")[0];
 }
 
+function saveToLocalStorage(p: Progress) {
+  try {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(p));
+  } catch {}
+}
+
+// ── Hook ─────────────────────────────────────────────────────────────────────
+
 export function useProgress() {
   const { user } = useAuth();
   const [progress, setProgress] = useState<Progress>(DEFAULT_PROGRESS);
   const [synced, setSynced] = useState(false);
-  const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Load progress on mount / user change
   useEffect(() => {
     setSynced(false);
     if (user) {
@@ -123,60 +133,118 @@ export function useProgress() {
     }
   }, [user?.id]);
 
-  const saveProgress = useCallback((newProgress: Progress) => {
-    setProgress(newProgress);
-    if (user) {
-      if (saveTimeout.current) clearTimeout(saveTimeout.current);
-      saveTimeout.current = setTimeout(() => {
-        fetch("/api/progress", {
-          method: "PUT",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newProgress),
-        }).catch(() => {});
-      }, 500);
-    } else {
-      try {
-        localStorage.setItem(LOCAL_KEY, JSON.stringify(newProgress));
-      } catch {}
-    }
-  }, [user]);
+  // ── completeLesson ──────────────────────────────────────────────────────────
+  // For authenticated users: send an event to the server; server computes
+  // authoritative XP/badges/streak and returns the updated progress.
+  // For guests: derive progress locally and persist to localStorage.
 
   const completeLesson = useCallback((moduleId: string, lessonId: string, xpReward: number) => {
     const lessonKey = `${moduleId}:${lessonId}`;
-    setProgress(prev => {
-      if (prev.completedLessons.includes(lessonKey)) return prev;
-      let updated = {
-        ...prev,
-        xp: prev.xp + xpReward,
-        completedLessons: [...prev.completedLessons, lessonKey],
-      };
-      updated = computeStreak(updated);
-      updated = computeBadges(updated);
-      saveProgress(updated);
-      return updated;
-    });
-  }, [saveProgress]);
+
+    if (user) {
+      // Optimistic update for instant UI feedback (XP animation, etc.)
+      setProgress(prev => {
+        if (prev.completedLessons.includes(lessonKey)) return prev;
+        return {
+          ...prev,
+          xp: prev.xp + xpReward,
+          completedLessons: [...prev.completedLessons, lessonKey],
+        };
+      });
+
+      // Authoritative server call
+      fetch("/api/progress/lesson", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ moduleId, lessonId }),
+      })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data) {
+            // Sync with server-authoritative values, preserving local reviewSchedule
+            setProgress(prev => ({ ...prev, ...data, reviewSchedule: prev.reviewSchedule }));
+          }
+        })
+        .catch(() => {});
+    } else {
+      setProgress(prev => {
+        if (prev.completedLessons.includes(lessonKey)) return prev;
+        let updated = {
+          ...prev,
+          xp: prev.xp + xpReward,
+          completedLessons: [...prev.completedLessons, lessonKey],
+        };
+        updated = computeStreak(updated);
+        updated = computeBadges(updated);
+        saveToLocalStorage(updated);
+        return updated;
+      });
+    }
+  }, [user]);
+
+  // ── completeChallenge ───────────────────────────────────────────────────────
 
   const completeChallenge = useCallback((moduleId: string, xpBonus: number) => {
-    setProgress(prev => {
-      if (prev.completedChallenges.includes(moduleId)) return prev;
-      const existing = prev.reviewSchedule?.[moduleId];
-      const reviewSchedule = existing
-        ? prev.reviewSchedule
-        : { ...prev.reviewSchedule, [moduleId]: { nextDate: addDays(3), interval: 3 } };
-      let updated = {
-        ...prev,
-        xp: prev.xp + xpBonus,
-        completedChallenges: [...prev.completedChallenges, moduleId],
-        reviewSchedule,
-      };
-      updated = computeStreak(updated);
-      updated = computeBadges(updated);
-      saveProgress(updated);
-      return updated;
-    });
-  }, [saveProgress]);
+    if (user) {
+      // Optimistic update
+      setProgress(prev => {
+        if (prev.completedChallenges.includes(moduleId)) return prev;
+        const existing = prev.reviewSchedule?.[moduleId];
+        const reviewSchedule = existing
+          ? prev.reviewSchedule
+          : { ...prev.reviewSchedule, [moduleId]: { nextDate: addDays(3), interval: 3 } };
+        return {
+          ...prev,
+          xp: prev.xp + xpBonus,
+          completedChallenges: [...prev.completedChallenges, moduleId],
+          reviewSchedule,
+        };
+      });
+
+      // Authoritative server call — server computes XP from catalog; xpBonus is not sent
+      fetch("/api/progress/challenge", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ moduleId }),
+      })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data) {
+            setProgress(prev => {
+              // Merge server state, but keep local reviewSchedule (not persisted server-side)
+              const reviewSchedule = prev.reviewSchedule?.[moduleId]
+                ? prev.reviewSchedule
+                : { ...prev.reviewSchedule, [moduleId]: { nextDate: addDays(3), interval: 3 } };
+              return { ...prev, ...data, reviewSchedule };
+            });
+          }
+        })
+        .catch(() => {});
+    } else {
+      setProgress(prev => {
+        if (prev.completedChallenges.includes(moduleId)) return prev;
+        const existing = prev.reviewSchedule?.[moduleId];
+        const reviewSchedule = existing
+          ? prev.reviewSchedule
+          : { ...prev.reviewSchedule, [moduleId]: { nextDate: addDays(3), interval: 3 } };
+        let updated = {
+          ...prev,
+          xp: prev.xp + xpBonus,
+          completedChallenges: [...prev.completedChallenges, moduleId],
+          reviewSchedule,
+        };
+        updated = computeStreak(updated);
+        updated = computeBadges(updated);
+        saveToLocalStorage(updated);
+        return updated;
+      });
+    }
+  }, [user]);
+
+  // ── markReviewed ────────────────────────────────────────────────────────────
+  // reviewSchedule is local-only (not persisted to the server).
 
   const markReviewed = useCallback((moduleId: string, quality: "easy" | "medium" | "hard") => {
     setProgress(prev => {
@@ -190,10 +258,12 @@ export function useProgress() {
           [moduleId]: { nextDate: addDays(newInterval), interval: newInterval },
         },
       };
-      saveProgress(updated);
+      if (!user) saveToLocalStorage(updated);
       return updated;
     });
-  }, [saveProgress]);
+  }, [user]);
+
+  // ── Read-only helpers ────────────────────────────────────────────────────────
 
   const getDueReviews = useCallback((): string[] => {
     const today = new Date().toISOString().split("T")[0];
