@@ -18,6 +18,7 @@ import Profile from "@/pages/Profile";
 import Admin from "@/pages/Admin";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
+import VideoTemplate from "@/components/video/VideoTemplate";
 import { motion } from "framer-motion";
 
 function ThemeApplier({ children }: { children: React.ReactNode }) {
@@ -31,7 +32,7 @@ function ThemeApplier({ children }: { children: React.ReactNode }) {
 
 const queryClient = new QueryClient();
 
-const PUBLIC_PATHS = ["/esqueci-senha", "/recuperar-senha"];
+const PUBLIC_PATHS = ["/esqueci-senha", "/recuperar-senha", "/video"];
 
 function LoadingScreen() {
   return (
@@ -66,6 +67,7 @@ function AppRoutes() {
       <Switch>
         <Route path="/esqueci-senha" component={ForgotPassword} />
         <Route path="/recuperar-senha" component={ResetPassword} />
+        <Route path="/video" component={VideoTemplate} />
       </Switch>
     );
   }
