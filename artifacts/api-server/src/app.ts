@@ -8,6 +8,8 @@ import { rateLimit } from "express-rate-limit";
 import { pool } from "@workspace/db";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import path from "node:path";
+import fs from "node:fs";
 
 const PgSession = connectPgSimple(session);
 
@@ -95,5 +97,15 @@ const globalLimiter = rateLimit({
 });
 
 app.use("/api", globalLimiter, router);
+
+if (process.env["NODE_ENV"] === "production") {
+  const staticDir = path.resolve(process.cwd(), "artifacts/gestao-kids/dist/public");
+  if (fs.existsSync(staticDir)) {
+    app.use(express.static(staticDir));
+    app.get("*", (_req, res) => {
+      res.sendFile(path.join(staticDir, "index.html"));
+    });
+  }
+}
 
 export default app;

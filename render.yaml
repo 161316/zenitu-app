@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: zenitu
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: pnpm install --frozen-lockfile && pnpm run typecheck:libs && BASE_PATH=/ PORT=3000 pnpm --filter @workspace/gestao-kids run build && pnpm --filter @workspace/api-server run build
+    startCommand: node artifacts/api-server/dist/index.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zenitu-db
+          property: connectionString
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+
+databases:
+  - name: zenitu-db
+    plan: free
+    databaseName: zenitu
+    user: zenitu

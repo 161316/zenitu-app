@@ -53,7 +53,10 @@ router.post("/forgot-password", resetLimiter, async (req, res) => {
     VALUES (${user.id}, ${tokenHash}, ${expiresAt})
   `);
 
-  const domains = process.env.REPLIT_DOMAINS?.split(",")[0] ?? "localhost:80";
+  const domains =
+    process.env.REPLIT_DOMAINS?.split(",")[0] ??
+    process.env.RENDER_EXTERNAL_HOSTNAME ??
+    "localhost:80";
   const resetUrl = `https://${domains}/recuperar-senha?token=${rawToken}`;
 
   try {
