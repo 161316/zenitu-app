@@ -19,6 +19,7 @@ const ipLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   message: { error: "Muitas requisições. Aguarde um momento." },
 });
 
@@ -27,6 +28,7 @@ const userLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
   message: { error: "Muitas correções solicitadas. Aguarde um momento." },
 });

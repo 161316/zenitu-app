@@ -93,6 +93,7 @@ const globalLimiter = rateLimit({
   max: 120,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   message: { error: "Muitas requisições. Aguarde um momento." },
 });
 
@@ -102,7 +103,7 @@ if (process.env["NODE_ENV"] === "production") {
   const staticDir = path.resolve(process.cwd(), "artifacts/gestao-kids/dist/public");
   if (fs.existsSync(staticDir)) {
     app.use(express.static(staticDir));
-    app.get("*", (_req, res) => {
+    app.use((_req, res) => {
       res.sendFile(path.join(staticDir, "index.html"));
     });
   }
