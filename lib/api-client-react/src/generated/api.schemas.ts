@@ -9,6 +9,15 @@ export interface HealthStatus {
   status: string;
 }
 
+export type QuestionResultInputQuestionType = typeof QuestionResultInputQuestionType[keyof typeof QuestionResultInputQuestionType];
+
+
+export const QuestionResultInputQuestionType = {
+  objective: 'objective',
+  written: 'written',
+  reading: 'reading',
+} as const;
+
 export interface QuestionResultInput {
   /**
      * @minLength 1
@@ -23,8 +32,7 @@ export interface QuestionResultInput {
   /** @minimum 0 */
   questionIndex: number;
   isCorrect: boolean;
-  /** @maxLength 50 */
-  questionType?: string;
+  questionType?: QuestionResultInputQuestionType;
 }
 
 export interface QuestionResult {

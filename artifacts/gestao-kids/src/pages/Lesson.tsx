@@ -100,11 +100,11 @@ export default function Lesson() {
   const handleNext = () => {
     if (!isLast) {
       // Save current paragraph as read before advancing
-      saveResult(currentParagraph, true, "lesson");
+      saveResult(currentParagraph, true, "reading");
       setCurrentParagraph(prev => prev + 1);
     } else {
       // Save last paragraph, then complete lesson
-      saveResult(currentParagraph, true, "lesson");
+      saveResult(currentParagraph, true, "reading");
       if (!alreadyDone && !completed) {
         completeLesson(params.moduleId, params.lessonId, lesson.xpReward);
         setShowXP(true);

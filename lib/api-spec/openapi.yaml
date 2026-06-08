@@ -128,7 +128,7 @@ components:
           type: boolean
         questionType:
           type: string
-          maxLength: 50
+          enum: [objective, written, reading]
           default: objective
       required:
         - moduleId

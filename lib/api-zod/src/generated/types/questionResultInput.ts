@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { QuestionResultInputQuestionType } from './questionResultInputQuestionType';
 
 export interface QuestionResultInput {
   /**
@@ -20,6 +21,5 @@ export interface QuestionResultInput {
   /** @minimum 0 */
   questionIndex: number;
   isCorrect: boolean;
-  /** @maxLength 50 */
-  questionType?: string;
+  questionType?: QuestionResultInputQuestionType;
 }

@@ -181,7 +181,7 @@ export default function Challenge() {
     setShake(true);
     setTimeout(() => setShake(false), 600);
     setXpBreakdown(prev => [...prev, { q: current + 1, xp: 0, correct: false, timeout: true }]);
-    saveResult(questionIndices[current], false, "challenge");
+    saveResult(questionIndices[current], false, "objective");
     if (newLives <= 0) {
       setTimeout(() => setPhase("gameover"), 1800);
     }
@@ -196,7 +196,7 @@ export default function Challenge() {
     if (!selected) return;
     setConfirmed(true);
     const isCorrect = selected === question.correct;
-    saveResult(questionIndices[current], isCorrect, "challenge");
+    saveResult(questionIndices[current], isCorrect, "objective");
 
     if (isCorrect) {
       const newCombo = combo + 1;

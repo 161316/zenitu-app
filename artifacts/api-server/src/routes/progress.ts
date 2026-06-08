@@ -247,7 +247,7 @@ const questionResultSchema = z.object({
   lessonId: z.string().min(1).max(100),
   questionIndex: z.number().int().min(0),
   isCorrect: z.boolean(),
-  questionType: z.string().max(50).optional().default("objective"),
+  questionType: z.enum(["objective", "written", "reading"]).optional().default("objective"),
 });
 
 // ── POST /api/progress/question-result ───────────────────────────────────────

@@ -244,12 +244,13 @@ function MultipleChoiceQuestion({ practice, color, onAnswer }: {
   );
 }
 
-function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer }: {
+function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer, onSubmit }: {
   practice: Practice;
   color: string;
   moduleTitle: string;
   lessonTitle: string;
   onAnswer: () => void;
+  onSubmit?: () => void;
 }) {
   const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -307,7 +308,7 @@ function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer }
       <p className="text-xs text-muted-foreground text-right">{answer.length} caracteres</p>
 
       <button
-        onClick={() => setSubmitted(true)}
+        onClick={() => { onSubmit?.(); setSubmitted(true); }}
         disabled={answer.trim().length < 20}
         className="w-full py-4 rounded-2xl font-extrabold text-white disabled:opacity-40 flex items-center justify-center gap-2"
         style={{ backgroundColor: color }}
@@ -401,6 +402,9 @@ export default function PracticePage() {
   };
 
   const handleSkip = () => {
+    if (!alreadyDone) {
+      completeLesson(params.moduleId ?? "", PRACTICE_LESSON_ID, 0);
+    }
     setLocation(isReview ? "/" : `/modulo/${params.moduleId}`);
   };
 
@@ -431,9 +435,13 @@ export default function PracticePage() {
     setTimeout(() => setPhase("feedback"), 1500);
   };
 
+  const handleWrittenSubmit = () => {
+    // Persist the result immediately at submit time (before AI feedback is shown)
+    saveResult(questionIndices[current], true, "written");
+  };
+
   const handleWrittenDone = () => {
     setTotalXP(prev => prev + practice.xpReward);
-    saveResult(questionIndices[current], true, "written");
     setPhase("feedback");
   };
 
@@ -747,6 +755,7 @@ export default function PracticePage() {
                   moduleTitle={mod.title}
                   lessonTitle={practice.question}
                   onAnswer={handleWrittenDone}
+                  onSubmit={handleWrittenSubmit}
                 />
               ) : (
                 <MultipleChoiceQuestion

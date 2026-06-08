@@ -12,3 +12,4 @@ export * from './healthStatus';
 export * from './okResponse';
 export * from './questionResult';
 export * from './questionResultInput';
+export * from './questionResultInputQuestionType';

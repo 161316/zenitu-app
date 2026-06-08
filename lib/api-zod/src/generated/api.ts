@@ -29,16 +29,13 @@ export const saveQuestionResultBodyLessonIdMax = 100;
 export const saveQuestionResultBodyQuestionIndexMin = 0;
 
 export const saveQuestionResultBodyQuestionTypeDefault = `objective`;
-export const saveQuestionResultBodyQuestionTypeMax = 50;
-
-
 
 export const SaveQuestionResultBody = zod.object({
   "moduleId": zod.string().min(1).max(saveQuestionResultBodyModuleIdMax),
   "lessonId": zod.string().min(1).max(saveQuestionResultBodyLessonIdMax),
   "questionIndex": zod.number().min(saveQuestionResultBodyQuestionIndexMin),
   "isCorrect": zod.boolean(),
-  "questionType": zod.string().max(saveQuestionResultBodyQuestionTypeMax).default(saveQuestionResultBodyQuestionTypeDefault)
+  "questionType": zod.enum(['objective', 'written', 'reading']).default(saveQuestionResultBodyQuestionTypeDefault)
 })
 
 export const SaveQuestionResultResponse = zod.object({
