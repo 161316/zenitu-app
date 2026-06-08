@@ -5,9 +5,6 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-export interface HealthStatus {
-  status: string;
-}
 
 export interface QuestionResultInput {
   /**
@@ -26,29 +23,3 @@ export interface QuestionResultInput {
   /** @maxLength 50 */
   questionType?: string;
 }
-
-export interface QuestionResult {
-  questionIndex: number;
-  isCorrect: boolean;
-  questionType: string;
-}
-
-export interface OkResponse {
-  ok: boolean;
-}
-
-export interface ErrorResponse {
-  error: string;
-}
-
-export type GetLessonResultsParams = {
-/**
- * @maxLength 100
- */
-moduleId: string;
-/**
- * @maxLength 100
- */
-lessonId: string;
-};
-

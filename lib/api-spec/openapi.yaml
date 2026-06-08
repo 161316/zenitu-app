@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: progress
+    description: Learning progress operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,81 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /progress/question-result:
+    post:
+      operationId: saveQuestionResult
+      tags: [progress]
+      summary: Save a single question result
+      description: >
+        Upserts the result for a specific question in a lesson or challenge.
+        Requires an authenticated session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionResultInput"
+      responses:
+        "200":
+          description: Result saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OkResponse"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /progress/lesson-results:
+    get:
+      operationId: getLessonResults
+      tags: [progress]
+      summary: Get saved question results for a lesson
+      description: >
+        Returns all saved question results for the authenticated user in a
+        given module/lesson combination.
+      parameters:
+        - in: query
+          name: moduleId
+          required: true
+          schema:
+            type: string
+            maxLength: 100
+        - in: query
+          name: lessonId
+          required: true
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        "200":
+          description: List of saved results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionResult"
+        "400":
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +110,55 @@ components:
           type: string
       required:
         - status
-
+    QuestionResultInput:
+      type: object
+      properties:
+        moduleId:
+          type: string
+          minLength: 1
+          maxLength: 100
+        lessonId:
+          type: string
+          minLength: 1
+          maxLength: 100
+        questionIndex:
+          type: integer
+          minimum: 0
+        isCorrect:
+          type: boolean
+        questionType:
+          type: string
+          maxLength: 50
+          default: objective
+      required:
+        - moduleId
+        - lessonId
+        - questionIndex
+        - isCorrect
+    QuestionResult:
+      type: object
+      properties:
+        questionIndex:
+          type: integer
+        isCorrect:
+          type: boolean
+        questionType:
+          type: string
+      required:
+        - questionIndex
+        - isCorrect
+        - questionType
+    OkResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required:
+        - ok
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

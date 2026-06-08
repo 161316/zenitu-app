@@ -149,6 +149,9 @@ export default function Challenge() {
   };
 
   const handleSkip = () => {
+    if (!alreadyDone) {
+      completeChallenge(params.moduleId, 0);
+    }
     setLocation(`/modulo/${params.moduleId}`);
   };
 

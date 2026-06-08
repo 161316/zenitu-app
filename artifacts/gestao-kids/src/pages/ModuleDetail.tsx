@@ -196,7 +196,7 @@ export default function ModuleDetail() {
               <p className="text-white/80 text-sm">
                 {allLessonsDone
                   ? challengeDone
-                    ? "Você arrasou neste módulo! +100 XP"
+                    ? "Módulo concluído com êxito! +100 XP"
                     : "5 questões para testar seu conhecimento • +100 XP"
                   : "Complete todas as aulas para desbloquear"}
               </p>

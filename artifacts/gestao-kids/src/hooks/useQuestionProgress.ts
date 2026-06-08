@@ -115,6 +115,16 @@ export function useQuestionProgress(moduleId: string, lessonId: string, totalQue
     [results],
   );
 
+  const getSummary = useCallback(
+    () => ({
+      answered: answeredCount,
+      total: totalQuestions,
+      correct: correctCount,
+      wrong: wrongCount,
+    }),
+    [answeredCount, totalQuestions, correctCount, wrongCount],
+  );
+
   return {
     results,
     loading,
@@ -126,5 +136,6 @@ export function useQuestionProgress(moduleId: string, lessonId: string, totalQue
     allAnswered,
     getLastUnansweredIndex,
     getWrongIndexes,
+    getSummary,
   };
 }

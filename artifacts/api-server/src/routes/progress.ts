@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { z } from "zod/v4";
 import { db } from "@workspace/db";
 import { progressTable, lessonQuestionResultsTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
@@ -241,25 +242,27 @@ router.post("/challenge", requireAuth, async (req, res) => {
   });
 });
 
+const questionResultSchema = z.object({
+  moduleId: z.string().min(1).max(100),
+  lessonId: z.string().min(1).max(100),
+  questionIndex: z.number().int().min(0),
+  isCorrect: z.boolean(),
+  questionType: z.string().max(50).optional().default("objective"),
+});
+
 // ── POST /api/progress/question-result ───────────────────────────────────────
 // Upserts a single question result for the authenticated user.
 
 router.post("/question-result", requireAuth, async (req, res) => {
-  const { moduleId, lessonId, questionIndex, isCorrect, questionType } = req.body ?? {};
-
-  if (
-    typeof moduleId !== "string" || !moduleId || moduleId.length > 100 ||
-    typeof lessonId !== "string" || !lessonId || lessonId.length > 100 ||
-    typeof questionIndex !== "number" || !Number.isInteger(questionIndex) || questionIndex < 0 ||
-    typeof isCorrect !== "boolean" ||
-    (questionType !== undefined && (typeof questionType !== "string" || questionType.length > 50))
-  ) {
+  const parsed = questionResultSchema.safeParse(req.body ?? {});
+  if (!parsed.success) {
     res.status(400).json({ error: "Dados inválidos" });
     return;
   }
 
+  const { moduleId, lessonId, questionIndex, isCorrect, questionType } = parsed.data;
   const userId = req.session.userId!;
-  const type = typeof questionType === "string" ? questionType : "objective";
+  const type = questionType;
 
   await db
     .insert(lessonQuestionResultsTable)

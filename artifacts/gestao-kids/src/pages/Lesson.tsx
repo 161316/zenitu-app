@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useParams } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Share2 } from "lucide-react";
 import { getLessonById, getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
 import { useTone } from "@/hooks/useTone";
+import { useQuestionProgress } from "@/hooks/useQuestionProgress";
 import { WordPopup, HighlightedText } from "@/components/WordPopup";
 import { XPAnimation } from "@/components/XPAnimation";
+import { LessonResumeDialog } from "@/components/LessonResumeDialog";
 import { ThemeBackground } from "@/components/ThemeBackground";
 import { ShareCardModal } from "@/components/ShareCard";
 
@@ -19,12 +21,25 @@ export default function Lesson() {
   const mod = getModuleById(params.moduleId);
   const lesson = getLessonById(params.moduleId, params.lessonId);
 
+  // useQuestionProgress must be called before any conditional return (Rules of Hooks).
+  // totalParagraphs is 0 when lesson is null — hook still runs safely.
+  const totalParagraphs = lesson?.content.length ?? 0;
+  const {
+    loading: qLoading,
+    hasProgress,
+    answeredCount,
+    saveResult,
+    getLastUnansweredIndex,
+  } = useQuestionProgress(params.moduleId, params.lessonId, totalParagraphs);
+
   const [currentParagraph, setCurrentParagraph] = useState(0);
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [showXP, setShowXP] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [showShareCard, setShowShareCard] = useState(false);
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
 
+  const dialogShownRef = useRef(false);
   const alreadyDone = isLessonComplete(params.moduleId, params.lessonId);
 
   useEffect(() => {
@@ -35,6 +50,21 @@ export default function Lesson() {
     window.addEventListener('open-word', handler);
     return () => window.removeEventListener('open-word', handler);
   }, []);
+
+  // Show resume dialog once when loading finishes and there's saved paragraph progress
+  useEffect(() => {
+    if (
+      !qLoading &&
+      hasProgress &&
+      !alreadyDone &&
+      !completed &&
+      !dialogShownRef.current &&
+      currentParagraph === 0
+    ) {
+      dialogShownRef.current = true;
+      setShowResumeDialog(true);
+    }
+  }, [qLoading, hasProgress, alreadyDone, completed, currentParagraph]);
 
   if (!mod || !lesson) {
     return (
@@ -47,10 +77,34 @@ export default function Lesson() {
   const isLast = currentParagraph === lesson.content.length - 1;
   const progressPct = ((currentParagraph + 1) / lesson.content.length) * 100;
 
+  // Resume dialog handlers
+  const handleResume = () => {
+    const nextIdx = getLastUnansweredIndex();
+    setCurrentParagraph(Math.min(nextIdx, lesson.content.length - 1));
+    setShowResumeDialog(false);
+  };
+
+  const handleRestartFromBeginning = () => {
+    setCurrentParagraph(0);
+    setShowResumeDialog(false);
+  };
+
+  const handleSkipLesson = () => {
+    setShowResumeDialog(false);
+    if (!alreadyDone && !completed) {
+      completeLesson(params.moduleId, params.lessonId, lesson.xpReward);
+    }
+    setLocation(`/modulo/${params.moduleId}`);
+  };
+
   const handleNext = () => {
     if (!isLast) {
+      // Save current paragraph as read before advancing
+      saveResult(currentParagraph, true, "lesson");
       setCurrentParagraph(prev => prev + 1);
     } else {
+      // Save last paragraph, then complete lesson
+      saveResult(currentParagraph, true, "lesson");
       if (!alreadyDone && !completed) {
         completeLesson(params.moduleId, params.lessonId, lesson.xpReward);
         setShowXP(true);
@@ -68,6 +122,29 @@ export default function Lesson() {
 
   return (
     <ThemeBackground className="pb-6">
+      {/* Resume dialog — shown when returning mid-lesson */}
+      {showResumeDialog && (
+        <LessonResumeDialog
+          answeredCount={answeredCount}
+          totalCount={lesson.content.length}
+          correctCount={0}
+          wrongCount={0}
+          color={mod.color}
+          allAnswered={answeredCount >= lesson.content.length}
+          hasWrong={false}
+          title="Você já iniciou esta aula"
+          summaryText={`Parte ${Math.min(answeredCount + 1, lesson.content.length)} de ${lesson.content.length} — retomar onde parou?`}
+          resumeLabel="Continuar de onde parei"
+          redoAllLabel="Recomeçar do início"
+          skipLabel="Pular aula"
+          skipSubLabel="Marca como concluída e volta ao módulo"
+          onResume={handleResume}
+          onRedoWrong={() => {}}
+          onRedoAll={handleRestartFromBeginning}
+          onSkip={handleSkipLesson}
+        />
+      )}
+
       {/* Header */}
       <div className={`bg-gradient-to-r ${mod.bgGradient} px-4 pt-8 pb-6`}>
         <div className="max-w-2xl mx-auto">
