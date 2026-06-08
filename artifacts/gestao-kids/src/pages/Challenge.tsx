@@ -54,7 +54,7 @@ export default function Challenge() {
   const nextMod = MODULES.find(m => m.order === (mod?.order ?? 0) + 1);
 
   const totalQuestions = challenge?.questions.length ?? 0;
-  const { loading: qLoading, hasProgress, allAnswered, answeredCount, correctCount, wrongCount, saveResult, getLastUnansweredIndex, getWrongIndexes } =
+  const { results, loading: qLoading, hasProgress, allAnswered, answeredCount, correctCount, wrongCount, saveResult, getLastUnansweredIndex, getWrongIndexes } =
     useQuestionProgress(params.moduleId, CHALLENGE_LESSON_ID, totalQuestions);
 
   const defaultIndices = useMemo(
@@ -131,6 +131,16 @@ export default function Challenge() {
     setShowResumeDialog(false);
     const nextIdx = getLastUnansweredIndex();
     const posInActive = questionIndices.indexOf(nextIdx);
+    // Restore runtime counters from persisted results so final grading is correct
+    const savedInActive = results.filter(r => questionIndices.includes(r.questionIndex));
+    const priorCorrect = savedInActive.filter(r => r.isCorrect).length;
+    setScore(priorCorrect);
+    setTotalXP(priorCorrect * BASE_XP);
+    setXpBreakdown(
+      savedInActive
+        .sort((a, b) => questionIndices.indexOf(a.questionIndex) - questionIndices.indexOf(b.questionIndex))
+        .map((r, i) => ({ q: i + 1, xp: r.isCorrect ? BASE_XP : 0, correct: r.isCorrect })),
+    );
     setCurrent(posInActive >= 0 ? posInActive : answeredCount);
   };
 

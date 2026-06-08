@@ -334,6 +334,7 @@ export default function PracticePage() {
 
   const totalQuestions = practices.length;
   const {
+    results,
     loading: qLoading,
     hasProgress,
     allAnswered,
@@ -376,6 +377,13 @@ export default function PracticePage() {
   const handleResume = () => {
     const nextIdx = getLastUnansweredIndex();
     const posInActive = questionIndices.indexOf(nextIdx);
+    // Restore session counters from persisted results for accurate final scoring/XP
+    const priorCorrect = results.filter(r => questionIndices.includes(r.questionIndex) && r.isCorrect).length;
+    const priorXP = results
+      .filter(r => questionIndices.includes(r.questionIndex) && r.isCorrect)
+      .reduce((acc, r) => acc + (practices[r.questionIndex]?.xpReward ?? 0), 0);
+    setCorrectCount2(priorCorrect);
+    setTotalXP(priorXP);
     setCurrent(posInActive >= 0 ? posInActive : answeredCount);
     setShowResumeDialog(false);
     setPhase("question");
