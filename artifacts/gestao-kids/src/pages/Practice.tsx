@@ -1,14 +1,18 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { useLocation, useParams, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle, ChevronRight, Lightbulb, Send, Loader2, RotateCcw } from "lucide-react";
 import { getModuleById } from "@/data/modules";
 import { getPracticesByModule, type Practice } from "@/data/practices";
 import { useProgress } from "@/hooks/useProgress";
+import { useQuestionProgress } from "@/hooks/useQuestionProgress";
+import { LessonResumeDialog } from "@/components/LessonResumeDialog";
 import { XPAnimation } from "@/components/XPAnimation";
 import { ThemeBackground } from "@/components/ThemeBackground";
 
 type Phase = "intro" | "question" | "feedback" | "done";
+
+const PRACTICE_LESSON_ID = "praticas";
 
 function AIFeedback({ question, answer, moduleTitle, lessonTitle, onDone, color }: {
   question: string;
@@ -88,23 +92,23 @@ function AIFeedback({ question, answer, moduleTitle, lessonTitle, onDone, color 
           </div>
           <div>
             <p className="font-extrabold text-violet-800 text-sm">Seu Tutor</p>
-            <p className="text-violet-500 text-xs">Guiando seu raciocínio</p>
+            <p className="text-violet-500 text-xs">Orientando seu raciocínio</p>
           </div>
         </div>
 
         {loading ? (
           <div className="flex items-center gap-2 py-4">
             <Loader2 className="w-5 h-5 text-violet-500 animate-spin" />
-            <p className="text-violet-600 text-sm font-medium">Analisando sua resposta...</p>
+            <p className="text-violet-600 text-sm font-medium">Analisando sua resposta…</p>
           </div>
         ) : error ? (
           <div className="space-y-3">
-            <p className="text-red-600 text-sm">Não consegui conectar. Tente novamente.</p>
+            <p className="text-red-600 text-sm">Não foi possível conectar. Tente novamente.</p>
             <button
               onClick={fetchFeedback}
               className="flex items-center gap-2 text-violet-600 text-sm font-bold"
             >
-              <RotateCcw className="w-4 h-4" /> Tentar de novo
+              <RotateCcw className="w-4 h-4" /> Tentar novamente
             </button>
           </div>
         ) : (
@@ -194,7 +198,7 @@ function MultipleChoiceQuestion({ practice, color, onAnswer }: {
             className={`rounded-2xl p-4 ${isCorrect ? "bg-green-50 border border-green-200" : "bg-amber-50 border border-amber-200"}`}
           >
             <p className={`font-extrabold text-sm mb-1 ${isCorrect ? "text-green-800" : "text-amber-800"}`}>
-              {isCorrect ? "✅ Correto! Muito bem!" : "💡 Pensa comigo..."}
+              {isCorrect ? "✅ Correto!" : "💡 Atenção:"}
             </p>
             <p className={`text-sm leading-relaxed ${isCorrect ? "text-green-700" : "text-amber-700"}`}>
               {practice.hint}
@@ -210,7 +214,7 @@ function MultipleChoiceQuestion({ practice, color, onAnswer }: {
             className="flex items-center gap-2 text-amber-600 text-sm font-semibold"
           >
             <Lightbulb className="w-4 h-4" />
-            {showHint ? "Esconder dica" : "Ver dica"}
+            {showHint ? "Ocultar dica" : "Ver dica"}
           </button>
           <AnimatePresence>
             {showHint && (
@@ -278,7 +282,7 @@ function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer }
           className="flex items-center gap-2 text-amber-600 text-sm font-semibold"
         >
           <Lightbulb className="w-4 h-4" />
-          {showHint ? "Esconder orientação" : "Ver orientação"}
+          {showHint ? "Ocultar orientação" : "Ver orientação"}
         </button>
         <AnimatePresence>
           {showHint && (
@@ -297,7 +301,7 @@ function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer }
       <textarea
         value={answer}
         onChange={e => setAnswer(e.target.value)}
-        placeholder="Escreva sua resposta aqui. Seja detalhado — quanto mais você explicar, melhor o tutor pode te guiar..."
+        placeholder="Escreva sua resposta aqui. Quanto mais detalhada, melhor o tutor pode orientar seu raciocínio…"
         className="w-full h-40 p-4 rounded-2xl border border-border text-sm font-medium resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 bg-card text-foreground"
       />
       <p className="text-xs text-muted-foreground text-right">{answer.length} caracteres</p>
@@ -312,13 +316,13 @@ function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer }
         Enviar para o tutor
       </button>
       {answer.trim().length < 20 && answer.length > 0 && (
-        <p className="text-xs text-muted-foreground text-center">Escreva um pouco mais para poder enviar</p>
+        <p className="text-xs text-muted-foreground text-center">Desenvolva um pouco mais sua resposta para enviar</p>
       )}
     </div>
   );
 }
 
-export default function Practice() {
+export default function PracticePage() {
   const params = useParams<{ moduleId: string }>();
   const search = useSearch();
   const isReview = new URLSearchParams(search).get("review") === "1";
@@ -327,17 +331,78 @@ export default function Practice() {
   const practices = getPracticesByModule(params.moduleId);
   const { completeLesson, isLessonComplete, markReviewed } = useProgress();
 
-  const PRACTICE_LESSON_ID = "praticas";
+  const totalQuestions = practices.length;
+  const {
+    loading: qLoading,
+    hasProgress,
+    allAnswered,
+    answeredCount,
+    correctCount,
+    wrongCount,
+    saveResult,
+    getLastUnansweredIndex,
+    getWrongIndexes,
+  } = useQuestionProgress(params.moduleId ?? "", PRACTICE_LESSON_ID, totalQuestions);
 
+  const defaultIndices = useMemo(
+    () => Array.from({ length: totalQuestions }, (_, i) => i),
+    [totalQuestions],
+  );
+
+  const [questionIndices, setQuestionIndices] = useState<number[]>(defaultIndices);
   const [current, setCurrent] = useState(0);
   const [phase, setPhase] = useState<Phase>("intro");
-  const [correctCount, setCorrectCount] = useState(0);
+  const [correctCount2, setCorrectCount2] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
   const [showXP, setShowXP] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
   const [reviewDone, setReviewDone] = useState(false);
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
 
+  const dialogShownRef = useRef(false);
   const alreadyDone = isLessonComplete(params.moduleId ?? "", PRACTICE_LESSON_ID);
+
+  // Show resume dialog when entering intro and there's saved progress
+  const handleStartPractice = () => {
+    if (!qLoading && hasProgress && !dialogShownRef.current) {
+      dialogShownRef.current = true;
+      setShowResumeDialog(true);
+    } else {
+      setPhase("question");
+    }
+  };
+
+  const handleResume = () => {
+    const nextIdx = getLastUnansweredIndex();
+    const posInActive = questionIndices.indexOf(nextIdx);
+    setCurrent(posInActive >= 0 ? posInActive : answeredCount);
+    setShowResumeDialog(false);
+    setPhase("question");
+  };
+
+  const handleRedoWrong = () => {
+    const wrong = getWrongIndexes();
+    if (wrong.length === 0) { setShowResumeDialog(false); setPhase("question"); return; }
+    setQuestionIndices(wrong);
+    setCurrent(0);
+    setCorrectCount2(0);
+    setTotalXP(0);
+    setShowResumeDialog(false);
+    setPhase("question");
+  };
+
+  const handleRedoAll = () => {
+    setQuestionIndices(defaultIndices);
+    setCurrent(0);
+    setCorrectCount2(0);
+    setTotalXP(0);
+    setShowResumeDialog(false);
+    setPhase("question");
+  };
+
+  const handleSkip = () => {
+    setLocation(isReview ? "/" : `/modulo/${params.moduleId}`);
+  };
 
   if (!mod || practices.length === 0) {
     return (
@@ -355,22 +420,25 @@ export default function Practice() {
     );
   }
 
-  const practice = practices[current];
+  const activePractices = questionIndices.map(i => practices[i]);
+  const practice = activePractices[current];
 
   const handleMultipleAnswer = (correct: boolean) => {
     const xp = correct ? practice.xpReward : Math.floor(practice.xpReward * 0.1);
-    if (correct) setCorrectCount(c => c + 1);
+    if (correct) setCorrectCount2(c => c + 1);
     setTotalXP(prev => prev + xp);
+    saveResult(questionIndices[current], correct, "objective");
     setTimeout(() => setPhase("feedback"), 1500);
   };
 
   const handleWrittenDone = () => {
     setTotalXP(prev => prev + practice.xpReward);
+    saveResult(questionIndices[current], true, "written");
     setPhase("feedback");
   };
 
   const handleNext = () => {
-    if (current < practices.length - 1) {
+    if (current < activePractices.length - 1) {
       setCurrent(c => c + 1);
       setPhase("question");
     } else {
@@ -383,13 +451,30 @@ export default function Practice() {
     }
   };
 
-  const progressPct = ((current) / practices.length) * 100;
+  const progressPct = (current / activePractices.length) * 100;
 
-  const writtenCount = practices.filter(p => p.type === "written").length;
+  const writtenCount = activePractices.filter(p => p.type === "written").length;
+  const objCount = activePractices.filter(p => p.type !== "written").length;
 
   if (phase === "intro") {
     return (
       <ThemeBackground className="flex flex-col">
+        {showResumeDialog && (
+          <LessonResumeDialog
+            answeredCount={answeredCount}
+            totalCount={totalQuestions}
+            correctCount={correctCount}
+            wrongCount={wrongCount}
+            color={mod.color}
+            allAnswered={allAnswered}
+            hasWrong={wrongCount > 0}
+            onResume={handleResume}
+            onRedoWrong={handleRedoWrong}
+            onRedoAll={handleRedoAll}
+            onSkip={handleSkip}
+          />
+        )}
+
         <div className={`bg-gradient-to-br ${mod.bgGradient} px-4 pt-10 pb-20 text-center`}>
           <button
             onClick={() => setLocation(isReview ? "/" : `/modulo/${mod.id}`)}
@@ -427,16 +512,17 @@ export default function Practice() {
                 <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 text-sm">✍️</div>
                 <div>
                   <p className="font-bold text-sm">
-                    {writtenCount} {writtenCount === 1 ? "questão dissertativa" : "questões dissertativas"}
+                    {practices.filter(p => p.type === "written").length}{" "}
+                    {practices.filter(p => p.type === "written").length === 1 ? "questão dissertativa" : "questões dissertativas"}
                   </p>
-                  <p className="text-xs text-muted-foreground">Respondida por escrito e corrigida pelo seu tutor de IA</p>
+                  <p className="text-xs text-muted-foreground">Respondida por escrito e orientada pelo tutor de IA</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 text-sm">🧑‍🏫</div>
                 <div>
-                  <p className="font-bold text-sm">Correção guiada — nunca damos a resposta</p>
-                  <p className="text-xs text-muted-foreground">O tutor mostra o caminho para você descobrir a resposta certa</p>
+                  <p className="font-bold text-sm">Correção guiada — nunca entregamos a resposta pronta</p>
+                  <p className="text-xs text-muted-foreground">O tutor orienta o raciocínio para você chegar à resposta</p>
                 </div>
               </div>
             </div>
@@ -451,7 +537,7 @@ export default function Practice() {
             <div className="text-2xl">⚡</div>
             <div>
               <p className="font-extrabold text-white">Até {practices.reduce((a, p) => a + p.xpReward, 0)} XP disponíveis</p>
-              <p className="text-white/80 text-xs">Ganhe mais acertando sem dicas!</p>
+              <p className="text-white/80 text-xs">Acerte sem usar dicas para maximizar o XP!</p>
             </div>
           </motion.div>
 
@@ -459,11 +545,11 @@ export default function Practice() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
-            onClick={() => setPhase("question")}
+            onClick={handleStartPractice}
             className="w-full py-5 rounded-2xl font-extrabold text-white text-lg flex items-center justify-center gap-3 shadow-md"
             style={{ backgroundColor: mod.color }}
           >
-            Começar prática
+            Iniciar prática
             <ChevronRight className="w-6 h-6" />
           </motion.button>
         </div>
@@ -472,8 +558,7 @@ export default function Practice() {
   }
 
   if (phase === "done") {
-    const objCount = practices.filter(p => p.type !== "written").length;
-    const score = objCount > 0 ? Math.round((correctCount / objCount) * 100) : 100;
+    const score = objCount > 0 ? Math.round((correctCount2 / objCount) * 100) : 100;
 
     const handleQuality = (quality: "easy" | "medium" | "hard") => {
       markReviewed(params.moduleId ?? "", quality);
@@ -489,9 +574,9 @@ export default function Practice() {
             {score >= 80 ? "🏆" : score >= 60 ? "⭐" : "💪"}
           </motion.div>
           <h1 className="text-3xl font-extrabold text-white">
-            {score >= 80 ? "Incrível!" : score >= 60 ? "Muito bem!" : "Continue assim!"}
+            {score >= 80 ? "Excelente!" : score >= 60 ? "Muito bem!" : "Continue avançando!"}
           </h1>
-          <p className="text-white/80 mt-1">{isReview ? "Revisão concluída!" : "Prática concluída"}</p>
+          <p className="text-white/80 mt-1">{isReview ? "Revisão concluída." : "Prática concluída."}</p>
         </div>
 
         <div className="max-w-md mx-auto px-4 -mt-10 space-y-4">
@@ -507,7 +592,7 @@ export default function Practice() {
                 <p className="text-xs text-muted-foreground font-semibold mt-1">XP ganhos</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-extrabold" style={{ color: mod.color }}>{correctCount}/{objCount}</p>
+                <p className="text-3xl font-extrabold" style={{ color: mod.color }}>{correctCount2}/{objCount}</p>
                 <p className="text-xs text-muted-foreground font-semibold mt-1">Objetivas corretas</p>
               </div>
               <div className="text-center">
@@ -519,7 +604,6 @@ export default function Practice() {
             </div>
           </motion.div>
 
-          {/* Review quality rating */}
           {isReview && !reviewDone && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -561,7 +645,7 @@ export default function Practice() {
               animate={{ opacity: 1, scale: 1 }}
               className="bg-green-50 border border-green-200 rounded-2xl p-4 text-center"
             >
-              <p className="text-green-700 font-bold">✓ Revisão registrada! Próxima data agendada.</p>
+              <p className="text-green-700 font-bold">✓ Revisão registrada. Próxima data agendada.</p>
             </motion.div>
           )}
 
@@ -571,67 +655,61 @@ export default function Practice() {
             transition={{ delay: 0.5 }}
             className="grid grid-cols-2 gap-3"
           >
-            {isReview ? (
-              <button
-                onClick={() => setLocation("/")}
-                className="col-span-2 py-4 rounded-2xl font-extrabold text-white"
-                style={{ backgroundColor: mod.color }}
-              >
-                Voltar ao início 🏠
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={() => setLocation(`/modulo/${mod.id}`)}
-                  className="py-4 rounded-2xl border border-border font-bold text-foreground hover:bg-muted"
-                >
-                  Voltar ao módulo
-                </button>
-                <button
-                  onClick={() => setLocation(`/desafio/${mod.id}`)}
-                  className="py-4 rounded-2xl font-extrabold text-white"
-                  style={{ backgroundColor: mod.color }}
-                >
-                  Desafio Final ⚡
-                </button>
-              </>
-            )}
+            <button
+              onClick={() => {
+                setQuestionIndices(defaultIndices);
+                setCurrent(0);
+                setCorrectCount2(0);
+                setTotalXP(0);
+                setPhase("question");
+              }}
+              className="py-4 rounded-2xl border border-border font-bold text-foreground hover:bg-muted transition-colors"
+            >
+              🔄 Refazer
+            </button>
+            <button
+              onClick={() => setLocation(isReview ? "/" : `/modulo/${params.moduleId}`)}
+              className="py-4 rounded-2xl font-extrabold text-white"
+              style={{ backgroundColor: mod.color }}
+            >
+              Voltar ao módulo
+            </button>
           </motion.div>
         </div>
       </ThemeBackground>
     );
   }
 
+  if (!practice) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando…</p>
+      </div>
+    );
+  }
+
   return (
-    <ThemeBackground className="pb-12">
+    <ThemeBackground className="pb-20">
       <div className={`bg-gradient-to-r ${mod.bgGradient} px-4 pt-8 pb-6`}>
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <button
-              onClick={() => setLocation(`/modulo/${mod.id}`)}
-              className="flex items-center gap-2 text-white/80 hover:text-white"
+              onClick={() => setPhase("intro")}
+              className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               <span className="font-semibold text-sm">Sair</span>
             </button>
             <div className="bg-white/20 rounded-xl px-3 py-1.5">
-              <p className="text-white font-extrabold text-sm">{current + 1}/{practices.length}</p>
+              <p className="text-white font-extrabold text-sm">{current + 1}/{activePractices.length}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-white/80 text-xs font-bold uppercase tracking-wide">{mod.emoji} Prática</span>
-            <span
-              className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
-              style={{ backgroundColor: "rgba(0,0,0,0.25)" }}
-            >
-              {practice.type === "written" ? "✍️ Dissertativa" : practice.type === "truefalse" ? "⚖️ V ou F" : "🎯 Múltipla Escolha"}
-            </span>
-          </div>
+          <p className="text-white/70 text-xs font-bold uppercase tracking-wide mb-1">{mod.emoji} Prática</p>
 
-          <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+          <div className="mt-3 h-2 bg-white/20 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-white rounded-full"
+              className="h-full bg-white/60 rounded-full"
               animate={{ width: `${progressPct}%` }}
               transition={{ duration: 0.4 }}
             />
@@ -643,17 +721,23 @@ export default function Practice() {
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="bg-card border border-border rounded-2xl p-5 mb-5 shadow-sm">
-              <p className="text-foreground text-base font-semibold leading-relaxed">{practice.question}</p>
-              <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-amber-600 font-bold">+{practice.xpReward} XP</span>
-              </div>
+            <div className="flex items-center gap-2 mb-4">
+              <span
+                className="text-xs font-extrabold px-3 py-1.5 rounded-full text-white uppercase tracking-wide"
+                style={{ backgroundColor: mod.color }}
+              >
+                {practice.type === "written" ? "Dissertativa" : practice.type === "truefalse" ? "Verdadeiro ou Falso" : "Múltipla Escolha"}
+              </span>
             </div>
+
+            <h2 className="text-xl font-extrabold text-foreground mb-5 leading-tight">
+              {practice.question}
+            </h2>
 
             {phase === "question" && (
               practice.type === "written" ? (
@@ -661,7 +745,7 @@ export default function Practice() {
                   practice={practice}
                   color={mod.color}
                   moduleTitle={mod.title}
-                  lessonTitle={practice.question.slice(0, 60)}
+                  lessonTitle={practice.question}
                   onAnswer={handleWrittenDone}
                 />
               ) : (
@@ -673,20 +757,38 @@ export default function Practice() {
               )
             )}
 
-            {phase === "feedback" && practice.type !== "written" && (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                onClick={handleNext}
-                className="w-full py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2"
-                style={{ backgroundColor: mod.color }}
+            {phase === "feedback" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
               >
-                {current < practices.length - 1 ? (
-                  <>Próxima questão <ChevronRight className="w-5 h-5" /></>
-                ) : (
-                  <>Ver resultado <CheckCircle className="w-5 h-5" /></>
-                )}
-              </motion.button>
+                <div className="bg-card border border-border rounded-2xl p-5 mb-4">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
+                    {current + 1} de {activePractices.length} respondidas
+                  </p>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: mod.color }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${((current + 1) / activePractices.length) * 100}%` }}
+                      transition={{ duration: 0.6 }}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleNext}
+                  className="w-full py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2"
+                  style={{ backgroundColor: mod.color }}
+                >
+                  {current < activePractices.length - 1 ? (
+                    <>Próxima questão <ChevronRight className="w-5 h-5" /></>
+                  ) : (
+                    <>Ver resultado <ChevronRight className="w-5 h-5" /></>
+                  )}
+                </button>
+              </motion.div>
             )}
           </motion.div>
         </AnimatePresence>

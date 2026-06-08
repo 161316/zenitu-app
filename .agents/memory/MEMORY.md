@@ -1,2 +1,4 @@
 - [Tone Progression System](tone-progression.md) — 4-tone system (casual→executivo) driven by completed modules count; files: data/tones.ts, hooks/useTone.ts.
 - [Journey & Module Architecture](journey-architecture.md) — 4 journeys (14 total modules), sequential unlock by journey; all data in data/modules.ts + data/journeys.ts.
+- [Question progress persistence](question-progress.md) — per-question results in lesson_question_results table; hook useQuestionProgress.ts; guest users use localStorage "zenitu-question-results"; lessonId for challenge = "desafio", practice = "praticas".
+- [GitHub push flow](github-push.md) — git add is blocked in main agent but git push works; push after task checkpoint using GITHUB_PERSONAL_ACCESS_TOKEN env var.

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { progressTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { progressTable, lessonQuestionResultsTable } from "@workspace/db";
+import { eq, and } from "drizzle-orm";
 import { CATALOG, MODULE_ORDER, MAX_XP_PER_CHALLENGE_QUESTION } from "../data/catalog.js";
 
 const router = Router();
@@ -239,6 +239,88 @@ router.post("/challenge", requireAuth, async (req, res) => {
     lastActivityDate: newLastActivity,
     badges: newBadges,
   });
+});
+
+// ── POST /api/progress/question-result ───────────────────────────────────────
+// Upserts a single question result for the authenticated user.
+
+router.post("/question-result", requireAuth, async (req, res) => {
+  const { moduleId, lessonId, questionIndex, isCorrect, questionType } = req.body ?? {};
+
+  if (
+    typeof moduleId !== "string" || !moduleId || moduleId.length > 100 ||
+    typeof lessonId !== "string" || !lessonId || lessonId.length > 100 ||
+    typeof questionIndex !== "number" || !Number.isInteger(questionIndex) || questionIndex < 0 ||
+    typeof isCorrect !== "boolean" ||
+    (questionType !== undefined && (typeof questionType !== "string" || questionType.length > 50))
+  ) {
+    res.status(400).json({ error: "Dados inválidos" });
+    return;
+  }
+
+  const userId = req.session.userId!;
+  const type = typeof questionType === "string" ? questionType : "objective";
+
+  await db
+    .insert(lessonQuestionResultsTable)
+    .values({
+      userId,
+      moduleId,
+      lessonId,
+      questionIndex,
+      isCorrect,
+      questionType: type,
+      updatedAt: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: [
+        lessonQuestionResultsTable.userId,
+        lessonQuestionResultsTable.moduleId,
+        lessonQuestionResultsTable.lessonId,
+        lessonQuestionResultsTable.questionIndex,
+      ],
+      set: {
+        isCorrect,
+        questionType: type,
+        updatedAt: new Date(),
+      },
+    });
+
+  res.json({ ok: true });
+});
+
+// ── GET /api/progress/lesson-results ─────────────────────────────────────────
+// Returns all saved question results for the user in a specific lesson.
+
+router.get("/lesson-results", requireAuth, async (req, res) => {
+  const { moduleId, lessonId } = req.query;
+
+  if (
+    typeof moduleId !== "string" || !moduleId || moduleId.length > 100 ||
+    typeof lessonId !== "string" || !lessonId || lessonId.length > 100
+  ) {
+    res.status(400).json({ error: "Parâmetros inválidos" });
+    return;
+  }
+
+  const userId = req.session.userId!;
+
+  const rows = await db
+    .select({
+      questionIndex: lessonQuestionResultsTable.questionIndex,
+      isCorrect: lessonQuestionResultsTable.isCorrect,
+      questionType: lessonQuestionResultsTable.questionType,
+    })
+    .from(lessonQuestionResultsTable)
+    .where(
+      and(
+        eq(lessonQuestionResultsTable.userId, userId),
+        eq(lessonQuestionResultsTable.moduleId, moduleId),
+        eq(lessonQuestionResultsTable.lessonId, lessonId),
+      ),
+    );
+
+  res.json(rows);
 });
 
 export default router;

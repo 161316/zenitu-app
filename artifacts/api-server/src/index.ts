@@ -68,6 +68,18 @@ async function initDb(): Promise<void> {
       );
 
       CREATE INDEX IF NOT EXISTS idx_session_expire ON session(expire);
+
+      CREATE TABLE IF NOT EXISTS lesson_question_results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        module_id TEXT NOT NULL,
+        lesson_id TEXT NOT NULL,
+        question_index INTEGER NOT NULL,
+        is_correct BOOLEAN NOT NULL,
+        question_type TEXT NOT NULL DEFAULT 'objective',
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        UNIQUE(user_id, module_id, lesson_id, question_index)
+      );
     `);
     logger.info("Database schema ready");
   } catch (err) {

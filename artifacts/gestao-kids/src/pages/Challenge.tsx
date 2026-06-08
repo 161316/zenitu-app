@@ -1,15 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation, useParams } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle, XCircle, Trophy, Zap, ChevronRight } from "lucide-react";
 import { getModuleById, MODULES } from "@/data/modules";
 import { getChallengeByModule } from "@/data/challenges";
 import { useProgress } from "@/hooks/useProgress";
+import { useQuestionProgress } from "@/hooks/useQuestionProgress";
+import { LessonResumeDialog } from "@/components/LessonResumeDialog";
 import { XPAnimation, Confetti } from "@/components/XPAnimation";
 import { ThemeBackground } from "@/components/ThemeBackground";
 
 const MAX_TIME = 20;
 const BASE_XP = 20;
+const CHALLENGE_LESSON_ID = "desafio";
 
 type Phase = "quiz" | "result" | "gameover";
 
@@ -50,6 +53,16 @@ export default function Challenge() {
   const challenge = getChallengeByModule(params.moduleId);
   const nextMod = MODULES.find(m => m.order === (mod?.order ?? 0) + 1);
 
+  const totalQuestions = challenge?.questions.length ?? 0;
+  const { loading: qLoading, hasProgress, allAnswered, answeredCount, correctCount, wrongCount, saveResult, getLastUnansweredIndex, getWrongIndexes } =
+    useQuestionProgress(params.moduleId, CHALLENGE_LESSON_ID, totalQuestions);
+
+  const defaultIndices = useMemo(
+    () => Array.from({ length: totalQuestions }, (_, i) => i),
+    [totalQuestions],
+  );
+
+  const [questionIndices, setQuestionIndices] = useState<number[]>(defaultIndices);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState(false);
@@ -65,19 +78,33 @@ export default function Challenge() {
   const [xpBreakdown, setXpBreakdown] = useState<XPEntry[]>([]);
   const [lastXP, setLastXP] = useState<number | null>(null);
   const [showComboAnim, setShowComboAnim] = useState(false);
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
 
   const livesRef = useRef(3);
   const alreadyDone = isChallengeComplete(params.moduleId);
+  const dialogShownRef = useRef(false);
+
+  // Show resume dialog once loaded if there's saved progress
+  useEffect(() => {
+    if (!qLoading && hasProgress && !dialogShownRef.current && phase === "quiz" && current === 0) {
+      dialogShownRef.current = true;
+      setShowResumeDialog(true);
+    }
+  }, [qLoading, hasProgress, phase, current]);
 
   useEffect(() => {
-    if (confirmed || phase !== "quiz") return;
+    setQuestionIndices(defaultIndices);
+  }, [defaultIndices]);
+
+  useEffect(() => {
+    if (confirmed || phase !== "quiz" || showResumeDialog) return;
     if (timeLeft <= 0) {
       handleTimeout();
       return;
     }
     const id = setInterval(() => setTimeLeft(t => t - 1), 1000);
     return () => clearInterval(id);
-  }, [timeLeft, confirmed, phase]);
+  }, [timeLeft, confirmed, phase, showResumeDialog]);
 
   if (!mod || !challenge) {
     return (
@@ -87,8 +114,60 @@ export default function Challenge() {
     );
   }
 
-  const question = challenge.questions[current];
-  const progressPct = (current / challenge.questions.length) * 100;
+  const activeQuestions = questionIndices.map(i => challenge.questions[i]);
+  const question = activeQuestions[current];
+  if (!question) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando…</p>
+      </div>
+    );
+  }
+
+  const progressPct = (current / activeQuestions.length) * 100;
+
+  // Resume dialog handlers
+  const handleResume = () => {
+    setShowResumeDialog(false);
+    const nextIdx = getLastUnansweredIndex();
+    const posInActive = questionIndices.indexOf(nextIdx);
+    setCurrent(posInActive >= 0 ? posInActive : answeredCount);
+  };
+
+  const handleRedoWrong = () => {
+    const wrong = getWrongIndexes();
+    if (wrong.length === 0) { setShowResumeDialog(false); return; }
+    setQuestionIndices(wrong);
+    resetQuizState();
+    setShowResumeDialog(false);
+  };
+
+  const handleRedoAll = () => {
+    setQuestionIndices(defaultIndices);
+    resetQuizState();
+    setShowResumeDialog(false);
+  };
+
+  const handleSkip = () => {
+    setLocation(`/modulo/${params.moduleId}`);
+  };
+
+  const resetQuizState = () => {
+    setCurrent(0);
+    setSelected(null);
+    setConfirmed(false);
+    setScore(0);
+    setPhase("quiz");
+    setTimeLeft(MAX_TIME);
+    setCombo(0);
+    setLives(3);
+    livesRef.current = 3;
+    setTotalXP(0);
+    setXpBreakdown([]);
+    setLastXP(null);
+    setShowComboAnim(false);
+    setShake(false);
+  };
 
   const handleTimeout = () => {
     setConfirmed(true);
@@ -99,6 +178,7 @@ export default function Challenge() {
     setShake(true);
     setTimeout(() => setShake(false), 600);
     setXpBreakdown(prev => [...prev, { q: current + 1, xp: 0, correct: false, timeout: true }]);
+    saveResult(questionIndices[current], false, "challenge");
     if (newLives <= 0) {
       setTimeout(() => setPhase("gameover"), 1800);
     }
@@ -113,6 +193,7 @@ export default function Challenge() {
     if (!selected) return;
     setConfirmed(true);
     const isCorrect = selected === question.correct;
+    saveResult(questionIndices[current], isCorrect, "challenge");
 
     if (isCorrect) {
       const newCombo = combo + 1;
@@ -141,7 +222,7 @@ export default function Challenge() {
 
   const handleNext = () => {
     if (livesRef.current <= 0) { setPhase("gameover"); return; }
-    if (current < challenge.questions.length - 1) {
+    if (current < activeQuestions.length - 1) {
       setCurrent(prev => prev + 1);
       setSelected(null);
       setConfirmed(false);
@@ -149,7 +230,7 @@ export default function Challenge() {
       setLastXP(null);
       setShowComboAnim(false);
     } else {
-      const finalPct = Math.round((score / challenge.questions.length) * 100);
+      const finalPct = Math.round((score / activeQuestions.length) * 100);
       if (!alreadyDone && finalPct >= 60) {
         completeChallenge(params.moduleId, totalXP);
         setShowXP(true);
@@ -159,23 +240,20 @@ export default function Challenge() {
   };
 
   const handleRetry = () => {
-    setCurrent(0); setSelected(null); setConfirmed(false);
-    setScore(0); setPhase("quiz"); setTimeLeft(MAX_TIME);
-    setCombo(0); setLives(3); livesRef.current = 3;
-    setTotalXP(0); setXpBreakdown([]); setLastXP(null);
-    setShowComboAnim(false); setShake(false);
+    setQuestionIndices(defaultIndices);
+    resetQuizState();
   };
 
-  const percentage = Math.round((score / challenge.questions.length) * 100);
+  const percentage = Math.round((score / activeQuestions.length) * 100);
   const passed = percentage >= 60;
 
   const gradeInfo = percentage === 100
-    ? { emoji: "🏆", title: "LENDÁRIO!", subtitle: "Perfeito absoluto! Você mandou muito bem!", color: "#f59e0b" }
+    ? { emoji: "🏆", title: "PERFEITO!", subtitle: "Resultado absoluto! Domínio completo do conteúdo.", color: "#f59e0b" }
     : percentage >= 80
-    ? { emoji: "⭐", title: "INCRÍVEL!", subtitle: "Resultado impressionante! Você arrasou!", color: "#22c55e" }
+    ? { emoji: "⭐", title: "EXCELENTE!", subtitle: "Resultado impressionante! Continue assim.", color: "#22c55e" }
     : percentage >= 60
-    ? { emoji: "🎯", title: "MUITO BEM!", subtitle: "Desafio concluído! Continue assim!", color: "#3b82f6" }
-    : { emoji: "💪", title: "QUASE LÁ!", subtitle: "Você aprendeu bastante. Tente de novo!", color: "#f97316" };
+    ? { emoji: "🎯", title: "MUITO BEM!", subtitle: "Desafio concluído! Siga em frente.", color: "#3b82f6" }
+    : { emoji: "💪", title: "QUASE LÁ!", subtitle: "Você está progredindo. Tente novamente!", color: "#f97316" };
 
   if (phase === "gameover") {
     return (
@@ -189,7 +267,7 @@ export default function Challenge() {
           <div className="text-7xl mb-4">💔</div>
           <h1 className="text-3xl font-extrabold text-foreground mb-2">Sem vidas!</h1>
           <p className="text-muted-foreground text-lg mb-6">
-            Você ganhou <span className="font-extrabold text-primary">{totalXP} XP</span> antes de acabar as vidas.
+            Você acumulou <span className="font-extrabold text-primary">{totalXP} XP</span> antes de acabar as vidas.
           </p>
           <div className="bg-muted rounded-3xl p-6 mb-8 text-left">
             <p className="text-sm font-bold text-muted-foreground mb-3 uppercase tracking-wide">Progresso desta tentativa</p>
@@ -197,7 +275,7 @@ export default function Challenge() {
               <div key={i} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                 <span className="text-sm text-muted-foreground">Questão {e.q}</span>
                 <span className={`text-sm font-bold ${e.correct ? "text-green-600" : "text-red-500"}`}>
-                  {e.correct ? `+${e.xp} XP` : e.timeout ? "⏰ Tempo!" : "✗ Errou"}
+                  {e.correct ? `+${e.xp} XP` : e.timeout ? "⏰ Tempo esgotado" : "✗ Incorreta"}
                 </span>
               </div>
             ))}
@@ -208,7 +286,7 @@ export default function Challenge() {
               className="py-4 rounded-2xl font-extrabold text-white"
               style={{ backgroundColor: mod.color }}
             >
-              🔄 Tentar de novo
+              🔄 Tentar novamente
             </button>
             <button
               onClick={() => setLocation(`/modulo/${params.moduleId}`)}
@@ -272,7 +350,7 @@ export default function Challenge() {
                 <p className="text-xs text-muted-foreground font-semibold mt-1">XP ganhos</p>
               </div>
               <div className="text-center">
-                <p className="text-4xl font-extrabold text-foreground">{score}/{challenge.questions.length}</p>
+                <p className="text-4xl font-extrabold text-foreground">{score}/{activeQuestions.length}</p>
                 <p className="text-xs text-muted-foreground font-semibold mt-1">Corretas</p>
               </div>
             </div>
@@ -311,7 +389,7 @@ export default function Challenge() {
                     <span className="text-sm text-muted-foreground">
                       {e.correct
                         ? `Correta ${e.xp > BASE_XP ? `(${Math.floor(e.xp / BASE_XP)}× combo + bônus tempo)` : ""}`
-                        : e.timeout ? "Tempo esgotado" : "Errou"}
+                        : e.timeout ? "Tempo esgotado" : "Incorreta"}
                     </span>
                   </div>
                   <span className={`text-sm font-extrabold ${e.correct ? "text-green-600" : "text-muted-foreground"}`}>
@@ -363,7 +441,7 @@ export default function Challenge() {
             >
               <div className="text-5xl mb-2">🏆</div>
               <p className="text-white font-extrabold text-xl">Curso Completo!</p>
-              <p className="text-white/80 text-sm mt-1">Você é um verdadeiro Gestão Master!</p>
+              <p className="text-white/80 text-sm mt-1">Você concluiu o curso com êxito.</p>
             </motion.div>
           )}
 
@@ -377,7 +455,7 @@ export default function Challenge() {
               onClick={handleRetry}
               className="py-4 rounded-2xl border border-border font-bold text-foreground hover:bg-muted transition-colors"
             >
-              🔄 Tentar de novo
+              🔄 Tentar novamente
             </button>
             <button
               onClick={() => setLocation(`/modulo/${params.moduleId}`)}
@@ -396,6 +474,22 @@ export default function Challenge() {
 
   return (
     <ThemeBackground className="pb-20">
+      {showResumeDialog && (
+        <LessonResumeDialog
+          answeredCount={answeredCount}
+          totalCount={totalQuestions}
+          correctCount={correctCount}
+          wrongCount={wrongCount}
+          color={mod.color}
+          allAnswered={allAnswered}
+          hasWrong={wrongCount > 0}
+          onResume={handleResume}
+          onRedoWrong={handleRedoWrong}
+          onRedoAll={handleRedoAll}
+          onSkip={handleSkip}
+        />
+      )}
+
       <div className={`bg-gradient-to-r ${mod.bgGradient} px-4 pt-8 pb-6`}>
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-4">
@@ -412,7 +506,7 @@ export default function Challenge() {
             </div>
 
             <div className="bg-white/20 rounded-xl px-3 py-1.5 text-center">
-              <p className="text-white font-extrabold">{current + 1}/{challenge.questions.length}</p>
+              <p className="text-white font-extrabold">{current + 1}/{activeQuestions.length}</p>
             </div>
           </div>
 
@@ -542,7 +636,7 @@ export default function Challenge() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <p className={`font-extrabold text-sm ${isCorrect ? "text-green-800" : "text-amber-800"}`}>
-                          {isCorrect ? "Correto! Muito bem!" : selected ? "Quase lá!" : "⏰ Tempo esgotado!"}
+                          {isCorrect ? "Correto!" : selected ? "Não foi desta vez." : "⏰ Tempo esgotado!"}
                         </p>
                         {isCorrect && lastXP !== null && (
                           <motion.span
@@ -567,33 +661,28 @@ export default function Challenge() {
               <button
                 onClick={handleConfirm}
                 disabled={!selected}
-                className={`w-full py-5 rounded-2xl font-extrabold text-lg transition-all duration-200 ${
-                  selected
-                    ? "text-white shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                    : "bg-muted text-muted-foreground cursor-not-allowed"
-                }`}
-                style={selected ? { backgroundColor: mod.color } : {}}
-              >
-                Confirmar resposta
-              </button>
-            ) : livesRef.current > 0 ? (
-              <button
-                onClick={handleNext}
-                className="w-full py-5 rounded-2xl font-extrabold text-lg text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                className="w-full py-4 rounded-2xl font-extrabold text-white disabled:opacity-40 flex items-center justify-center gap-2"
                 style={{ backgroundColor: mod.color }}
               >
-                {current < challenge.questions.length - 1 ? "Próxima questão →" : "Ver resultado! 🏆"}
+                Confirmar resposta
+                <ChevronRight className="w-5 h-5" />
               </button>
             ) : (
-              <div className="w-full py-5 rounded-2xl font-extrabold text-lg bg-muted text-muted-foreground text-center">
-                💔 Perdeu todas as vidas...
-              </div>
+              <button
+                onClick={handleNext}
+                className="w-full py-4 rounded-2xl font-extrabold text-white flex items-center justify-center gap-2"
+                style={{ backgroundColor: mod.color }}
+              >
+                {current < activeQuestions.length - 1 ? (
+                  <>Próxima questão <ChevronRight className="w-5 h-5" /></>
+                ) : (
+                  <>Ver resultado <Trophy className="w-5 h-5" /></>
+                )}
+              </button>
             )}
           </motion.div>
         </AnimatePresence>
       </div>
-
-      {showXP && <XPAnimation amount={totalXP} onDone={() => setShowXP(false)} />}
     </ThemeBackground>
   );
 }
