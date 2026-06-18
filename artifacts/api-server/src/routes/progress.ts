@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
 import { z } from "zod/v4";
 import { db } from "@workspace/db";
 import { progressTable, lessonQuestionResultsTable } from "@workspace/db";
@@ -6,6 +7,16 @@ import { eq, and } from "drizzle-orm";
 import { CATALOG, MODULE_ORDER, MAX_XP_PER_CHALLENGE_QUESTION } from "../data/catalog.js";
 
 const router = Router();
+
+const questionResultLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: false },
+  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  message: { error: "Muitas respostas enviadas. Aguarde um momento antes de continuar." },
+});
 
 function requireAuth(req: any, res: any, next: any) {
   if (!req.session?.userId) {
@@ -253,7 +264,7 @@ const questionResultSchema = z.object({
 // ── POST /api/progress/question-result ───────────────────────────────────────
 // Upserts a single question result for the authenticated user.
 
-router.post("/question-result", requireAuth, async (req, res) => {
+router.post("/question-result", requireAuth, questionResultLimiter, async (req, res) => {
   const parsed = questionResultSchema.safeParse(req.body ?? {});
   if (!parsed.success) {
     res.status(400).json({ error: "Dados inválidos" });
