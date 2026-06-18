@@ -10,6 +10,11 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LineChart,
+  Line,
+  Area,
+  AreaChart,
+  ReferenceLine,
 } from "recharts";
 import { ArrowLeft, Target, CheckCircle2, XCircle, BarChart2 } from "lucide-react";
 import { useProgress, ALL_BADGES } from "@/hooks/useProgress";
@@ -24,6 +29,13 @@ interface ModuleStat {
 }
 
 type ModuleStats = Record<string, ModuleStat>;
+
+interface DailyAccuracy {
+  date: string;
+  total: number;
+  correct: number;
+  accuracy: number;
+}
 
 const LOCAL_QUESTION_KEY = "zenitu-question-results";
 
@@ -60,6 +72,29 @@ function AccuracyTooltip({ active, payload }: any) {
   );
 }
 
+function DailyTooltip({ active, payload }: any) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className="bg-card border border-card-border rounded-xl px-3 py-2 shadow-md text-sm">
+      <p className="font-extrabold text-foreground mb-0.5">{d.displayDate}</p>
+      <p className="text-muted-foreground">{d.correct}/{d.total} corretas</p>
+      <p className="font-bold text-primary">{d.accuracy}% de acerto</p>
+    </div>
+  );
+}
+
+function formatShortDate(dateStr: string): string {
+  const [, month, day] = dateStr.split("-");
+  return `${day}/${month}`;
+}
+
+function formatLongDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split("-");
+  const months = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year}`;
+}
+
 export default function Desempenho() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
@@ -68,16 +103,22 @@ export default function Desempenho() {
 
   const [moduleStats, setModuleStats] = useState<ModuleStats>({});
   const [loadingStats, setLoadingStats] = useState(true);
+  const [dailyAccuracy, setDailyAccuracy] = useState<DailyAccuracy[]>([]);
 
   useEffect(() => {
     if (user) {
-      fetch("/api/progress/module-stats", { credentials: "include" })
-        .then(r => (r.ok ? r.json() : {}))
-        .then((data: ModuleStats) => {
-          setModuleStats(data);
-          setLoadingStats(false);
-        })
-        .catch(() => setLoadingStats(false));
+      Promise.all([
+        fetch("/api/progress/module-stats", { credentials: "include" })
+          .then(r => (r.ok ? r.json() : {}))
+          .catch(() => ({})),
+        fetch("/api/progress/daily-accuracy", { credentials: "include" })
+          .then(r => (r.ok ? r.json() : []))
+          .catch(() => []),
+      ]).then(([modData, dailyData]: [ModuleStats, DailyAccuracy[]]) => {
+        setModuleStats(modData);
+        setDailyAccuracy(dailyData);
+        setLoadingStats(false);
+      });
     } else {
       setModuleStats(loadGuestStats());
       setLoadingStats(false);
@@ -184,6 +225,80 @@ export default function Desempenho() {
             <p className="text-xs text-muted-foreground mt-2">
               {totalAnswered} questões respondidas no total
             </p>
+          </motion.div>
+        )}
+
+        {/* Time-series chart: accuracy over time */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08 }}
+            className="bg-card border border-card-border rounded-2xl p-5 shadow-sm"
+          >
+            <h2 className="font-extrabold text-foreground mb-1">Acerto ao longo do tempo</h2>
+            <p className="text-xs text-muted-foreground mb-4">Últimos 30 dias de respostas</p>
+
+            {loadingStats ? (
+              <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
+                Carregando...
+              </div>
+            ) : dailyAccuracy.length === 0 ? (
+              <p className="text-center text-muted-foreground text-sm py-8">
+                Nenhuma resposta registrada ainda. Responda questões nas aulas para ver seu progresso aqui!
+              </p>
+            ) : (
+              <ResponsiveContainer width="100%" height={180}>
+                <AreaChart
+                  data={dailyAccuracy.map(d => ({
+                    ...d,
+                    displayDate: formatLongDate(d.date),
+                    shortDate: formatShortDate(d.date),
+                  }))}
+                  margin={{ top: 4, right: 4, left: -20, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="accuracyGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                  <XAxis
+                    dataKey="shortDate"
+                    tick={{ fontSize: 10, fill: "#9ca3af" }}
+                    tickLine={false}
+                    axisLine={false}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tickFormatter={v => `${v}%`}
+                    tick={{ fontSize: 10, fill: "#9ca3af" }}
+                    tickLine={false}
+                    axisLine={false}
+                    ticks={[0, 25, 50, 75, 100]}
+                  />
+                  <ReferenceLine y={80} stroke="#22c55e" strokeDasharray="4 2" strokeOpacity={0.5} />
+                  <Tooltip content={<DailyTooltip />} cursor={{ stroke: "#7c3aed", strokeWidth: 1, strokeDasharray: "4 2" }} />
+                  <Area
+                    type="monotone"
+                    dataKey="accuracy"
+                    stroke="#7c3aed"
+                    strokeWidth={2.5}
+                    fill="url(#accuracyGradient)"
+                    dot={{ fill: "#7c3aed", r: 3, strokeWidth: 0 }}
+                    activeDot={{ r: 5, fill: "#7c3aed", strokeWidth: 2, stroke: "#fff" }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+
+            {dailyAccuracy.length > 0 && (
+              <p className="text-xs text-muted-foreground mt-2">
+                A linha verde pontilhada indica a meta de 80% de acerto.
+              </p>
+            )}
           </motion.div>
         )}
 

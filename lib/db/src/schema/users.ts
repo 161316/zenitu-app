@@ -38,7 +38,8 @@ export const lessonQuestionResultsTable = pgTable(
     questionIndex: integer("question_index").notNull(),
     isCorrect: boolean("is_correct").notNull(),
     questionType: text("question_type").notNull().default("objective"),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => [
     uniqueIndex("lesson_question_results_unique").on(

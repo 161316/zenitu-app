@@ -3,7 +3,7 @@ import { rateLimit, ipKeyGenerator } from "express-rate-limit";
 import { z } from "zod/v4";
 import { db } from "@workspace/db";
 import { progressTable, lessonQuestionResultsTable, usersTable } from "@workspace/db";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, gte } from "drizzle-orm";
 import { CATALOG, MODULE_ORDER, MAX_XP_PER_CHALLENGE_QUESTION } from "../data/catalog.js";
 
 const router = Router();
@@ -349,6 +349,39 @@ router.get("/module-stats", requireAuth, async (req, res) => {
   }
 
   res.json(stats);
+});
+
+// ── GET /api/progress/daily-accuracy ─────────────────────────────────────────
+// Returns per-day accuracy for the past 30 days based on createdAt timestamps.
+
+router.get("/daily-accuracy", requireAuth, async (req, res) => {
+  const userId = req.session.userId!;
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+  const rows = await db
+    .select({
+      day: sql<string>`to_char(${lessonQuestionResultsTable.createdAt} AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM-DD')`,
+      total: sql<number>`count(*)::int`,
+      correct: sql<number>`sum(case when ${lessonQuestionResultsTable.isCorrect} then 1 else 0 end)::int`,
+    })
+    .from(lessonQuestionResultsTable)
+    .where(
+      and(
+        eq(lessonQuestionResultsTable.userId, userId),
+        gte(lessonQuestionResultsTable.createdAt, since),
+      ),
+    )
+    .groupBy(sql`to_char(${lessonQuestionResultsTable.createdAt} AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM-DD')`)
+    .orderBy(sql`to_char(${lessonQuestionResultsTable.createdAt} AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM-DD')`);
+
+  const result = rows.map(r => ({
+    date: r.day,
+    total: Number(r.total),
+    correct: Number(r.correct),
+    accuracy: r.total > 0 ? Math.round((Number(r.correct) / Number(r.total)) * 100) : 0,
+  }));
+
+  res.json(result);
 });
 
 // ── GET /api/progress/leaderboard ────────────────────────────────────────────
