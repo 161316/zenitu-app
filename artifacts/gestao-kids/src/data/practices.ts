@@ -760,6 +760,365 @@ export const PRACTICES: ModulePractices[] = [
       },
     ],
   },
+
+  // ─── GESTÃO ESTRATÉGICA ───────────────────────────────────────────────────
+
+  {
+    moduleId: "setores-empresa",
+    practices: [
+      {
+        id: "setemp-p1",
+        type: "multiple",
+        question: "A diretora de Operações (COO) e o diretor de Marketing (CMO) discordam sobre o lançamento de um produto: COO quer 6 meses para garantir qualidade; CMO quer lançar em 2 meses para pegar uma janela de mercado. Quem deveria desempatar?",
+        options: ["O CFO — quem paga decide", "O CEO — é uma decisão estratégica que equilibra risco operacional e oportunidade de mercado", "O conselho de administração — toda decisão de produto passa por eles", "O gerente de produto — é o dono do roadmap"],
+        correct: "O CEO — é uma decisão estratégica que equilibra risco operacional e oportunidade de mercado",
+        hint: "Pense na estrutura da C-Suite: qual cargo tem a visão completa de todos os trade-offs — operacional, financeiro E de mercado — ao mesmo tempo?",
+        xpReward: 30,
+      },
+      {
+        id: "setemp-p2",
+        type: "truefalse",
+        question: "Uma empresa pode crescer indefinidamente mantendo a mesma estrutura organizacional que tinha quando tinha 10 funcionários.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Falso",
+        hint: "Pense: o que funciona para 10 pessoas (comunicação informal, todos fazem tudo) continua funcionando para 500? O que muda quando o CEO não consegue mais conhecer pessoalmente cada funcionário?",
+        xpReward: 25,
+      },
+      {
+        id: "setemp-p3",
+        type: "written",
+        question: "Você fundou uma startup com 8 pessoas. Hoje tem 80 funcionários em 4 áreas (Produto, Comercial, Operações, Financeiro). O CEO continua tomando todas as decisões — inclusive aprovar férias e escolher fornecedores de material de escritório. Que problema isso cria e como você resolveria?",
+        hint: "Pense no conceito de 'span of control' (amplitude de controle): até quantas pessoas um gestor consegue gerenciar efetivamente? O que acontece quando o CEO vira gargalo em tudo? Quais processos e delegações você criaria?",
+        xpReward: 60,
+      },
+    ],
+  },
+
+  {
+    moduleId: "diagnostico-empresa",
+    practices: [
+      {
+        id: "diagno-p1",
+        type: "multiple",
+        question: "Uma empresa de logística tem: Receita R$5M, Custo dos Serviços R$3,5M, Despesas Operacionais R$800K, EBITDA R$700K. Qual é sua margem EBITDA?",
+        options: ["14%", "8%", "20%", "5,6%"],
+        correct: "14%",
+        hint: "Margem EBITDA = EBITDA ÷ Receita Líquida × 100. Substitua os valores dados.",
+        xpReward: 35,
+      },
+      {
+        id: "diagno-p2",
+        type: "multiple",
+        question: "O NPS de uma empresa de software mudou de 62 para 41 em 6 meses, coincidindo com uma atualização do produto. Qual é a primeira análise que o gestor deveria fazer?",
+        options: [
+          "Comparar o NPS com a média do setor para ver se ainda está acima",
+          "Segmentar o NPS por cohort de usuário: os clientes que usaram a versão nova vs. os que usaram a antiga, para isolar o impacto da atualização",
+          "Contratar uma consultoria para refazer a pesquisa de NPS",
+          "Ignorar — variações de NPS são normais e não indicam problema real"
+        ],
+        correct: "Segmentar o NPS por cohort de usuário: os clientes que usaram a versão nova vs. os que usaram a antiga, para isolar o impacto da atualização",
+        hint: "Quando uma métrica muda após um evento específico (nova versão), a pergunta é: o evento causou a mudança? Como você isolaria essa causa do ruído normal?",
+        xpReward: 35,
+      },
+      {
+        id: "diagno-p3",
+        type: "written",
+        question: "Você é gestor de uma rede de academias com 12 unidades. Seus KPIs atuais são: número de matrículas, receita total e margem. Que outros indicadores você adicionaria ao dashboard para ter uma visão completa da saúde do negócio?",
+        hint: "Pense além do financeiro: o que indica satisfação do cliente (churn, NPS), eficiência operacional (taxa de ocupação das aulas, custo por membro), saúde do time (turnover de instrutores) e crescimento futuro (taxa de indicação, retenção mensal). Um bom dashboard equilibra métricas do passado com indicadores antecedentes do futuro.",
+        xpReward: 60,
+      },
+    ],
+  },
+
+  {
+    moduleId: "empresa-sem-retorno",
+    practices: [
+      {
+        id: "empret-p1",
+        type: "multiple",
+        question: "Uma empresa tem Custos Fixos de R$200K/mês, preço de venda de R$80/unidade e custo variável de R$30/unidade. Quantas unidades ela precisa vender para atingir o break-even?",
+        options: ["2.500 unidades", "4.000 unidades", "6.667 unidades", "2.000 unidades"],
+        correct: "4.000 unidades",
+        hint: "Break-even = Custos Fixos ÷ (Preço − Custo Variável). O denominador é a Margem de Contribuição unitária.",
+        xpReward: 35,
+      },
+      {
+        id: "empret-p2",
+        type: "truefalse",
+        question: "Na análise BCG, um produto classificado como 'Abacaxi' sempre deve ser imediatamente descontinuado.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Falso",
+        hint: "Pense: um abacaxi pode ter outras funções além de gerar lucro — como segurar um cliente estratégico, cumprir uma obrigação contratual ou servir de âncora para outros produtos. A decisão é contextual.",
+        xpReward: 25,
+      },
+      {
+        id: "empret-p3",
+        type: "written",
+        question: "Você assume como CEO de uma rede de 15 restaurantes que perdeu R$3M nos últimos 12 meses. O caixa cobre apenas 45 dias de operação. Usando a metodologia de turnaround, descreva suas primeiras 30 ações/decisões.",
+        hint: "Siga a sequência: Estabilização (pare a sangria — corte o que não é essencial para operar, negocie prazo com fornecedores, veja quais unidades podem ser fechadas ou vendidas), Diagnóstico (quais restaurantes lucram? quais destroem valor?), Reestruturação (como ficará a empresa enxuta?). Seja específico: o que você faria no dia 1, semana 1, mês 1?",
+        xpReward: 70,
+      },
+    ],
+  },
+
+  {
+    moduleId: "direito-empresarial",
+    practices: [
+      {
+        id: "diremp-p1",
+        type: "multiple",
+        question: "Sua empresa lançou um produto e um concorrente diz que você copiou a patente dele. Você nunca solicitou análise de patentes antes do lançamento. Qual erro fundamental você cometeu?",
+        options: [
+          "Não ter registrado sua própria marca antes do lançamento",
+          "Não ter feito uma busca de anterioridade no INPI antes de desenvolver o produto para verificar patentes existentes",
+          "Não ter criado uma LTDA antes de lançar o produto",
+          "Não ter contratado um seguro de propriedade intelectual"
+        ],
+        correct: "Não ter feito uma busca de anterioridade no INPI antes de desenvolver o produto para verificar patentes existentes",
+        hint: "Toda inovação deve começar com pesquisa de prior art. Qual órgão no Brasil registra patentes e como você verifica se algo já está protegido antes de desenvolver?",
+        xpReward: 35,
+      },
+      {
+        id: "diremp-p2",
+        type: "truefalse",
+        question: "Se a Receita Federal autuar sua empresa por sonegação fiscal, apenas a empresa (CNPJ) responde — os sócios e diretores estão protegidos pela personalidade jurídica.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Falso",
+        hint: "O Código Tributário Nacional tem uma previsão específica sobre responsabilidade dos administradores. O que acontece quando há dolo, fraude ou excesso de poderes?",
+        xpReward: 25,
+      },
+      {
+        id: "diremp-p3",
+        type: "written",
+        question: "Você quer abrir uma empresa de tecnologia com dois sócios (você, 60%; sócio B, 40%). Escolha o tipo societário mais adequado, explique as obrigações trabalhistas dos primeiros funcionários e cite duas leis que você precisaria conhecer antes de operar.",
+        hint: "Para tipo societário: compare LTDA e SA — qual faz mais sentido para uma startup pequena? Para obrigações trabalhistas: pense no que a CLT exige desde o primeiro contrato (registro, FGTS, INSS, benefícios). Para leis: seu setor de tecnologia provavelmente processa dados de usuários — qual lei regula isso? E qual protege o consumidor das suas plataformas?",
+        xpReward: 60,
+      },
+    ],
+  },
+
+  {
+    moduleId: "gestao-pessoas-clt",
+    practices: [
+      {
+        id: "gepclt-p1",
+        type: "multiple",
+        question: "Um funcionário com salário de R$6.000 pediu demissão. Ele tem 4 anos e 7 meses de empresa. Tem direito a aviso prévio indenizado?",
+        options: [
+          "Não — quem pede demissão não tem direito a aviso prévio indenizado",
+          "Sim — o funcionário que pede demissão deve cumprir 30 dias de aviso prévio ou a empresa pode dispensar e pagar",
+          "Sim — mas apenas se a empresa concordar em dispensá-lo do aviso",
+          "Não — aviso prévio indenizado existe apenas em demissão sem justa causa pela empresa"
+        ],
+        correct: "Sim — o funcionário que pede demissão deve cumprir 30 dias de aviso prévio ou a empresa pode dispensar e pagar",
+        hint: "O aviso prévio protege ambas as partes. Quando o funcionário pede demissão, ele deve avisar a empresa com antecedência para ela se organizar. Se a empresa dispensa esse aviso, paga os dias. E quando é a empresa que demite, quem deve cumprir ou indenizar o aviso?",
+        xpReward: 35,
+      },
+      {
+        id: "gepclt-p2",
+        type: "multiple",
+        question: "Sua empresa quer contratar uma consultora de marketing para um projeto de 4 meses, exclusivamente para esse projeto, com horário flexível e sem exclusividade. Qual contrato é mais adequado?",
+        options: [
+          "CLT — qualquer trabalho acima de 30 dias deve ser CLT",
+          "Contrato de prestação de serviços PJ — pois há autonomia, prazo definido, projeto específico e sem exclusividade",
+          "Estágio — projetos de curta duração sempre são estágio",
+          "Trabalho avulso — para qualquer freelancer"
+        ],
+        correct: "Contrato de prestação de serviços PJ — pois há autonomia, prazo definido, projeto específico e sem exclusividade",
+        hint: "Lembre os elementos que caracterizam vínculo empregatício: subordinação, pessoalidade, continuidade, onerosidade. Quais desses estão presentes nesse caso? Quais estão ausentes?",
+        xpReward: 30,
+      },
+      {
+        id: "gepclt-p3",
+        type: "written",
+        question: "Você é RH de uma empresa com 120 funcionários. O turnover anual chegou a 42% — um dos piores do setor (média: 18%). A diretoria quer cortar benefícios para reduzir custos. Analise: isso resolveria o turnover? Quais são as causas mais prováveis de um turnover tão alto e que ações você proporia?",
+        hint: "Comece separando turnover voluntário (funcionários pedem demissão) de involuntário (empresa demite). Para o voluntário, as causas mais comuns são: salário abaixo do mercado, falta de plano de carreira, gestão ruim (o clássico 'pessoas não saem de empresas, saem de chefes'), cultura tóxica. Cortar benefícios em um cenário de alto turnover costuma piorar — por quê?",
+        xpReward: 65,
+      },
+    ],
+  },
+
+  {
+    moduleId: "financas-corporativas-avancado",
+    practices: [
+      {
+        id: "fincorp-p1",
+        type: "multiple",
+        question: "Uma empresa tem: Receita R$10M, COGS R$5,5M, SG&A R$2M, Depreciação R$500K, Resultado Financeiro (juros) −R$300K, IR R$200K. Qual é o EBITDA?",
+        options: ["R$2M", "R$2,5M", "R$1,5M", "R$3M"],
+        correct: "R$2,5M",
+        hint: "EBITDA = Lucro antes de Juros, Impostos, Depreciação e Amortização. Comece pela receita, subtraia custo dos produtos e despesas operacionais — mas NÃO subtraia depreciação nem juros. EBITDA = Receita − COGS − SG&A = R$10M − R$5,5M − R$2M = R$2,5M.",
+        xpReward: 40,
+      },
+      {
+        id: "fincorp-p2",
+        type: "truefalse",
+        question: "Uma empresa com Dívida Líquida/EBITDA de 1,2x e ROIC de 22% está em situação financeira saudável pela maioria das métricas.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Verdadeiro",
+        hint: "Analise cada indicador: o que significa Dívida Líquida/EBITDA de 1,2x? E ROIC de 22% — é alto ou baixo? Compare com benchmarks: alavancagem abaixo de 2x é confortável; ROIC acima de 15% é considerado forte na maioria dos setores.",
+        xpReward: 30,
+      },
+      {
+        id: "fincorp-p3",
+        type: "written",
+        question: "Você é CFO de uma empresa de software B2B com crescimento de 60% ao ano mas que ainda queima R$1,5M por mês de caixa. Os investidores pedem um plano de 18 meses para atingir breakeven. Qual seria sua estratégia? Quais alavancas financeiras você usaria?",
+        hint: "As alavancas do CFO para reduzir queima sem matar o crescimento: (1) otimização de CAC e ciclo de vendas, (2) melhoria de churn para aumentar LTV, (3) renegociação de contratos com fornecedores, (4) priorização de clientes de maior margem, (5) corte cirúrgico de gastos não produtivos. Não confunda 'cortar custos' com 'cortar crescimento' — como distinguir os dois?",
+        xpReward: 70,
+      },
+    ],
+  },
+
+  // ─── LIDERANÇA CORPORATIVA ────────────────────────────────────────────────
+
+  {
+    moduleId: "compliance-lgpd",
+    practices: [
+      {
+        id: "cplgpd-p1",
+        type: "multiple",
+        question: "Sua empresa de RH terceirizado processa dados de 50.000 funcionários de clientes corporativos (salários, CPF, dados bancários). Qual é o papel da sua empresa na LGPD?",
+        options: [
+          "Controlador — você decide como os dados são tratados",
+          "Operador — você trata os dados em nome dos seus clientes, que são os controladores",
+          "Encarregado — você é o DPO de todas as empresas clientes",
+          "Terceiro — você não tem obrigações porque os dados pertencem aos clientes"
+        ],
+        correct: "Operador — você trata os dados em nome dos seus clientes, que são os controladores",
+        hint: "A LGPD define: Controlador = quem decide para que e como os dados serão usados. Operador = quem processa os dados por conta e ordem do controlador. Quem contratou você para processar a folha de pagamento dos funcionários — quem tomou a decisão original de coletar esses dados?",
+        xpReward: 35,
+      },
+      {
+        id: "cplgpd-p2",
+        type: "truefalse",
+        question: "Um funcionário de uma empresa tem o direito de saber quais dados pessoais a empresa possui sobre ele e pode solicitar a correção de dados incorretos.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Verdadeiro",
+        hint: "A LGPD garante direitos aos titulares de dados. Lembre os 9 direitos básicos: acesso, correção, anonimização, portabilidade, eliminação, informação sobre compartilhamento, revogação de consentimento, revisão de decisões automatizadas e oposição.",
+        xpReward: 25,
+      },
+      {
+        id: "cplgpd-p3",
+        type: "written",
+        question: "Você é o DPO (Data Protection Officer) de uma empresa de saúde que sofreu um ataque ransomware. Hackers criptografaram e provavelmente roubaram prontuários médicos de 12.000 pacientes. Quais são seus próximos passos nas próximas 72 horas?",
+        hint: "A LGPD exige que incidentes com alto risco aos titulares sejam comunicados à ANPD 'em prazo razoável' (na prática, a ANPD recomenda 72h para incidentes graves). Pense nas três frentes simultâneas: (1) Técnica — conter o incidente, preservar evidências; (2) Legal — notificar ANPD e titular conforme art. 48 LGPD, acionar jurídico; (3) Comunicação — como informar os pacientes afetados?",
+        xpReward: 65,
+      },
+    ],
+  },
+
+  {
+    moduleId: "gestao-crise",
+    practices: [
+      {
+        id: "gcrise-p1",
+        type: "multiple",
+        question: "Em outubro de 1982, alguém adulterou frascos de Tylenol com cianeto nos EUA, matando 7 pessoas. A Johnson & Johnson recolheu 31 milhões de frascos do mercado mesmo sem obrigação legal. Qual foi o resultado desse recall?",
+        options: [
+          "A empresa faliu por causa do custo do recall de US$100 milhões",
+          "O Tylenol foi descontinuado permanentemente",
+          "A J&J perdeu sua posição de liderança para concorrentes como Excedrin por 10 anos",
+          "O Tylenol recuperou 100% da participação de mercado em menos de 1 ano, tornando-se o case referência de gestão de crise"
+        ],
+        correct: "O Tylenol recuperou 100% da participação de mercado em menos de 1 ano, tornando-se o case referência de gestão de crise",
+        hint: "Quando uma empresa coloca as pessoas acima do lucro em uma crise com risco de vida, qual é o impacto na confiança do consumidor a longo prazo? Compare com empresas que tentaram esconder problemas.",
+        xpReward: 30,
+      },
+      {
+        id: "gcrise-p2",
+        type: "multiple",
+        question: "Uma rede social descobre às 18h de sexta-feira que um bug expôs dados pessoais de 200.000 usuários. Qual é a decisão correta?",
+        options: [
+          "Aguardar até segunda-feira para investigar melhor antes de comunicar",
+          "Corrigir o bug silenciosamente e não comunicar — se ninguém percebeu, não precisa avisar",
+          "Acionar imediatamente a célula de crise, corrigir o bug, notificar a ANPD dentro de 72h e comunicar os usuários afetados proativamente",
+          "Publicar nas redes sociais antes de notificar os usuários afetados diretamente"
+        ],
+        correct: "Acionar imediatamente a célula de crise, corrigir o bug, notificar a ANPD dentro de 72h e comunicar os usuários afetados proativamente",
+        hint: "Há duas obrigações aqui: técnica (corrigir o problema) e legal (a LGPD exige notificação à ANPD em caso de incidente de segurança). E há o timing: esperar até segunda aumenta o risco de exposição — o que acontece se um usuário descobrir antes da empresa comunicar?",
+        xpReward: 35,
+      },
+      {
+        id: "gcrise-p3",
+        type: "written",
+        question: "Você é CEO de uma rede de fast-food. Um vídeo viral mostra um funcionário de uma das suas franquias manuseando alimentos de forma inadequada. O vídeo tem 2 milhões de visualizações em 4 horas. Monte o plano de crise: o que você faz nas próximas 24 horas?",
+        hint: "Siga o framework: (1) Confirme os fatos — é autêntico? qual loja? quando foi? o funcionário ainda trabalha lá? (2) Comunique com transparência — o que você sabe, o que está apurando e o que já fez; (3) Aja visivelmente — não basta investigar, mostre ação concreta (visita in loco, auditoria na unidade, afastamento preventivo enquanto apura); (4) Quem fala? Um CEO ou diretor, não um assessor de imprensa. Pessoas querem ver humanos, não notas frias.",
+        xpReward: 70,
+      },
+    ],
+  },
+
+  {
+    moduleId: "captacao-recursos-corp",
+    practices: [
+      {
+        id: "caprec-p1",
+        type: "multiple",
+        question: "Uma startup de agritech quer captar R$5M. O fundador não quer perder controle da empresa e tem fluxo de caixa operacional positivo de R$80K/mês. Qual fonte de capital faz mais sentido?",
+        options: [
+          "Série A com fundo de venture capital — é a única opção para startups",
+          "Dívida estruturada (CRI, debêntures, BNDES) — o fluxo de caixa sustenta o serviço da dívida sem dilução",
+          "IPO — a melhor forma de captar sem dilução",
+          "Equity crowdfunding — para qualquer startup que não queira diluição"
+        ],
+        correct: "Dívida estruturada (CRI, debêntures, BNDES) — o fluxo de caixa sustenta o serviço da dívida sem dilução",
+        hint: "A questão central: o fundador não quer diluição. Qual forma de capital não exige ceder participação societária? E qual pré-requisito essa forma geralmente exige — que o fundador felizmente tem?",
+        xpReward: 35,
+      },
+      {
+        id: "caprec-p2",
+        type: "truefalse",
+        question: "Em uma rodada Série A, o investidor recebe ações ordinárias com os mesmos direitos dos fundadores.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Falso",
+        hint: "Investidores institucionais em rodadas de VC geralmente exigem proteções especiais. Quais tipos de ações garantem direitos preferenciais — como liquidation preference e anti-dilution provisions?",
+        xpReward: 25,
+      },
+      {
+        id: "caprec-p3",
+        type: "written",
+        question: "Você fundou uma empresa de educação corporativa. Receita anual: R$4M, crescimento 80% ao ano, margem EBITDA de 15%. Um fundo de PE oferece R$12M por 30% da empresa. Avalie: esse é um bom deal? Qual o valuation implícito? O que você negociaria nos termos?",
+        hint: "Calcule o valuation: se R$12M = 30%, então 100% = ? Isso equivale a quantos múltiplos de receita? É razoável para o seu setor e crescimento? Pense nos termos além do valuation: liquidation preference (quantas vezes o capital deve ser devolvido antes dos fundadores receberem?), drag-along (o fundo pode te forçar a vender?), vesting dos fundadores, composição do conselho. Cada cláusula tem implicações práticas.",
+        xpReward: 70,
+      },
+    ],
+  },
+
+  {
+    moduleId: "estrategia-crescimento",
+    practices: [
+      {
+        id: "estcre-p1",
+        type: "multiple",
+        question: "A Magazine Luiza transformou-se de varejista físico em plataforma digital entre 2015 e 2022. Segundo a Matriz de Ansoff, qual estratégia de crescimento ela utilizou principalmente?",
+        options: [
+          "Penetração de mercado — vendeu mais para os mesmos clientes em suas lojas físicas",
+          "Desenvolvimento de produto — lançou o Magalu como app e ecossistema digital para o mesmo público de varejo",
+          "Diversificação — entrou em mercados completamente novos sem relação com o varejo",
+          "Desenvolvimento de mercado — abriu lojas em cidades onde nunca tinha operado"
+        ],
+        correct: "Desenvolvimento de produto — lançou o Magalu como app e ecossistema digital para o mesmo público de varejo",
+        hint: "A Matriz de Ansoff cruza Produto (existente/novo) com Mercado (existente/novo). O Magalu continuou atendendo o mesmo mercado (consumidor brasileiro de varejo), mas criou um novo produto/canal (plataforma digital, marketplace, serviços financeiros). Qual quadrante isso representa?",
+        xpReward: 35,
+      },
+      {
+        id: "estcre-p2",
+        type: "truefalse",
+        question: "Segundo a Lei de Franquias brasileira, o franqueado pode exigir exclusividade territorial — ou seja, que nenhuma outra unidade da rede seja aberta na sua região.",
+        options: ["Verdadeiro", "Falso"],
+        correct: "Falso",
+        hint: "A Lei 13.966/2019 regula o que DEVE estar na COF, mas não impõe exclusividade. Exclusividade territorial é uma cláusula negociável — pode ou não estar no contrato. Qual documento o franqueado deve ler atentamente antes de assinar para saber se tem ou não exclusividade?",
+        xpReward: 25,
+      },
+      {
+        id: "estcre-p3",
+        type: "written",
+        question: "Você é CEO de uma rede de academias com 80 unidades próprias no Sudeste. O conselho quer crescer para 300 unidades em 4 anos. Compare as 3 principais estratégias de expansão — abrir unidades próprias, franquear e fazer M&A de redes menores — analisando velocidade, controle, custo de capital e risco operacional de cada uma.",
+        hint: "Unidades próprias: controle total, mas capital intensivo e crescimento lento (cada unidade exige R$800K a R$1,5M). Franquia: escala rápida com capital do franqueado, mas você perde controle operacional e o sucesso depende da qualidade dos franqueados. M&A: velocidade máxima, mas risco de choques culturais e integração de sistemas. A melhor estratégia geralmente combina as três — para que e quando você usaria cada uma?",
+        xpReward: 70,
+      },
+    ],
+  },
 ];
 
 export function getPracticesByModule(moduleId: string): Practice[] {
