@@ -21,6 +21,10 @@ function NativeTabLayout() {
         <Icon sf={{ default: "map", selected: "map.fill" }} />
         <Label>Jornadas</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="desempenho">
+        <Icon sf={{ default: "chart.bar", selected: "chart.bar.fill" }} />
+        <Label>Desempenho</Label>
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="perfil">
         <Icon sf={{ default: "person", selected: "person.fill" }} />
         <Label>Perfil</Label>
@@ -77,6 +81,18 @@ function ClassicTabLayout() {
               <SymbolView name="map" tintColor={color} size={24} />
             ) : (
               <Feather name="map" size={22} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="desempenho"
+        options={{
+          title: "Desempenho",
+          tabBarIcon: ({ color }) =>
+            isIOS ? (
+              <SymbolView name="chart.bar" tintColor={color} size={24} />
+            ) : (
+              <Feather name="bar-chart-2" size={22} color={color} />
             ),
         }}
       />
