@@ -4,9 +4,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import OnboardingFlow from "@/pages/OnboardingFlow";
 import JourneyDetail from "@/pages/JourneyDetail";
 import ModuleDetail from "@/pages/ModuleDetail";
 import Lesson from "@/pages/Lesson";
@@ -59,8 +61,9 @@ function LoadingScreen() {
 function AppRoutes() {
   const { user, loading } = useAuth();
   const [location] = useLocation();
+  const { needsOnboarding, loading: onboardingLoading, saveAnswers } = useOnboarding();
 
-  if (loading) return <LoadingScreen />;
+  if (loading || onboardingLoading) return <LoadingScreen />;
 
   if (PUBLIC_PATHS.some(p => location.startsWith(p))) {
     return (
@@ -73,6 +76,15 @@ function AppRoutes() {
   }
 
   if (!user) return <Login />;
+
+  if (needsOnboarding) {
+    return (
+      <OnboardingFlow
+        userName={user.name}
+        onComplete={answers => saveAnswers(answers)}
+      />
+    );
+  }
 
   return (
     <Switch>
