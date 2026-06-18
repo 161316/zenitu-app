@@ -323,6 +323,30 @@ router.post("/question-result", requireAuth, questionResultLimiter, async (req, 
   res.json({ ok: true });
 });
 
+// ── GET /api/progress/module-stats ───────────────────────────────────────────
+// Returns aggregated question accuracy per module for the authenticated user.
+
+router.get("/module-stats", requireAuth, async (req, res) => {
+  const userId = req.session.userId!;
+
+  const rows = await db
+    .select({
+      moduleId: lessonQuestionResultsTable.moduleId,
+      isCorrect: lessonQuestionResultsTable.isCorrect,
+    })
+    .from(lessonQuestionResultsTable)
+    .where(eq(lessonQuestionResultsTable.userId, userId));
+
+  const stats: Record<string, { correct: number; total: number }> = {};
+  for (const row of rows) {
+    if (!stats[row.moduleId]) stats[row.moduleId] = { correct: 0, total: 0 };
+    stats[row.moduleId].total++;
+    if (row.isCorrect) stats[row.moduleId].correct++;
+  }
+
+  res.json(stats);
+});
+
 // ── GET /api/progress/lesson-results ─────────────────────────────────────────
 // Returns all saved question results for the user in a specific lesson.
 

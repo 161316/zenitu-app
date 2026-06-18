@@ -17,6 +17,7 @@ import Practice from "@/pages/Practice";
 import Dictionary from "@/pages/Dictionary";
 import WordDetail from "@/pages/WordDetail";
 import Profile from "@/pages/Profile";
+import Desempenho from "@/pages/Desempenho";
 import Admin from "@/pages/Admin";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
@@ -97,6 +98,7 @@ function AppRoutes() {
       <Route path="/dicionario" component={Dictionary} />
       <Route path="/dicionario/:word" component={WordDetail} />
       <Route path="/perfil" component={Profile} />
+      <Route path="/desempenho" component={Desempenho} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>

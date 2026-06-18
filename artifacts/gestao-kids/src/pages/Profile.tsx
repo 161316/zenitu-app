@@ -1,6 +1,6 @@
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Flame, Trophy, BookOpen, CheckCircle, Zap, LogOut } from "lucide-react";
+import { ArrowLeft, Star, Flame, Trophy, BookOpen, CheckCircle, Zap, LogOut, BarChart2 } from "lucide-react";
 import { useProgress, ALL_BADGES } from "@/hooks/useProgress";
 import { useAuth } from "@/hooks/useAuth";
 import { MODULES } from "@/data/modules";
@@ -116,6 +116,26 @@ export default function Profile() {
             </div>
           ))}
         </motion.div>
+
+        {/* Link to Desempenho */}
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          onClick={() => setLocation("/desempenho")}
+          className="w-full flex items-center justify-between bg-card border border-card-border rounded-2xl p-4 mb-0 shadow-sm hover:bg-muted/50 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <BarChart2 className="w-5 h-5 text-primary" />
+            </div>
+            <div className="text-left">
+              <p className="font-extrabold text-foreground text-sm">Ver desempenho detalhado</p>
+              <p className="text-xs text-muted-foreground">Taxa de acerto por módulo e badges</p>
+            </div>
+          </div>
+          <span className="text-muted-foreground text-lg">›</span>
+        </motion.button>
 
         {/* Desafios */}
         <motion.div
