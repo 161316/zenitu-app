@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { rateLimit } from "express-rate-limit";
+import { rateLimit, ipKeyGenerator } from "express-rate-limit";
 import { sql } from "drizzle-orm";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { db, correctionUsageTable } from "@workspace/db";
@@ -29,7 +29,7 @@ const userLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { trustProxy: false },
-  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  keyGenerator: (req) => (req as any).session?.userId ? String((req as any).session.userId) : ipKeyGenerator(req),
   message: { error: "Muitas correções solicitadas. Aguarde um momento." },
 });
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { rateLimit } from "express-rate-limit";
+import { rateLimit, ipKeyGenerator } from "express-rate-limit";
 import { z } from "zod/v4";
 import { db } from "@workspace/db";
 import { progressTable, lessonQuestionResultsTable, usersTable } from "@workspace/db";
@@ -8,13 +8,17 @@ import { CATALOG, MODULE_ORDER, MAX_XP_PER_CHALLENGE_QUESTION } from "../data/ca
 
 const router = Router();
 
+function sessionOrIpKey(req: any): string {
+  return req.session?.userId ? String(req.session.userId) : ipKeyGenerator(req);
+}
+
 const questionResultLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 60,
   standardHeaders: true,
   legacyHeaders: false,
   validate: { trustProxy: false },
-  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  keyGenerator: sessionOrIpKey,
   message: { error: "Muitas respostas enviadas. Aguarde um momento antes de continuar." },
 });
 
@@ -24,7 +28,7 @@ const lessonLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { trustProxy: false },
-  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  keyGenerator: sessionOrIpKey,
   message: { error: "Muitas aulas concluídas em pouco tempo. Aguarde um momento antes de continuar." },
 });
 
@@ -34,7 +38,7 @@ const challengeLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   validate: { trustProxy: false },
-  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  keyGenerator: sessionOrIpKey,
   message: { error: "Muitos desafios enviados em pouco tempo. Aguarde um momento antes de continuar." },
 });
 
