@@ -8,6 +8,7 @@ import { useColors } from "@/hooks/useColors";
 import { useProgress } from "@/contexts/ProgressContext";
 import { CHALLENGES } from "@/data/challenges";
 import { MODULES } from "@/data/modules";
+import TutorChatModal from "@/components/TutorChatModal";
 
 export default function DesafioScreen() {
   const { moduleId } = useLocalSearchParams<{ moduleId: string }>();
@@ -19,6 +20,7 @@ export default function DesafioScreen() {
   const [revealed, setRevealed] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [tutorVisible, setTutorVisible] = useState(false);
   const topPad = Platform.OS === "web" ? 67 : insets.top;
   const bottomPad = Platform.OS === "web" ? 34 : insets.bottom;
 
@@ -158,6 +160,18 @@ export default function DesafioScreen() {
             <Text style={[styles.explanationText, { color: colors.mutedForeground, fontFamily: "SpaceGrotesk_400Regular" }]}>
               {q.explanation}
             </Text>
+            <Pressable
+              onPress={() => setTutorVisible(true)}
+              style={({ pressed }) => [
+                styles.tutorInlineBtn,
+                { backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}40`, opacity: pressed ? 0.75 : 1 },
+              ]}
+            >
+              <Ionicons name="sparkles" size={15} color={colors.primary} />
+              <Text style={[styles.tutorInlineBtnText, { color: colors.primary, fontFamily: "SpaceGrotesk_600SemiBold" }]}>
+                Ainda tem dúvida? Pergunte ao Tutor IA
+              </Text>
+            </Pressable>
           </View>
         )}
       </ScrollView>
@@ -175,6 +189,15 @@ export default function DesafioScreen() {
           </Pressable>
         </View>
       )}
+
+      <TutorChatModal
+        visible={tutorVisible}
+        onClose={() => setTutorVisible(false)}
+        contextQuestion={q.question}
+        moduleTitle={mod.title}
+        lessonTitle={`Desafio · ${mod.title}`}
+        questionType="objective"
+      />
     </View>
   );
 }
@@ -192,6 +215,18 @@ const styles = StyleSheet.create({
   explanation: { borderWidth: 1, borderRadius: 12, padding: 16, gap: 6 },
   explanationLabel: { fontSize: 14 },
   explanationText: { fontSize: 14, lineHeight: 20 },
+  tutorInlineBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignSelf: "flex-start",
+  },
+  tutorInlineBtnText: { fontSize: 13 },
   nextBar: { padding: 20, paddingTop: 12 },
   nextBtn: { borderRadius: 14, padding: 16, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
   nextBtnText: { color: "#fff", fontSize: 16 },

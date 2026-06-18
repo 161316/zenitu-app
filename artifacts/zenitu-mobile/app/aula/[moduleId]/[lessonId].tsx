@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useColors } from "@/hooks/useColors";
 import { useProgress } from "@/contexts/ProgressContext";
 import { MODULES } from "@/data/modules";
+import TutorChatModal from "@/components/TutorChatModal";
 
 export default function AulaScreen() {
   const { moduleId, lessonId } = useLocalSearchParams<{ moduleId: string; lessonId: string }>();
@@ -23,6 +24,7 @@ export default function AulaScreen() {
   const { completeLesson, isLessonComplete } = useProgress();
   const [step, setStep] = useState(0);
   const [completed, setCompleted] = useState(false);
+  const [tutorVisible, setTutorVisible] = useState(false);
 
   const mod = MODULES.find((m) => m.id === moduleId);
   const lesson = mod?.lessons.find((l) => l.id === lessonId);
@@ -121,19 +123,42 @@ export default function AulaScreen() {
       </ScrollView>
 
       <View style={[styles.bottomBar, { paddingBottom: bottomPad + 16, paddingHorizontal: 20 }]}>
-        <Pressable
-          onPress={handleNext}
-          style={({ pressed }) => [
-            styles.nextBtn,
-            { backgroundColor: isLastStep ? colors.accent : colors.primary, opacity: pressed ? 0.85 : 1 },
-          ]}
-        >
-          <Text style={[styles.nextBtnText, { fontFamily: "SpaceGrotesk_700Bold" }]}>
-            {isLastStep ? "Concluir aula" : "Continuar"}
-          </Text>
-          <Ionicons name={isLastStep ? "checkmark" : "arrow-forward"} size={18} color="#fff" />
-        </Pressable>
+        <View style={styles.bottomActions}>
+          <Pressable
+            onPress={() => setTutorVisible(true)}
+            style={({ pressed }) => [
+              styles.tutorBtn,
+              { backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}50`, opacity: pressed ? 0.75 : 1 },
+            ]}
+          >
+            <Ionicons name="sparkles" size={18} color={colors.primary} />
+            <Text style={[styles.tutorBtnText, { color: colors.primary, fontFamily: "SpaceGrotesk_600SemiBold" }]}>
+              Tutor IA
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={handleNext}
+            style={({ pressed }) => [
+              styles.nextBtn,
+              { backgroundColor: isLastStep ? colors.accent : colors.primary, opacity: pressed ? 0.85 : 1 },
+            ]}
+          >
+            <Text style={[styles.nextBtnText, { fontFamily: "SpaceGrotesk_700Bold" }]}>
+              {isLastStep ? "Concluir aula" : "Continuar"}
+            </Text>
+            <Ionicons name={isLastStep ? "checkmark" : "arrow-forward"} size={18} color="#fff" />
+          </Pressable>
+        </View>
       </View>
+
+      <TutorChatModal
+        visible={tutorVisible}
+        onClose={() => setTutorVisible(false)}
+        contextQuestion={lesson.content[step]}
+        moduleTitle={mod.title}
+        lessonTitle={lesson.title}
+        questionType="written"
+      />
     </View>
   );
 }
@@ -148,7 +173,23 @@ const styles = StyleSheet.create({
   lessonTitle: { fontSize: 16 },
   paragraph: { fontSize: 17, lineHeight: 28, letterSpacing: 0.1 },
   bottomBar: { paddingTop: 16 },
+  bottomActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  tutorBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  tutorBtnText: { fontSize: 14 },
   nextBtn: {
+    flex: 1,
     borderRadius: 14,
     padding: 16,
     flexDirection: "row",
