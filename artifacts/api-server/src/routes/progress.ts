@@ -18,6 +18,26 @@ const questionResultLimiter = rateLimit({
   message: { error: "Muitas respostas enviadas. Aguarde um momento antes de continuar." },
 });
 
+const lessonLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: false },
+  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  message: { error: "Muitas aulas concluídas em pouco tempo. Aguarde um momento antes de continuar." },
+});
+
+const challengeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: false },
+  keyGenerator: (req) => String((req as any).session?.userId ?? req.ip),
+  message: { error: "Muitos desafios enviados em pouco tempo. Aguarde um momento antes de continuar." },
+});
+
 function requireAuth(req: any, res: any, next: any) {
   if (!req.session?.userId) {
     res.status(401).json({ error: "Não autenticado" });
@@ -104,7 +124,7 @@ router.get("/", requireAuth, async (req, res) => {
 // Records a completed lesson. XP is taken from the server-side catalog;
 // client-supplied XP is ignored.
 
-router.post("/lesson", requireAuth, async (req, res) => {
+router.post("/lesson", requireAuth, lessonLimiter, async (req, res) => {
   const { moduleId, lessonId } = req.body ?? {};
   if (typeof moduleId !== "string" || !moduleId || moduleId.length > 100 ||
       typeof lessonId !== "string" || !lessonId || lessonId.length > 100) {
@@ -180,7 +200,7 @@ router.post("/lesson", requireAuth, async (req, res) => {
 // already complete. XP is taken entirely from the server-side catalog;
 // client-supplied XP is never accepted.
 
-router.post("/challenge", requireAuth, async (req, res) => {
+router.post("/challenge", requireAuth, challengeLimiter, async (req, res) => {
   const { moduleId } = req.body ?? {};
   if (typeof moduleId !== "string" || !moduleId || moduleId.length > 100) {
     res.status(400).json({ error: "Dados inválidos" });
