@@ -16,6 +16,7 @@ import Challenge from "@/pages/Challenge";
 import Practice from "@/pages/Practice";
 import Dictionary from "@/pages/Dictionary";
 import WordDetail from "@/pages/WordDetail";
+import LegalRefs from "@/pages/LegalRefs";
 import Profile from "@/pages/Profile";
 import Desempenho from "@/pages/Desempenho";
 import Admin from "@/pages/Admin";
@@ -97,6 +98,7 @@ function AppRoutes() {
       <Route path="/desafio/:moduleId" component={Challenge} />
       <Route path="/dicionario" component={Dictionary} />
       <Route path="/dicionario/:word" component={WordDetail} />
+      <Route path="/legislacao" component={LegalRefs} />
       <Route path="/perfil" component={Profile} />
       <Route path="/desempenho" component={Desempenho} />
       <Route path="/admin" component={Admin} />

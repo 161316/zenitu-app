@@ -416,6 +416,22 @@ export default function Home() {
           </div>
           <ArrowRight className="w-5 h-5 ml-auto" style={{ color: theme.colors.secondary }} />
         </motion.button>
+
+        {/* Legal References */}
+        <motion.button
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+          onClick={() => setLocation("/legislacao")}
+          className="w-full rounded-2xl p-4 flex items-center gap-4 transition-all hover:brightness-110"
+          style={{ background: `linear-gradient(135deg, #22c55e18, #16a34a0e)`, border: `1px solid #22c55e33` }}
+          data-testid="button-go-legal"
+        >
+          <div className="text-3xl">⚖️</div>
+          <div className="text-left">
+            <p className={`${headingFont} font-semibold text-base`} style={{ color: theme.colors.text }}>Legislação Empresarial</p>
+            <p className="text-xs" style={{ color: theme.colors.textMuted }}>15 leis essenciais — proibições, multas e obrigações</p>
+          </div>
+          <ArrowRight className="w-5 h-5 ml-auto" style={{ color: "#22c55e" }} />
+        </motion.button>
       </main>
     </div>
   );

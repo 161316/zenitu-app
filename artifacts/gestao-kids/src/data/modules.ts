@@ -1042,7 +1042,7 @@ export const MODULES: Module[] = [
     emoji: "🏛️",
     color: "#e11d48",
     bgGradient: "from-rose-600 to-red-700",
-    order: 13,
+    order: 23,
     tier: 1,
     tierLabel: "Master",
     tierEmoji: "🚀",
@@ -1095,7 +1095,7 @@ export const MODULES: Module[] = [
     emoji: "🤖",
     color: "#9333ea",
     bgGradient: "from-purple-700 to-violet-900",
-    order: 14,
+    order: 24,
     tier: 2,
     tierLabel: "Master",
     tierEmoji: "🚀",
@@ -1138,7 +1138,398 @@ export const MODULES: Module[] = [
         ]
       }
     ]
-  }
+  },
+
+  // ─── GESTÃO ESTRATÉGICA (Intermediário) ───────────────────────────────────
+
+  {
+    id: "setores-empresa",
+    journeyId: "gestao-estrategica",
+    title: "Estrutura Organizacional",
+    subtitle: "Quem faz o quê, como cada área funciona e como todas se conectam",
+    emoji: "🏗️",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 13,
+    tier: 2,
+    tierLabel: "Intermediário",
+    tierEmoji: "📊",
+    tierColor: "#2563eb",
+    reviewConcepts: ["Organograma", "C-Suite", "Departamentos", "Sinergia", "KPI"],
+    bossQuote: "Uma empresa bem estruturada não precisa de um herói — precisa de um sistema que funcione mesmo quando o herói está de férias. — Michael Gerber",
+    nextModuleTeaser: "Próximo: aprenda a ler os sinais vitais de uma empresa e diagnosticar problemas antes que se tornem crises.",
+    lessons: [
+      {
+        id: "hierarquia-csuite",
+        title: "Hierarquia Empresarial: do Estagiário ao CEO",
+        xpReward: 75,
+        content: [
+          "Toda empresa de médio e grande porte possui uma estrutura hierárquica clara, e entender essa estrutura é fundamental para qualquer profissional que queira crescer ou gerenciar negócios. No topo está o C-Suite — os executivos com o prefixo 'Chief' no título. O CEO (Chief Executive Officer) é o responsável máximo pela empresa: toma as decisões estratégicas mais importantes, responde ao Conselho de Administração e define a direção geral do negócio. Abaixo do CEO estão os outros C-levels: CFO (Finanças), COO (Operações), CMO (Marketing), CTO (Tecnologia), CHRO (Recursos Humanos) e CLO (Jurídico). Cada um comanda uma área e reporta diretamente ao CEO.",
+          "Abaixo do C-Suite vêm os Diretores (ou Vice-Presidentes em empresas americanas), que traduzem a estratégia dos executivos em planos concretos para suas áreas. Em seguida, os Gerentes coordenam equipes e garantem a execução do dia a dia. Os Coordenadores e Supervisores fazem a ponte entre gerentes e a equipe operacional. Os Analistas, Assistentes e Estagiários executam as atividades e produzem os dados que sustentam as decisões de cima. Em uma empresa com 500 funcionários, essa pirâmide tipicamente tem 5 a 7 níveis hierárquicos. Em startups de alto crescimento, é comum ter apenas 3: CEO, gerentes e equipe — estruturas mais planas aceleram decisões mas exigem profissionais mais seniores em todos os níveis.",
+          "O organograma é o mapa visual da estrutura de uma empresa. Ele pode ser vertical (clássico, com caixas e linhas mostrando quem reporta para quem), horizontal (poucos níveis, comum em startups e agências criativas), matricial (cada funcionário reporta para dois gestores — um funcional e um de projeto) ou em rede (times autônomos conectados por propósito, comum em empresas ágeis como Spotify e Nubank). A escolha da estrutura não é arbitrária: impacta a velocidade de decisão, a comunicação interna, a inovação e a capacidade de escalar. Empresas em crescimento rápido frequentemente passam por reestruturações orgânicas — o que era funcional com 50 pessoas quebra com 300.",
+          "Cada nível hierárquico tem um perfil de competência diferente. Executivos precisam de visão sistêmica, tolerância à ambiguidade e capacidade de comunicar estratégia. Gerentes precisam de planejamento, gestão de pessoas e resolução de conflitos. Analistas e assistentes precisam de execução, atenção a detalhes e domínio técnico. O erro comum de profissionais que são promovidos é continuar fazendo o trabalho técnico que os fez ser promovidos — em vez de desenvolver as competências do novo nível. Um analista que vira gerente precisa parar de 'fazer' e começar a 'coordenar'."
+        ]
+      },
+      {
+        id: "departamentos-funcoes",
+        title: "Os Departamentos e o Que Cada Um Faz",
+        xpReward: 75,
+        content: [
+          "Uma empresa é um conjunto de áreas interdependentes. O Departamento Financeiro (ou Controladoria) é o guardião dos números: registra todas as transações, produz os demonstrativos financeiros, gerencia o fluxo de caixa, controla custos, recolhe impostos e assessora o CEO sobre a saúde financeira do negócio. Sem o financeiro, a empresa opera no escuro. Em uma empresa de médio porte, o financeiro tem quatro funções básicas: contas a pagar, contas a receber, contabilidade e tesouraria. As métricas do financeiro são: receita líquida, lucro bruto, EBITDA, margem líquida, endividamento líquido e capital de giro.",
+          "O Departamento Comercial (ou Vendas) gera a receita que faz a empresa existir. É dividido em Inside Sales (vendas internas, por telefone e videoconferência) e Field Sales (representantes externo que visitam clientes). Em empresas B2B, o processo de vendas é complexo e longo: Prospecção → Qualificação → Proposta → Negociação → Fechamento → Pós-venda. O funil de vendas mede a conversão em cada etapa. KPIs comerciais: número de leads, taxa de conversão, ticket médio, ciclo de vendas, churn (perda de clientes) e LTV (valor do cliente ao longo do tempo). O Marketing alimenta o comercial com leads qualificados — quando as duas áreas não estão alinhadas, a empresa perde dinheiro dos dois lados.",
+          "O Departamento de Recursos Humanos (RH ou People & Culture em empresas modernas) é responsável pelo capital humano da organização — seu ativo mais valioso e também o mais complexo. As funções do RH se dividem em: Recrutamento e Seleção (atrair e contratar as pessoas certas), Treinamento e Desenvolvimento (capacitar e desenvolver os colaboradores), Remuneração e Benefícios (estruturar salários, bônus, VR, VT, plano de saúde), Gestão de Desempenho (avaliações periódicas, feedbacks, PDIs), Administração de Pessoal (folha de pagamento, contratos, férias, rescisões) e Clima Organizacional (pesquisas de satisfação, programas de engajamento). Em empresas com mais de 50 funcionários, o RH deixa de ser opcional para se tornar crítico — a gestão ad hoc sem processos estruturados gera conflitos, rotatividade e passivos trabalhistas.",
+          "O Departamento Jurídico (ou Área Legal) protege a empresa de riscos legais. Seu trabalho inclui: elaboração e revisão de contratos comerciais, trabalhistas e societários; assessoria em questões tributárias; acompanhamento de processos judiciais; garantia de conformidade regulatória (compliance); proteção da propriedade intelectual (marcas, patentes); e consultoria preventiva para evitar litígios. Em pequenas empresas, o jurídico geralmente é terceirizado para um escritório de advocacia. Em grandes corporações, o departamento jurídico interno tem dezenas de advogados especializados em diferentes áreas. A máxima do jurídico corporativo: é muito mais barato prevenir um problema legal do que litigá-lo depois. Um processo trabalhista médio no Brasil custa entre R$15.000 e R$80.000 entre honorários, custas e condenação."
+        ]
+      },
+      {
+        id: "como-areas-se-conectam",
+        title: "Como os Setores se Conectam: a Empresa como Sistema",
+        xpReward: 75,
+        content: [
+          "Empresas não são coleções de departamentos isolados — são sistemas onde tudo se conecta. Uma decisão de Marketing impacta Vendas. Uma decisão de RH impacta Operações. Uma decisão de Operações impacta Financeiro. Gestores que pensam apenas na própria área e ignoram o sistema ao redor criam subotimizações: resolvem o problema da sua área enquanto criam problemas para as outras. Um bom exemplo: o Marketing cria uma campanha que gera 300% mais pedidos do que o normal. Ótimo para Marketing. Péssimo para Operações, que não tem capacidade de produzir, e para o Financeiro, que precisa de capital de giro extra para comprar matéria-prima antes de receber dos clientes.",
+          "O fluxo básico de valor em uma empresa funciona assim: o Marketing atrai potenciais clientes (leads). O Comercial converte leads em clientes pagantes. As Operações produzem e entregam o produto ou serviço. O Financeiro controla o dinheiro que entra e sai. O RH garante que as pessoas certas estão nos lugares certos executando todas essas etapas. O Jurídico garante que tudo é feito dentro da lei. A TI fornece as ferramentas tecnológicas que sustentam todos os departamentos. Quando um elo dessa cadeia falha, os efeitos se propagam. A questão não é 'qual área é mais importante?' — todas são igualmente necessárias para o sistema funcionar.",
+          "Reuniões de gestão interfuncional (cross-functional) existem justamente para alinhar os departamentos. Em empresas bem geridas, líderes de diferentes áreas se reúnem semanalmente ou quinzenalmente para revisar métricas, identificar gargalos e coordenar decisões que impactam múltiplos departamentos. Um erro clássico de empresas em crescimento rápido é cada área crescer de forma isolada — o que cria silos de informação onde Marketing não sabe o que Vendas está fazendo, Operações não sabe o que Marketing prometeu e o Financeiro descobre os problemas quando o caixa está negativo. A ferramenta que combate isso é o S&OP (Sales & Operations Planning): uma reunião mensal onde todos os departamentos alinham previsões, capacidade e estratégia para os próximos 3 a 6 meses.",
+          "Indicadores de performance (KPIs) de cada área devem estar conectados ao resultado final da empresa. O KPI do Marketing não pode ser apenas 'número de seguidores no Instagram' — precisa estar ligado a 'quantos leads qualificados geramos'. O KPI de Vendas não pode ser apenas 'número de ligações feitas' — precisa ser 'receita fechada e qualidade dos contratos'. O KPI de RH não pode ser apenas 'número de treinamentos realizados' — precisa incluir 'impacto na produtividade e retenção'. Quando os KPIs são bem definidos e conectados entre si, toda a organização remará na mesma direção. Quando são definidos de forma isolada, cada área pode atingir seus números enquanto a empresa perde dinheiro."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "diagnostico-empresa",
+    journeyId: "gestao-estrategica",
+    title: "Diagnóstico Empresarial",
+    subtitle: "Como identificar se uma empresa está saudável ou em risco",
+    emoji: "🔍",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 14,
+    tier: 2,
+    tierLabel: "Intermediário",
+    tierEmoji: "📊",
+    tierColor: "#2563eb",
+    reviewConcepts: ["Margem", "EBITDA", "Fluxo de Caixa", "DRE", "Churn", "NPS"],
+    bossQuote: "O que não é medido não é gerenciado. — Peter Drucker",
+    nextModuleTeaser: "Próximo: a empresa diagnosticada tem problemas sérios. O que você faz agora? Aprenda a reverter um negócio que não está dando retorno.",
+    lessons: [
+      {
+        id: "sinais-vitais-empresa",
+        title: "Os Sinais Vitais de uma Empresa",
+        xpReward: 75,
+        content: [
+          "Assim como um médico verifica pressão, temperatura e batimentos cardíacos para avaliar a saúde de um paciente, um gestor precisa monitorar os sinais vitais do negócio regularmente. Os sinais vitais financeiros fundamentais são: Receita (quanto a empresa vendeu), Custo dos Produtos Vendidos — CPV (quanto custou produzir o que vendeu), Lucro Bruto (Receita menos CPV), Despesas Operacionais (custos fixos: aluguel, salários, energia, software), EBITDA (Earnings Before Interest, Taxes, Depreciation and Amortization — o lucro operacional antes de juros, impostos e amortizações, que mede a eficiência operacional pura), Lucro Líquido (o que sobra depois de tudo) e Fluxo de Caixa (o dinheiro que efetivamente entrou e saiu da conta bancária).",
+          "A diferença entre lucro e caixa é crítica e frequentemente mal compreendida. Uma empresa pode ser lucrativa no papel e quebrar por falta de caixa. Isso acontece quando: clientes pagam a prazo (60-90 dias) mas fornecedores exigem pagamento à vista; a empresa cresce rápido e precisa investir em estoque e pessoal antes de receber das vendas; ou há inadimplência elevada. O índice de liquidez corrente — Ativo Circulante dividido pelo Passivo Circulante — mede a capacidade da empresa de pagar suas obrigações de curto prazo. Um índice abaixo de 1,0 significa que a empresa não tem recursos suficientes para honrar seus compromissos imediatos: sinal de alerta grave.",
+          "Os sinais vitais operacionais variam por setor, mas os mais universais são: Produtividade por funcionário (Receita ÷ Número de funcionários), Prazo médio de entrega (quanto tempo do pedido à entrega), Índice de devoluções e reclamações (qualidade do produto ou serviço), Taxa de ocupação ou utilização de capacidade (quanto da capacidade instalada está sendo usada), e NPS — Net Promoter Score (de 0 a 10, quantos clientes recomendariam a empresa: detratores 0-6, neutros 7-8, promotores 9-10; NPS = % promotores − % detratores). Um NPS acima de 50 é considerado excelente; abaixo de 0 indica crise de satisfação.",
+          "Os sinais vitais de RH revelam a saúde humana da organização: Turnover (taxa de rotatividade de funcionários — acima de 15% ao ano é preocupante no Brasil), Absenteísmo (faltas e afastamentos — acima de 3% indica problema de clima ou saúde), Tempo médio de contratação (demora para preencher vagas — indica se a empresa é atrativa para o mercado), e Índice de engajamento (pesquisa de clima — menos de 60% de engajados é sinal de ambiente problemático). Combinando os sinais financeiros, operacionais e de RH, um gestor tem uma visão 360° da empresa. O erro de muitos gestores é acompanhar apenas os financeiros e ignorar os operacionais e de RH — até que o problema humano se transforme em problema financeiro."
+        ]
+      },
+      {
+        id: "demonstrativos-financeiros",
+        title: "Como Ler Demonstrativos Financeiros",
+        xpReward: 80,
+        content: [
+          "O Balanço Patrimonial é a 'foto' da empresa em um momento específico. Ele mostra o que a empresa possui (Ativos), o que deve (Passivos) e o patrimônio dos sócios (Patrimônio Líquido). A equação fundamental é: Ativo = Passivo + Patrimônio Líquido. Ativos Circulantes são recursos que se convertem em dinheiro em menos de 12 meses: caixa, contas a receber, estoques. Ativos Não-Circulantes são de longo prazo: máquinas, imóveis, investimentos. Passivos Circulantes são dívidas de curto prazo: fornecedores a pagar, salários a pagar, impostos a recolher. Passivos Não-Circulantes são dívidas de longo prazo: financiamentos, debêntures. Um balanço saudável tem Patrimônio Líquido positivo e crescente — empresa com PL negativo está tecnicamente insolvente.",
+          "A Demonstração de Resultado do Exercício (DRE) é o 'filme' do desempenho da empresa durante um período (mês, trimestre, ano). Começa pela Receita Bruta (tudo que foi vendido), subtrai as devoluções e descontos para chegar à Receita Líquida, depois subtrai o Custo dos Produtos Vendidos (CPV) para obter o Lucro Bruto. As Despesas Operacionais (comerciais, administrativas, de marketing) são subtraídas para chegar ao EBIT (lucro operacional). O resultado financeiro (juros pagos menos recebidos) é somado ou subtraído para chegar ao Lucro antes dos Impostos (EBT). Após os impostos (IRPJ e CSLL — que somam 34% para grandes empresas no lucro real), chegamos ao Lucro Líquido. No Brasil, o Simples Nacional unifica impostos em uma alíquota única de 4% a 33% dependendo do porte e setor da empresa.",
+          "O Fluxo de Caixa Direto mostra todas as entradas e saídas de dinheiro em três grupos: Operacional (recebimentos de clientes e pagamentos operacionais), Investimentos (compra e venda de ativos fixos) e Financiamento (empréstimos, amortizações, distribuição de lucros). O Free Cash Flow (Fluxo de Caixa Livre) é o caixa gerado pelas operações menos os investimentos necessários para manter o negócio — é o caixa disponível para pagar dividendos, amortizar dívidas ou reinvestir no crescimento. Empresas que geram FCF consistentemente e crescente são as mais valorizadas no mercado: Amazon, Apple e Microsoft são exemplos. Uma empresa pode ter lucro líquido positivo e FCF negativo quando faz grandes investimentos ou quando seu capital de giro cresce mais rápido que sua receita.",
+          "Os principais indicadores de análise financeira derivados dos demonstrativos: Margem Bruta (Lucro Bruto ÷ Receita Líquida) — mede a eficiência da produção; Margem EBITDA — mede a eficiência operacional antes de itens não-caixa; Margem Líquida (Lucro Líquido ÷ Receita) — mede quanto de cada real vendido vira lucro; ROE (Return on Equity = Lucro Líquido ÷ Patrimônio Líquido) — mede o retorno sobre o capital dos sócios; ROA (Return on Assets = Lucro Líquido ÷ Ativos Totais) — mede a eficiência do uso dos ativos; e Dívida Líquida ÷ EBITDA — mede a alavancagem: abaixo de 2x é confortável, acima de 4x começa a ser preocupante para a maioria dos setores."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "empresa-sem-retorno",
+    journeyId: "gestao-estrategica",
+    title: "Empresa Sem Retorno",
+    subtitle: "Como identificar causas, agir rapidamente e reverter um negócio em dificuldade",
+    emoji: "📉",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 15,
+    tier: 2,
+    tierLabel: "Intermediário",
+    tierEmoji: "📊",
+    tierColor: "#2563eb",
+    reviewConcepts: ["Reestruturação", "Break-even", "Giro de Estoque", "Inadimplência", "Turnaround"],
+    bossQuote: "Toda empresa em crise passou por um período em que os sinais de alerta foram ignorados. — Luiz Seabra, cofundador da Natura",
+    nextModuleTeaser: "Próximo: entenda a lei e o que você pode e não pode fazer como empresário e gestor.",
+    lessons: [
+      {
+        id: "diagnostico-retorno",
+        title: "Por Que a Empresa Não Está Dando Retorno?",
+        xpReward: 80,
+        content: [
+          "Quando uma empresa não gera o retorno esperado, a causa é quase sempre uma dessas cinco: receita insuficiente, custo excessivo, margem comprimida, problema de giro (dinheiro preso em estoque ou contas a receber) ou modelo de negócio errado para o mercado. Confundir os sintomas com a causa raiz é o erro mais comum. Uma empresa que parece ter 'problema de vendas' pode, na verdade, ter um problema de precificação — está vendendo muito mas com margem tão baixa que quanto mais vende, mais perde. Uma empresa que parece ter 'problema de custo' pode ter um problema de escala — seus custos fixos são adequados para uma operação de 5 milhões de faturamento mas ela só fatura 1 milhão.",
+          "A ferramenta dos 5 Porquês (criada pela Toyota) é simples e poderosa para encontrar a causa raiz. Parte de um sintoma e pergunta 'por quê?' cinco vezes até chegar à causa fundamental. Exemplo: 'A empresa não dá lucro' → Por quê? 'Porque as despesas são maiores que a receita' → Por quê? 'Porque os custos fixos cresceram 40% no último ano' → Por quê? 'Porque contratamos 8 funcionários para um projeto que não foi aprovado pelo cliente' → Por quê? 'Porque começamos a executar o projeto antes da assinatura do contrato' → Por quê? 'Porque não existe processo formal de aprovação antes do início da execução'. Causa raiz identificada: ausência de processo de aprovação formal. A solução não é demitir os funcionários — é criar o processo.",
+          "O ponto de equilíbrio (break-even) é o nível de vendas onde a empresa não lucra nem perde — cobre exatamente seus custos. Calculado como: Custos Fixos Totais ÷ Margem de Contribuição Unitária (Preço de Venda − Custo Variável Unitário). Se uma empresa tem R$100.000 em custos fixos mensais e margem de contribuição de R$50 por produto, precisa vender 2.000 unidades por mês para atingir o break-even. Abaixo disso, opera no prejuízo. Acima, começa a lucrar. Empresas que não conhecem seu break-even não sabem se a meta de vendas que definiram é suficiente para ser sustentável. É um dos primeiros cálculos que qualquer gestor deve fazer ao assumir uma operação.",
+          "Quando a empresa identifica que não está performando, as ações imediatas dependem da urgência: (1) Se o caixa está crítico (menos de 30 dias de capital de giro), a prioridade é estancar a hemorragia — reduzir despesas variáveis imediatamente, renegociar prazos com fornecedores, acelerar cobranças e buscar capital de giro emergencial. (2) Se o problema é estrutural mas há fôlego de caixa, o foco é no diagnóstico profundo e na reestruturação planejada — revisão de portfólio de produtos, renegociação de contratos, ajuste de quadro de pessoal e revisão de modelo comercial. (3) Se o modelo de negócio está errado para o mercado, a solução pode exigir um pivot — mudança fundamental de público-alvo, proposta de valor ou canal de distribuição. O Nubank começou como cartão sem anuidade e evoluiu para um banco completo à medida que o modelo validou."
+        ]
+      },
+      {
+        id: "acoes-turnaround",
+        title: "Turnaround: Como Reverter um Negócio em Dificuldade",
+        xpReward: 80,
+        content: [
+          "Turnaround é o processo formal de reversão de uma empresa em dificuldade. Empresas de consultoria especializadas, chamadas de 'turnaround advisors', são contratadas para conduzir esse processo em casos graves. Mas gestores internos bem preparados podem conduzir turnarounds menores sem consultoria externa. O processo tem fases definidas: (1) Estabilização — parar a sangria financeira. Isso geralmente envolve corte imediato de custos desnecessários, renegociação com credores e injeção de capital pelos sócios se necessário. (2) Diagnóstico — entender profundamente o que causou a deterioração. (3) Reestruturação — implementar mudanças estruturais no modelo, na equipe ou nos processos. (4) Crescimento — após estabilizar, voltar a crescer sobre uma base sólida.",
+          "Renegociação com fornecedores é uma das primeiras e mais impactantes ações em um turnaround. Fornecedores preferem um cliente que paga devagar a um que não paga — então há espaço para negociação. Técnicas eficazes: (a) Transparência — apresentar ao fornecedor o diagnóstico da situação e o plano de recuperação. Fornecedores que entendem o problema têm mais disposição para colaborar. (b) Proposta de parcelamento — oferecer pagamento do passado em parcelas enquanto retoma o pagamento do corrente em dia. (c) Negociação de desconto por pagamento à vista de parte da dívida — muitos fornecedores aceitam 60-70 centavos por real para receber algo imediatamente. (d) Em casos extremos, renegociar o contrato de fornecimento para prazos maiores de pagamento em troca de volume garantido.",
+          "A revisão de portfólio é essencial em turnarounds: nem todos os produtos ou serviços são igualmente rentáveis. A análise de margem de contribuição por SKU (produto) frequentemente revela que 20% dos produtos geram 80% do lucro enquanto outros 30% geram lucro negativo quando você considera os custos de estoque, logística e atendimento específicos. A decisão de descontinuar produtos não rentáveis libera capital de giro, simplifica operações e permite foco no que funciona. A matriz BCG (Boston Consulting Group) é uma ferramenta clássica para essa análise: classifica produtos em Estrela (alta participação, crescendo), Vaca Leiteira (alta participação, mercado maduro), Ponto de Interrogação (baixa participação, crescendo) e Abacaxi (baixa participação, mercado em declínio). Abacaxis geralmente devem ser descontinuados; Vacas Leiteiras financiam Estrelas.",
+          "Se a empresa não consegue se recuperar sozinha, existem mecanismos legais de proteção. A Recuperação Judicial (Lei 11.101/2005) permite que uma empresa com dívidas suspenda temporariamente o pagamento de credores enquanto apresenta um plano de recuperação ao juiz e aos credores. O plano deve ser aprovado em assembleia de credores. Durante o processo, a empresa continua operando, mas sob supervisão judicial. É um instrumento legítimo e estratégico — não uma derrota. Grandes empresas brasileiras usaram a recuperação judicial para se reestruturar: Oi Telecom, Avianca Brasil e OAS passaram por este processo. A Falência, por outro lado, é o encerramento da empresa com liquidação de ativos para pagamento dos credores — é o último recurso quando a recuperação é inviável."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "direito-empresarial",
+    journeyId: "gestao-estrategica",
+    title: "Direito Empresarial",
+    subtitle: "O que você pode e não pode fazer — leis, multas e responsabilidades",
+    emoji: "⚖️",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 16,
+    tier: 2,
+    tierLabel: "Intermediário",
+    tierEmoji: "📊",
+    tierColor: "#2563eb",
+    reviewConcepts: ["CNPJ", "MEI", "LTDA", "S.A.", "Contrato", "Concorrência Desleal", "Procon"],
+    bossQuote: "A lei não é um obstáculo para os negócios — é o terreno sobre o qual todos os negócios competem. Quem a ignora perde o jogo antes de começar.",
+    nextModuleTeaser: "Próximo: a relação com os funcionários tem regras claras. Aprenda a CLT e o que você pode e não pode fazer como empregador.",
+    lessons: [
+      {
+        id: "tipos-empresa-brasil",
+        title: "Tipos de Empresa no Brasil: MEI, LTDA, S.A. e mais",
+        xpReward: 80,
+        content: [
+          "No Brasil, a escolha do tipo jurídico da empresa impacta diretamente a responsabilidade dos sócios, a carga tributária, as obrigações legais e as possibilidades de crescimento. O MEI (Microempreendedor Individual), criado pela Lei Complementar 128/2008, permite que uma pessoa física formalize seu negócio com faturamento anual de até R$81.000 (limite de 2024), pagamento mensal fixo de impostos (DAS — entre R$67 e R$72 em 2024, dependendo do setor), e responsabilidade ilimitada do titular (seu patrimônio pessoal responde pelas dívidas). É ideal para autônomos e microempreendedores que trabalham sozinhos — não pode ter sócios nem contratar mais de um funcionário.",
+          "A LTDA (Sociedade Limitada), regulada pelo Código Civil (Lei 10.406/2002, artigos 1.052 a 1.087), é o tipo mais comum no Brasil para empresas de médio porte. A responsabilidade de cada sócio é limitada ao valor de suas cotas — portanto, em caso de falência, o patrimônio pessoal dos sócios está protegido, salvo em casos de má-fé ou confusão patrimonial (misturar dinheiro pessoal com o da empresa). A LTDA pode ter de 1 a infinitos sócios, distribui lucros proporcionalmente às cotas e é gerida pelos próprios sócios ou por administradores designados no contrato social. A tributação pode ser pelo Simples Nacional (para faturamento até R$4,8 milhões/ano), Lucro Presumido (estimativa de lucro pelo fisco) ou Lucro Real (apuração real do lucro — obrigatório para empresas com faturamento acima de R$78 milhões/ano).",
+          "A S.A. (Sociedade Anônima), regida pela Lei 6.404/1976 (Lei das S.A.), é o tipo mais complexo e mais adequado para grandes empresas ou aquelas que buscam capital de terceiros (bancos ou mercado de capitais). O capital é dividido em ações, não em cotas. Pode ser de capital fechado (ações não negociadas em bolsa) ou aberto (listada na B3 — bolsa de valores brasileira). Empresas de capital aberto têm obrigações extras de transparência: publicação de demonstrações financeiras auditadas, informes de fatos relevantes à CVM (Comissão de Valores Mobiliários) e realização de assembleias de acionistas. O CNPJ — Cadastro Nacional de Pessoa Jurídica — é o número de identificação fiscal obrigatório para qualquer empresa no Brasil, emitido pela Receita Federal. Sem CNPJ, é ilegal operar comercialmente.",
+          "Contratos empresariais são instrumentos legais que formalizam acordos entre partes. Para ser válido, um contrato precisa de: Partes capazes (maiores de 18 anos ou representantes legais de empresas), Objeto lícito (não pode contratar para fazer algo ilegal), Forma prescrita em lei (alguns contratos exigem escritura pública — como compra e venda de imóveis) e Manifestação de vontade livre (sem coação). Contratos empresariais mais comuns: Contrato de Prestação de Serviços, Contrato de Fornecimento, Contrato de Locação Comercial, Contrato de Distribuição, Contrato de Franquia e Acordo de Confidencialidade (NDA). Cláusulas essenciais que todo contrato deve ter: objeto (o que está sendo contratado), prazo, valor e forma de pagamento, obrigações de cada parte, consequências do descumprimento (multas) e foro de eleição (qual comarca resolve disputas)."
+        ]
+      },
+      {
+        id: "o-que-pode-nao-pode",
+        title: "O Que Você Pode e Não Pode Fazer: Proibições e Multas",
+        xpReward: 80,
+        content: [
+          "Concorrência desleal é uma prática ilegal que prejudica outros competidores por meios antiéticos ou ilegais. A Lei 9.279/1996 (Lei de Propriedade Industrial) e a Lei 12.529/2011 (Lei de Defesa da Concorrência) protegem o mercado. Práticas ilegais incluem: (a) Divulgar informações falsas sobre um concorrente para prejudicá-lo — multa de até R$5 milhões e responsabilidade civil por danos; (b) Usar marca ou nome comercial parecido com o de outra empresa para confundir consumidores (confusão de marcas) — crime com pena de detenção de 3 meses a 1 ano e multa; (c) Desviar clientela por meios fraudulentos — indenização por danos materiais e morais; (d) Praticar dumping (vender abaixo do custo para eliminar concorrentes) — pode ser investigado pelo CADE (Conselho Administrativo de Defesa Econômica) com multas de até 20% do faturamento.",
+          "Publicidade enganosa e abusiva é proibida pelo Código de Defesa do Consumidor (CDC — Lei 8.078/1990) e fiscalizada pelo Procon e pelo CONAR (Conselho Nacional de Autorregulamentação Publicitária). Publicidade enganosa é qualquer comunicação que contenha informação falsa ou que, mesmo verdadeira, seja apresentada de forma que induza o consumidor ao erro. Exemplos: anunciar 'desconto de 50%' quando o preço base foi artificialmente inflado dias antes; exibir fotos de produto que não correspondem ao produto real; omitir informações relevantes como taxas adicionais em financiamentos. A multa do Procon varia de R$400 a R$7,7 milhões dependendo da gravidade e do porte da empresa. Além da multa, o fornecedor é obrigado a corrigir a publicidade e pode ser obrigado a ressarcir todos os consumidores afetados.",
+          "Uso indevido de propriedade intelectual é crime e gera pesadas indenizações. No Brasil, a Lei 9.610/1998 (Lei de Direitos Autorais) protege obras criativas, e a Lei 9.279/1996 protege marcas e patentes. Usar a logo, nome, slogan, música, fotografia ou software de terceiros sem autorização é: (a) Para uso comercial: crime de violação de direito autoral com pena de 2 a 4 anos de reclusão e multa; (b) Na internet: o Marco Civil da Internet (Lei 12.965/2014) responsabiliza empresas por conteúdo infrator hospedado em seus servidores. Uma marca registrada no INPI (Instituto Nacional de Propriedade Industrial) dá ao titular o direito exclusivo de uso em todo o território nacional por 10 anos, renovável indefinidamente. Registrar a marca custa entre R$355 e R$710 por classe de produto ou serviço — um investimento pequeno diante dos riscos de não registrar.",
+          "Tributação é uma obrigação inegociável e a sonegação fiscal é crime tipificado na Lei 8.137/1990 com pena de 2 a 5 anos de reclusão. Os principais impostos que uma empresa deve recolher: IRPJ (Imposto de Renda da Pessoa Jurídica — 15% + adicional de 10% sobre lucros acima de R$20.000/mês no Lucro Real), CSLL (Contribuição Social sobre o Lucro Líquido — 9%), PIS/COFINS (contribuições sobre faturamento — 3,65% no regime cumulativo ou 9,25% no não-cumulativo), ISS (Imposto Sobre Serviços — 2% a 5%, municipal, para empresas prestadoras de serviço), ICMS (Imposto sobre Circulação de Mercadorias — alíquota variável por estado, de 12% a 25%, para comércio e indústria). O não recolhimento de impostos gera: multa de 75% do valor devido + juros SELIC, inscrição em dívida ativa, execução fiscal e, em casos graves, responsabilização criminal dos sócios-administradores."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "gestao-pessoas-clt",
+    journeyId: "gestao-estrategica",
+    title: "Gestão de Pessoas e CLT",
+    subtitle: "Direitos trabalhistas, o que o empregador pode e não pode fazer, e como evitar passivos",
+    emoji: "👥",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 17,
+    tier: 2,
+    tierLabel: "Intermediário",
+    tierEmoji: "📊",
+    tierColor: "#2563eb",
+    reviewConcepts: ["CLT", "FGTS", "INSS", "Rescisão", "Assédio", "PDI", "Turnover"],
+    bossQuote: "Cuide bem dos seus funcionários e eles vão cuidar bem dos seus clientes. — Richard Branson",
+    nextModuleTeaser: "Próximo: aprenda a ler e interpretar os resultados financeiros de uma empresa com profundidade.",
+    lessons: [
+      {
+        id: "contratos-trabalho",
+        title: "Contratos de Trabalho: CLT, PJ, Estágio e Aprendiz",
+        xpReward: 80,
+        content: [
+          "O contrato de trabalho define a relação entre empregador e empregado. No Brasil, existem quatro modalidades principais. O contrato CLT (Consolidação das Leis do Trabalho — Decreto-Lei 5.452/1943) é o mais comum e protegido: garante ao trabalhador carteira assinada, FGTS (8% do salário bruto depositado mensalmente pelo empregador), INSS (de 7,5% a 14% do salário, descontado do funcionário), 13º salário (pago em duas parcelas: até 30/novembro e até 20/dezembro), férias de 30 dias por ano acrescidas de 1/3, hora extra com adicional mínimo de 50% (ou 100% em feriados), vale-transporte (descontado até 6% do salário do funcionário) e adicional noturno de 20% para quem trabalha após as 22h. O contrato pode ser por prazo determinado (máximo de 2 anos) ou indeterminado.",
+          "O contrato PJ (Pessoa Jurídica) não é um contrato de emprego — é um contrato de prestação de serviços entre duas empresas. O prestador emite nota fiscal pelo serviço, paga seus próprios impostos (Simples Nacional, MEI ou IRPF) e não tem os direitos trabalhistas da CLT. É legal quando existe autonomia real: o prestador define seus próprios horários, usa seus próprios equipamentos e pode recusar demandas específicas. O que é ilegal é o contrato PJ disfarçado — quando, na prática, existe subordinação (horário fixo, metas impostas, exclusividade de cliente) mas a empresa foge dos encargos trabalhistas contratando como PJ. Isso é chamado de 'pejotização ilegal' e, quando caracterizado, gera reconhecimento de vínculo empregatício pela Justiça do Trabalho, com pagamento retroativo de todos os direitos mais multa de 40% sobre o FGTS.",
+          "O contrato de estágio é regido pela Lei 11.788/2008 e não é contrato de emprego — é um instrumento de aprendizado prático. O estagiário não tem FGTS, 13º nem férias com 1/3 (só tem 30 dias de recesso remunerado por ano). A empresa paga bolsa-auxílio (obrigatória apenas para estágio não-obrigatório), vale-transporte e, opcionalmente, outros benefícios. A carga horária máxima é 6 horas diárias e 30 horas semanais para estudantes do ensino superior, ou 4 horas para ensino médio. O estágio deve ter relação com o curso do estudante e a empresa precisa de um supervisor designado. A duração máxima é 2 anos no mesmo empregador. O contrato de aprendiz (Lei 10.097/2000) é voltado para jovens de 14 a 24 anos e exige matrícula em curso de aprendizagem profissional (SENAI, SENAC etc.). Empresas com mais de 7 funcionários são obrigadas a contratar aprendizes numa cota de 5% a 15% do quadro de funcionários de cargos que exigem formação profissional.",
+          "O processo de demissão é um dos momentos de maior risco legal para o empregador. Na demissão sem justa causa (iniciativa do empregador sem motivo disciplinar), o funcionário recebe: saldo de salário proporcional, 13º proporcional, férias vencidas e proporcionais com 1/3, aviso prévio (30 dias + 3 dias por ano de empresa, máximo de 90 dias) e multa de 40% sobre o saldo do FGTS. Na demissão por justa causa (falta grave do funcionário — embriaguez, abandono de emprego, improbidade, violência), o funcionário perde o aviso prévio, a multa do FGTS e o seguro-desemprego. A justa causa deve ser provada documentalmente — uma justa causa mal fundamentada pode ser revertida na Justiça do Trabalho, resultando em condenação ao pagamento de todos os direitos acrescidos de indenizações. Sempre documente advertências e suspensões antes de uma justa causa."
+        ]
+      },
+      {
+        id: "obrigacoes-proibicoes-rh",
+        title: "O Que o Empregador Pode e Não Pode Fazer",
+        xpReward: 75,
+        content: [
+          "Assédio moral é a exposição repetida e prolongada do trabalhador a situações humilhantes, constrangedoras ou vexatórias relacionadas ao trabalho. Exemplos concretos: gritar com funcionários, ridicularizá-los na frente dos colegas, dar metas impossíveis propositalmente, ignorar sistematicamente suas contribuições ou isolá-los do grupo. Não é assédio moral uma cobrança firme por resultados, críticas construtivas sobre o trabalho ou a aplicação de penalidades previstas em regulamento. O assédio moral não é tipificado como crime federal no Brasil (há projetos de lei tramitando), mas gera responsabilidade civil e trabalhista: indenização por danos morais de R$5.000 a R$50.000 ou mais, dependendo da gravidade. Empresas podem ser responsabilizadas por assédio praticado por gestores, mesmo sem a cumplicidade da diretoria. Por isso, o treinamento de liderança e os canais de denúncia internos são essenciais.",
+          "Assédio sexual é o constrangimento de alguém com o intuito de obter vantagem sexual, prevalecendo-se o agente de sua condição de superior hierárquico ou ascendência inerentes ao exercício de emprego. É crime tipificado no artigo 216-A do Código Penal com pena de 1 a 2 anos de detenção (podendo dobrar se a vítima for menor de 18 anos). A empresa pode ser responsabilizada civilmente por danos morais se não tomar providências ao tomar conhecimento da situação. Toda empresa deve ter uma política formal de combate ao assédio, canal de denúncia confidencial e protocolo de investigação e punição. O não cumprimento expõe a empresa a ações trabalhistas e à responsabilização perante o Ministério do Trabalho e Emprego.",
+          "Monitoramento de funcionários tem limites legais claros. O empregador pode: monitorar e-mails corporativos (desde que comunique isso ao funcionário previamente), instalar câmeras de segurança em áreas comuns de trabalho (não em banheiros ou vestiários, o que constitui crime), registrar o ponto eletrônico (obrigatório para empresas com mais de 20 funcionários, conforme portaria MTE 1.510/2009), e acompanhar o uso de equipamentos da empresa durante o horário de trabalho. O que não pode: monitorar o celular pessoal do funcionário, instalar câmeras em áreas privativas, exigir exame de polígrafo (detector de mentiras — vedado pelo TST), discriminar na contratação ou promoção por raça, sexo, religião, orientação sexual, deficiência ou estado civil (Lei 9.029/1995 — pena de 1 a 2 anos de reclusão mais multa).",
+          "A folha de pagamento é um dos processos mais complexos e críticos do RH. Um erro na folha gera multas, processos trabalhistas e desconfiança dos funcionários. As principais obrigações do empregador: (a) Depositar o FGTS até o dia 7 do mês seguinte — multa de 5% sobre o valor não depositado; (b) Recolher o INSS (patronal: 20% sobre salário, mais SAT de 1% a 3% e TERCEIROS de 5,8%) até o dia 20 do mês seguinte — multa de 2% sobre o valor devido por mês de atraso; (c) Entregar o eSocial (Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas) — plataforma digital do governo que unifica todas as obrigações trabalhistas; (d) Entregar a RAIS (Relação Anual de Informações Sociais) anualmente — multa de R$425 a R$42.500 por atraso ou erros. O custo real de um funcionário CLT para a empresa é de 1,7 a 2,0 vezes o salário bruto, considerando todos os encargos sociais."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "financas-corporativas-avancado",
+    journeyId: "gestao-estrategica",
+    title: "Finanças Corporativas Avançadas",
+    subtitle: "Indicadores de performance, valuation e como tomar decisões financeiras estratégicas",
+    emoji: "📊",
+    color: "#2563eb",
+    bgGradient: "from-blue-600 to-indigo-700",
+    order: 18,
+    tier: 2,
+    tierLabel: "Intermediário",
+    tierEmoji: "📊",
+    tierColor: "#2563eb",
+    reviewConcepts: ["WACC", "Valuation", "DCF", "ROI", "Capital de Giro", "EBITDA"],
+    bossQuote: "O preço é o que você paga. O valor é o que você recebe. — Warren Buffett",
+    nextModuleTeaser: "Você concluiu a trilha Intermediária. Agora entra em território avançado: Liderança Corporativa.",
+    lessons: [
+      {
+        id: "indicadores-financeiros-avancados",
+        title: "Indicadores Financeiros que Gestores Precisam Dominar",
+        xpReward: 85,
+        content: [
+          "O EBITDA (Earnings Before Interest, Taxes, Depreciation and Amortization) é o principal indicador de eficiência operacional de uma empresa. Ele mede o lucro gerado pelas operações antes de itens que distorcem a comparação entre empresas: juros (que dependem da estrutura de capital), impostos (que variam por regime tributário), depreciação e amortização (que são gastos contábeis sem saída de caixa). Empresas de setores diferentes são comparadas por múltiplos de EBITDA: uma empresa do varejo pode valer 6-8x EBITDA; uma de tecnologia com crescimento rápido, 15-30x. O Nubank foi avaliado em mais de 100x EBITDA em seu IPO de 2021, refletindo as expectativas de crescimento do mercado de fintech brasileiro.",
+          "O ROIC (Return on Invested Capital) mede quanto a empresa gera de retorno para cada real de capital investido na operação. É calculado como: NOPAT (Lucro Operacional após Impostos) ÷ Capital Investido. O Capital Investido é o Patrimônio Líquido mais a Dívida Líquida — essencialmente, todo o dinheiro que sócios e credores colocaram no negócio. Um ROIC superior ao WACC (custo médio ponderado de capital) significa que a empresa está gerando valor. Quando o ROIC é inferior ao WACC, a empresa destrói valor para seus acionistas mesmo sendo lucrativa em termos contábeis. Warren Buffett busca empresas com ROIC consistentemente alto como um dos principais critérios de investimento — empresas como Coca-Cola, Apple e Moody's mantêm ROIC de 20-50% ao ano por décadas.",
+          "O capital de giro é o sangue que circula pelo corpo da empresa. Capital de Giro Líquido = Ativo Circulante − Passivo Circulante. Representa os recursos disponíveis para financiar o ciclo operacional: comprar matéria-prima, produzir, estocar, vender e receber. O Ciclo de Caixa (ou Ciclo de Conversão de Caixa) é o período entre o desembolso para compra de insumos e o recebimento das vendas: Prazo Médio de Estoques + Prazo Médio de Recebimento − Prazo Médio de Pagamento. Uma empresa que compra insumos e paga em 30 dias, produz em 15 dias, vende com prazo de 60 dias para receber, tem ciclo de caixa de 45 dias — precisa financiar 45 dias de operação sem entrada de receita. Reduzir o ciclo de caixa (negociar mais prazo com fornecedores, reduzir estoques, cobrar mais rápido) libera capital de giro sem necessidade de novos empréstimos.",
+          "Valuation é o processo de determinar quanto vale uma empresa. Os métodos mais utilizados são: (a) Múltiplos de Mercado — comparar a empresa com transações recentes de empresas similares. Se empresas de e-commerce estão sendo vendidas por 2x Receita, sua empresa de e-commerce com R$10 milhões de receita vale aproximadamente R$20 milhões. (b) DCF (Discounted Cash Flow — Fluxo de Caixa Descontado) — projetar os fluxos de caixa futuros da empresa e trazê-los a valor presente usando o WACC como taxa de desconto. É o método mais rigoroso e mais usado em grandes transações e IPOs. (c) Patrimônio Líquido (ou valor contábil) — simplesmente o PL do balanço. É o método mais conservador e geralmente subestima empresas com ativos intangíveis como marca, base de clientes e tecnologia. O valuation de uma empresa startup é particularmente desafiador — como avaliar uma empresa sem histórico de lucro? O mercado usa métricas como ARR (Receita Recorrente Anual), NRR (Net Revenue Retention) e taxa de crescimento MoM."
+        ]
+      }
+    ]
+  },
+
+  // ─── LIDERANÇA CORPORATIVA (Avançado) ─────────────────────────────────────
+
+  {
+    id: "compliance-lgpd",
+    journeyId: "lideranca-corporativa",
+    title: "Compliance e Proteção de Dados",
+    subtitle: "LGPD, transparência corporativa e como evitar multas milionárias",
+    emoji: "🛡️",
+    color: "#d97706",
+    bgGradient: "from-amber-500 to-orange-600",
+    order: 19,
+    tier: 3,
+    tierLabel: "Avançado",
+    tierEmoji: "🔭",
+    tierColor: "#d97706",
+    reviewConcepts: ["LGPD", "ANPD", "Compliance", "DPO", "Dado Sensível", "CADE"],
+    bossQuote: "Privacidade não é algo que as pessoas querem. É algo de que as pessoas precisam. — Tim Cook",
+    nextModuleTeaser: "Próximo: toda empresa enfrenta crises. Aprenda a agir nos momentos mais críticos para proteger reputação e operações.",
+    lessons: [
+      {
+        id: "lgpd-completa",
+        title: "LGPD na Prática: O Que Todo Gestor Precisa Saber",
+        xpReward: 90,
+        content: [
+          "A Lei Geral de Proteção de Dados (Lei 13.709/2018 — LGPD), inspirada no GDPR europeu, entrou em vigor em setembro de 2020 com sanções a partir de agosto de 2021. Ela regula qualquer operação realizada com dados pessoais de pessoas naturais localizadas no Brasil, independentemente do meio ou do país sede da empresa. Dados pessoais são qualquer informação que identifique ou possa identificar uma pessoa: nome, CPF, endereço, e-mail, telefone, IP, cookies de navegação, localização, comportamento de compra. Dados pessoais sensíveis têm proteção reforçada: origem racial ou étnica, convicção religiosa, opinião política, filiação sindical, saúde, vida sexual, dado genético ou biométrico. Toda empresa que coleta, armazena, usa, compartilha ou exclui dados pessoais — o que é praticamente qualquer empresa — está sujeita à LGPD.",
+          "As 10 bases legais da LGPD são as justificativas que autorizam o tratamento de dados. As mais usadas são: (a) Consentimento — o titular autoriza expressamente, de forma informada e inequívoca, para finalidade específica. Um checkbox 'Aceito receber comunicações' no cadastro é consentimento. Mas o consentimento pode ser revogado a qualquer momento. (b) Execução de contrato — necessário para cumprir o contrato com o titular, como processar o pagamento e entregar um pedido. (c) Legítimo interesse — quando o tratamento é necessário para interesses legítimos do controlador ou de terceiros, desde que não prejudique os direitos do titular — é a base mais complexa e exige documentação prévia (o LIA — Legitimate Interest Assessment). (d) Cumprimento de obrigação legal — quando a lei exige o tratamento, como guardar dados de funcionários para a Receita Federal.",
+          "Os direitos do titular de dados estabelecidos pela LGPD: (1) Acesso — saber quais dados a empresa tem sobre ele; (2) Correção — corrigir dados incompletos ou incorretos; (3) Anonimização ou bloqueio — limitar o uso de dados desnecessários; (4) Portabilidade — receber seus dados em formato estruturado para usar em outro serviço; (5) Eliminação — solicitar a exclusão de dados tratados com base em consentimento; (6) Informação sobre compartilhamento — saber com quem a empresa compartilha seus dados; (7) Oposição — contestar o tratamento realizado sem base legal adequada. As empresas têm prazo de até 15 dias para responder às solicitações dos titulares. O não cumprimento pode gerar reclamações à ANPD (Autoridade Nacional de Proteção de Dados).",
+          "As penalidades da LGPD são aplicadas pela ANPD e incluem: advertência com prazo para medidas corretivas; multa de até 2% do faturamento bruto da empresa no último exercício, limitada a R$50 milhões por infração; publicização da infração (dano reputacional); bloqueio dos dados pessoais tratados irregularmente; e, em casos graves, eliminação dos dados pessoais tratados de forma ilegal. O DPO (Data Protection Officer — Encarregado de Proteção de Dados) é o responsável pela conformidade com a LGPD na empresa. Não é obrigatório para todas as empresas (microempresas e startups em estágio inicial podem ser dispensadas), mas é fortemente recomendado para qualquer negócio que trate dados em larga escala. Além das sanções administrativas, incidentes de segurança (vazamentos) que afetem dados sensíveis ou um grande volume de dados devem ser comunicados à ANPD em prazo razoável — a demora na comunicação agrava as penalidades."
+        ]
+      },
+      {
+        id: "compliance-anticorrupcao",
+        title: "Compliance, Anticorrupção e Ética Corporativa",
+        xpReward: 90,
+        content: [
+          "Compliance (do inglês 'to comply' — cumprir) é o conjunto de políticas, processos e controles internos que garantem que uma empresa e seus colaboradores ajam em conformidade com leis, regulamentos e normas éticas. Um programa de compliance eficaz vai além de evitar multas — é um investimento em reputação, governança e sustentabilidade do negócio a longo prazo. Empresas com bom compliance atraem melhores investidores, clientes e talentos; pagam prêmios de seguro menores; e têm menos processos judiciais. Os pilares de um programa de compliance robusto: (1) Comprometimento da alta liderança (tone at the top); (2) Mapeamento e avaliação de riscos específicos do negócio; (3) Políticas e procedimentos claros; (4) Treinamento contínuo; (5) Canal de denúncias anônimas; (6) Monitoramento e auditorias periódicas; (7) Respostas a desvios.",
+          "A Lei Anticorrupção (Lei 12.846/2013 — também chamada de Lei da Empresa Limpa) responsabiliza as pessoas jurídicas, de forma objetiva, por atos lesivos à administração pública nacional e estrangeira. Isso significa que a empresa pode ser punida mesmo sem provar que a diretoria sabia ou ordenou o ato corrupto — basta que um funcionário ou intermediário da empresa tenha cometido o ato em benefício da organização. As sanções incluem: multa de 0,1% a 20% do faturamento bruto do último exercício (mínimo de R$6.000 quando não for possível calcular o faturamento); publicação extraordinária da decisão condenatória; e dissolução compulsória da empresa em casos graves. O Acordo de Leniência permite que a empresa colabore com as investigações em troca de redução das penalidades — instrumento central nas investigações da Operação Lava Jato, onde empresas como Odebrecht, Braskem e JBS firmaram acordos bilionários.",
+          "O Código de Conduta ou Código de Ética é o documento que estabelece os valores, princípios e regras de comportamento esperados de todos os colaboradores, prestadores e parceiros de negócio. Deve abordar: conflito de interesses (o que caracteriza e como reportar), política de presentes e hospitalidade (valor máximo aceitável — geralmente R$50 a R$300 dependendo da empresa e do setor), uso de ativos da empresa (equipamentos, dados, tempo), relações com o poder público (regras para interação com servidores e processos licitatórios), sustentabilidade e práticas ambientais, e tratamento de informações confidenciais. O Código deve ser assinado por todos os colaboradores na admissão e revisado anualmente. Não é um documento de gaveta — precisa ser vivido no dia a dia e reforçado por treinamentos e comunicação constante.",
+          "O canal de denúncias (ou 'whistleblowing') é um mecanismo que permite que colaboradores, fornecedores e parceiros reportem irregularidades de forma anônima e segura. Empresas com mais de 50 colaboradores devem ter algum canal estruturado. As melhores práticas: canal externo operado por empresa terceirizada (garantia de anonimato e independência), disponível 24 horas por dia, com protocolo de investigação definido e prazos claros, e proteção formal ao denunciante contra represálias (garantida também pela Lei 13.608/2018 no contexto do setor público, com extensão de proteção ao privado pela jurisprudência). Empresas que punem denunciantes estão sujeitas a ações trabalhistas por dano moral e responsabilidade civil. Um canal bem estruturado detecta problemas antes que escalem para processos judiciais, investigações regulatórias ou crises de reputação pública."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "gestao-crise",
+    journeyId: "lideranca-corporativa",
+    title: "Gestão de Crise Empresarial",
+    subtitle: "Como agir nos primeiros momentos, proteger a reputação e liderar sob pressão extrema",
+    emoji: "🚨",
+    color: "#d97706",
+    bgGradient: "from-amber-500 to-orange-600",
+    order: 20,
+    tier: 3,
+    tierLabel: "Avançado",
+    tierEmoji: "🔭",
+    tierColor: "#d97706",
+    reviewConcepts: ["Crise Reputacional", "Stakeholders", "Recuperação Judicial", "Comunicação de Crise", "Resiliência"],
+    bossQuote: "A medida de um homem não é onde ele está nos momentos de conforto, mas onde ele está em momentos de desafio e controvérsia. — Martin Luther King Jr.",
+    nextModuleTeaser: "Próximo: aprenda a captar recursos para crescer — de bancos, investidores e mercado de capitais.",
+    lessons: [
+      {
+        id: "tipos-crise-resposta",
+        title: "Tipos de Crise e Como Responder nas Primeiras 24 Horas",
+        xpReward: 90,
+        content: [
+          "Crises empresariais se classificam em quatro tipos principais: (1) Crise Financeira — fluxo de caixa negativo, inadimplência com credores, risco de insolvência. Causas típicas: queda abrupta de receita, expansão mal planejada, fraude contábil interna. (2) Crise Reputacional — evento que afeta negativamente a percepção pública da empresa. Causas: escândalo de produto defeituoso, comportamento inadequado de líderes, vazamento de dados, denúncia de prática antiética, campanha viral negativa. (3) Crise Operacional — falha grave em processos que paralisa ou degrada significativamente a operação. Causas: incêndio em fábrica, falha de sistema crítico de TI, recall de produto, acidente de trabalho fatal. (4) Crise Legal — processo judicial ou investigação regulatória que ameaça as operações ou a existência da empresa. Causas: ação coletiva de consumidores, investigação do CADE, processo trabalhista de grande escala, investigação criminal de gestores.",
+          "As primeiras 24 horas de uma crise determinam 70% de como ela será percebida publicamente e o quanto de dano permanente ela causará. O protocolo de crise nas primeiras horas: (a) Confirme os fatos — não reaja a rumores; apure o que realmente aconteceu antes de qualquer comunicação externa. Uma comunicação incorreta nas primeiras horas é muito pior do que o silêncio temporário. (b) Acione a célula de crise — convoque CEO, Jurídico, Comunicação/RP, RH e os responsáveis operacionais pela área afetada. (c) Priorize as vítimas (se houver) — qualquer crise com vítimas exige que o cuidado com as pessoas seja absolutamente prioritário, antes de qualquer consideração financeira ou reputacional. (d) Avalie os públicos impactados — quem precisa ser comunicado? Em que ordem? Funcionários, clientes afetados, reguladores, parceiros e imprensa têm prioridades diferentes. (e) Defina um porta-voz único — mensagens contraditórias de fontes diferentes dentro da empresa amplificam o dano.",
+          "O case da Americanas ilustra o que não fazer em uma crise. Em janeiro de 2023, o novo CEO Sérgio Rial anunciou uma inconsistência contábil de R$20 bilhões (que chegaria a R$43 bilhões) e pediu demissão após apenas 9 dias de empresa. A empresa entrou em recuperação judicial com uma das maiores dívidas da história corporativa brasileira. O que a Americanas errou: (1) A fraude existia há pelo menos dez anos — controles internos e auditores não a detectaram, ou foram omissos. (2) Quando o novo CEO descobriu, a saída abrupta sem um plano comunicado gerou pânico no mercado — as ações caíram 75% em dois dias. (3) A comunicação inicial foi insuficiente, gerando mais dúvidas do que respostas. O contraste: quando a Tylenol detectou sabotagem em frascos em 1982 nos EUA — casos de morte por cianeto — a Johnson & Johnson recolheu imediatamente 31 milhões de frascos do mercado antes de qualquer exigência regulatória. O gesto custou US$100 milhões mas salvou a marca. Tylenol recuperou 100% da participação de mercado em menos de um ano.",
+          "A comunicação em crise tem regras distintas da comunicação regular. Princípios fundamentais: (a) Velocidade — comunique cedo, mesmo com informações incompletas, dizendo o que sabe e o que ainda está apurando. O silêncio cria vacuos que a especulação preenche. (b) Transparência — mentiras e omissões descobertas depois destroem a credibilidade de forma irreversível. A crise do produto é recuperável; a crise de credibilidade raramente é. (c) Empatia antes da defesa — antes de apresentar argumentos ou justificativas, demonstre que compreende o impacto sobre as pessoas afetadas. (d) Ação concreta — comunicação sem ação é vazia. Anuncie o que está sendo feito para resolver o problema e o que você vai fazer diferente para evitar a recorrência. (e) Acompanhamento — a crise não acaba no primeiro comunicado; atualize os públicos periodicamente até a situação ser resolvida."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "captacao-recursos-corp",
+    journeyId: "lideranca-corporativa",
+    title: "Captação de Recursos",
+    subtitle: "Dívida, equity, venture capital, mercado de capitais e como financiar o crescimento",
+    emoji: "💰",
+    color: "#d97706",
+    bgGradient: "from-amber-500 to-orange-600",
+    order: 21,
+    tier: 3,
+    tierLabel: "Avançado",
+    tierEmoji: "🔭",
+    tierColor: "#d97706",
+    reviewConcepts: ["VC", "IPO", "Debênture", "WACC", "Due Diligence", "Term Sheet"],
+    bossQuote: "O dinheiro não é o objetivo — é o combustível. Saiba exatamente para onde está dirigindo antes de abastecer. — Mark Cuban",
+    nextModuleTeaser: "Próximo: aprenda a expandir um negócio além das fronteiras do Brasil — estratégia global e internacionalização.",
+    lessons: [
+      {
+        id: "divida-vs-equity",
+        title: "Dívida vs. Equity: Como Escolher a Fonte de Capital Certa",
+        xpReward: 90,
+        content: [
+          "Todo crescimento empresarial exige capital, e a escolha de como captá-lo é uma das decisões mais estratégicas que um gestor toma. Existem duas fontes fundamentais: dívida (capital de terceiros) e equity (capital próprio ou de novos sócios). A dívida — empréstimos bancários, linhas de crédito, debêntures — tem custo definido (a taxa de juros) e prazo de pagamento, mas não dilui a participação dos sócios. O equity — aporte de novos investidores em troca de participação societária — não tem obrigação de pagamento nem prazo, mas dilui os sócios existentes e traz novos stakeholders com voz na gestão. A decisão entre dívida e equity depende de: maturidade da empresa (startups sem fluxo de caixa previsível raramente conseguem dívida), custo do capital (se a taxa de juros é muito alta, equity pode ser mais barato no longo prazo), e planos de crescimento (se o crescimento requer capital que a dívida não comporta, equity é o caminho).",
+          "O ecossistema de venture capital (VC) financia startups em troca de participação societária. As rodadas de investimento seguem uma progressão: Pré-Seed (R$100 mil a R$1 milhão — geralmente de anjos ou aceleradoras, para validar o modelo), Seed (R$1 a R$10 milhões — primeiros fundos de VC, para construir o produto e adquirir os primeiros clientes), Série A (R$10 a R$100 milhões — aceleração do crescimento com modelo validado), Série B em diante (escala agressiva, expansão geográfica). Em cada rodada, o fundo de VC recebe uma fatia da empresa (equity) em troca do capital. O termo 'valuation' nesse contexto é o valor acordado da empresa antes do aporte (pre-money). O Term Sheet é o documento que estabelece os termos básicos do investimento — participação, direitos preferenciais, cláusulas anti-diluição — antes da due diligence formal.",
+          "O mercado de capitais oferece duas alternativas para empresas maduras: emissão de dívida (debêntures, CRIs, CRAs) e emissão de equity (IPO — abertura de capital). Debêntures são títulos de dívida emitidos pelas empresas e adquiridos por investidores no mercado. A empresa capta o recurso e paga juros (geralmente atrelados ao CDI ou IPCA) e devolve o principal no vencimento. Vantagem sobre empréstimos bancários: menores taxas para empresas de boa reputação, e prazos mais longos. O IPO (Initial Public Offering) é o processo pelo qual uma empresa abre seu capital na bolsa de valores, vendendo ações para investidores públicos. O processo é regulado pela CVM (Comissão de Valores Mobiliários) e exige: registro de companhia aberta, contratação de banco coordenador (banco de investimentos), elaboração do prospecto (documento detalhado sobre a empresa, riscos e uso dos recursos) e roadshow (apresentações para investidores institucionais). Empresas brasileiras que realizaram IPOs recentes: Nubank (2021 — NYSE, captou US$2,6 bilhões), Méliuz, Westwing e FRST.",
+          "O BNDES (Banco Nacional de Desenvolvimento Econômico e Social) é o maior banco de desenvolvimento da América Latina e uma fonte importante de financiamento para empresas brasileiras. Suas linhas de crédito têm taxas abaixo do mercado (muitas atreladas à TLP — Taxa de Longo Prazo) e prazos longos. Principais programas: BNDES Finame (financiamento de máquinas e equipamentos), BNDES Inovação (para P&D e projetos tecnológicos), BNDES Proger Urbano (para micro e pequenas empresas — via agentes financeiros parceiros). A due diligence é o processo de investigação detalhada que compradores, investidores ou credores realizam antes de fechar um negócio. Ela analisa: aspectos financeiros (verificação dos demonstrativos, contratos, dívidas ocultas), jurídicos (processos em andamento, contratos, propriedade intelectual), operacionais (processos, tecnologia, contratos com clientes e fornecedores) e trabalhistas (passivos de RH, ações em andamento). Uma due diligence bem conduzida pode identificar riscos que justificam ajuste de preço ou até o cancelamento do negócio."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "estrategia-crescimento",
+    journeyId: "lideranca-corporativa",
+    title: "Estratégia de Crescimento e Expansão",
+    subtitle: "Como escalar, entrar em novos mercados e competir globalmente",
+    emoji: "🌍",
+    color: "#d97706",
+    bgGradient: "from-amber-500 to-orange-600",
+    order: 22,
+    tier: 3,
+    tierLabel: "Avançado",
+    tierEmoji: "🔭",
+    tierColor: "#d97706",
+    reviewConcepts: ["Internacionalização", "M&A", "Franquia", "Escala", "Pivot", "Greenfield"],
+    bossQuote: "Se você quer ir rápido, vá sozinho. Se quer ir longe, vá acompanhado. — Provérbio Africano",
+    nextModuleTeaser: "Você concluiu a trilha Avançada. Agora entre no nível Master — onde os grandes líderes globais operam.",
+    lessons: [
+      {
+        id: "modos-crescimento",
+        title: "Modos de Crescimento: Orgânico, M&A e Franquia",
+        xpReward: 90,
+        content: [
+          "Crescimento orgânico é o crescimento gerado pelos recursos e esforços internos da própria empresa: mais vendas, novos produtos, novos mercados, mais eficiência operacional. É o modo mais controlado e menos arriscado, mas também o mais lento. Uma empresa pode crescer 20-30% ao ano organicamente em um mercado favorável — excepcional para uma empresa estabelecida. As alavancas do crescimento orgânico são: (a) Penetração de mercado — vender mais para os clientes atuais e capturar participação dos concorrentes com o mesmo produto; (b) Desenvolvimento de produto — criar novos produtos para os clientes atuais; (c) Desenvolvimento de mercado — levar os produtos atuais para novos mercados geográficos ou novos segmentos de clientes; (d) Diversificação — novos produtos para novos mercados (a mais arriscada das quatro).",
+          "M&A (Mergers & Acquisitions — Fusões e Aquisições) é o caminho para crescimento acelerado. Uma fusão une duas empresas para criar uma nova entidade. Uma aquisição é quando uma empresa compra outra, que deixa de existir como entidade independente. As razões para M&A: (a) Aquisição de market share rapidamente — comprar um concorrente dobra ou triplica a participação de mercado instantaneamente; (b) Acesso a tecnologia ou propriedade intelectual — frequentemente mais rápido e barato do que desenvolver internamente (o Facebook comprou o Instagram por US$1 bilhão em 2012, economizando anos de desenvolvimento); (c) Aquisição de talentos ('acqui-hire') — comprar uma startup pelo seu time de engenharia ou design; (d) Integração vertical — comprar fornecedores (para garantir supply chain) ou distribuidores (para controlar o canal de venda). Os principais riscos de M&A: pagamento excessivo (overvaluation), integração cultural fracassada (60-70% das fusões destroem valor), e passivos ocultos não identificados na due diligence.",
+          "A franquia é um modelo de expansão onde o franqueador (dono da marca) licencia seu modelo de negócio, marca e know-how para o franqueado, que paga uma taxa de franquia inicial e royalties mensais (geralmente 5-10% do faturamento bruto). Para o franqueador, é uma forma de expandir rapidamente com capital de terceiros (dos franqueados) e sem assumir os riscos operacionais de cada unidade. Para o franqueado, é a compra de um modelo testado com suporte contínuo. O Brasil tem o quarto maior mercado de franquias do mundo — mais de 170.000 unidades franqueadas e 160 bilhões de reais em faturamento anual (ABF, 2023). Marcas como Subway, McDonald's, O Boticário, Botica e Cacau Show demonstram a escala que o modelo permite. A Lei de Franquias (Lei 13.966/2019) exige que o franqueador entregue ao candidato a franqueado a COF (Circular de Oferta de Franquia) com no mínimo 10 dias de antecedência à assinatura de qualquer documento ou pagamento.",
+          "A internacionalização de empresas brasileiras enfrenta desafios específicos: câmbio volátil, custo de logística internacional, regulações de cada país e adaptação cultural. Os modos de entrada em mercados internacionais — do menos ao mais intensivo em recursos: (a) Exportação direta ou indireta — menor risco, menor controle; (b) Licenciamento — cede o direito de uso da marca ou tecnologia a um parceiro local em troca de royalties; (c) Joint Venture — parceria com empresa local para compartilhar riscos e conhecimento do mercado; (d) Greenfield — abertura de operação própria do zero no país destino; (e) Aquisição de empresa local. Cases brasileiros de internacionalização bem-sucedida: WEG (motor elétrico) — presente em 135 países com fábricas em 11; Embraer — tornou-se terceira maior fabricante de aeronaves comerciais do mundo; Totvs — ERP dominante no Brasil, em expansão para América Latina; Havaianas — de sandália popular a ícone global de moda, presente em 80 países. O fator crítico em todos esses cases foi a paciência estratégica: internacionalização rápida é rara, mas internacionalização disciplinada e sustentada cria vantagens competitivas duradouras."
+        ]
+      }
+    ]
+  },
 ];
 
 export function getModuleById(id: string): Module | undefined {
