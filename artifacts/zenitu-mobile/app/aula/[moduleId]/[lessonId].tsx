@@ -14,8 +14,112 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useColors } from "@/hooks/useColors";
 import { useProgress } from "@/contexts/ProgressContext";
+import { useQuestionProgress, type QuestionResult } from "@/hooks/useQuestionProgress";
 import { MODULES } from "@/data/modules";
 import TutorChatModal from "@/components/TutorChatModal";
+
+interface LessonHistoryPanelProps {
+  results: QuestionResult[];
+  totalParagraphs: number;
+  color: string;
+  onRetryUnread: () => void;
+}
+
+function LessonHistoryPanel({ results, totalParagraphs, color, onRetryUnread }: LessonHistoryPanelProps) {
+  const byIndex = new Map(results.map((r) => [r.questionIndex, r.isCorrect]));
+  const unreadCount = totalParagraphs - results.length;
+  const readCount = results.length;
+
+  return (
+    <View style={[historyStyles.container, { backgroundColor: `${color}12`, borderColor: `${color}33` }]}>
+      <Text style={[historyStyles.title, { color }]}>Histórico desta aula</Text>
+      <Text style={historyStyles.subtitle}>
+        {readCount} de {totalParagraphs} partes lidas
+      </Text>
+      <View style={historyStyles.grid}>
+        {Array.from({ length: totalParagraphs }, (_, i) => {
+          const answered = byIndex.has(i);
+          return (
+            <View
+              key={i}
+              style={[
+                historyStyles.bubble,
+                answered
+                  ? { backgroundColor: "#4ade8088" }
+                  : { backgroundColor: "transparent", borderWidth: 1.5, borderColor: "#9ca3af" },
+              ]}
+            >
+              <Text
+                style={[
+                  historyStyles.bubbleText,
+                  { color: answered ? "#15803d" : "#6b7280" },
+                ]}
+              >
+                {answered ? "✓" : "?"}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+      {unreadCount > 0 && (
+        <Pressable onPress={onRetryUnread} style={historyStyles.retryBtn}>
+          <Ionicons name="refresh" size={14} color={color} />
+          <Text style={[historyStyles.retryText, { color }]}>
+            Refazer {unreadCount} não lida{unreadCount === 1 ? "" : "s"}
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
+const historyStyles = StyleSheet.create({
+  container: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1.5,
+  },
+  title: {
+    fontSize: 11,
+    fontFamily: "SpaceGrotesk_700Bold",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 12,
+    color: "#6b7280",
+    fontFamily: "SpaceGrotesk_400Regular",
+    marginBottom: 12,
+  },
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  bubble: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bubbleText: {
+    fontSize: 12,
+    fontFamily: "SpaceGrotesk_700Bold",
+  },
+  retryBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 12,
+  },
+  retryText: {
+    fontSize: 12,
+    fontFamily: "SpaceGrotesk_700Bold",
+  },
+});
 
 export default function AulaScreen() {
   const { moduleId, lessonId } = useLocalSearchParams<{ moduleId: string; lessonId: string }>();
@@ -31,6 +135,13 @@ export default function AulaScreen() {
   const topPad = Platform.OS === "web" ? 67 : insets.top;
   const bottomPad = Platform.OS === "web" ? 34 : insets.bottom;
 
+  const totalParagraphs = lesson?.content.length ?? 0;
+  const { results, loading: qLoading, saveResult, getFirstUnreadIndex } = useQuestionProgress(
+    moduleId ?? "",
+    lessonId ?? "",
+    totalParagraphs
+  );
+
   if (!mod || !lesson) return null;
 
   const alreadyDone = isLessonComplete(mod.id, lesson.id);
@@ -40,6 +151,7 @@ export default function AulaScreen() {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+    await saveResult(step, true, "reading");
     if (!isLastStep) {
       setStep((s) => s + 1);
     } else {
@@ -48,6 +160,11 @@ export default function AulaScreen() {
       }
       setCompleted(true);
     }
+  }
+
+  function handleRetryUnread() {
+    const firstUnread = getFirstUnreadIndex();
+    setStep(firstUnread);
   }
 
   if (completed) {
@@ -117,6 +234,14 @@ export default function AulaScreen() {
         contentContainerStyle={{ padding: 20, paddingTop: 16 }}
         showsVerticalScrollIndicator={false}
       >
+        {alreadyDone && !qLoading && results.length > 0 && (
+          <LessonHistoryPanel
+            results={results}
+            totalParagraphs={totalParagraphs}
+            color={mod.color}
+            onRetryUnread={handleRetryUnread}
+          />
+        )}
         <Text style={[styles.paragraph, { color: colors.foreground, fontFamily: "SpaceGrotesk_400Regular" }]}>
           {lesson.content[step]}
         </Text>
