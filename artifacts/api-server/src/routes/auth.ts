@@ -25,7 +25,15 @@ const authLimiter = rateLimit({
   message: { error: "Muitas tentativas. Aguarde 15 minutos e tente novamente." },
 });
 
-router.post("/register", authLimiter, async (req, res) => {
+const registerLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Muitas tentativas de cadastro. Aguarde 15 minutos e tente novamente." },
+});
+
+router.post("/register", registerLimiter, async (req, res) => {
   const result = registerSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json({ error: result.error.issues[0]?.message ?? "Dados inválidos" });
