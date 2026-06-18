@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import type { ReviewEntry } from "@/contexts/ProgressContext";
+import { apiFetch } from "@/lib/api";
 
 type DynamicNotifications = typeof import("expo-notifications");
 
@@ -95,4 +96,27 @@ export async function rescheduleAllNotifications(
     scheduleStreakReminder(streakDays),
     scheduleReviewReminders(reviewSchedule),
   ]);
+}
+
+export async function getExpoPushToken(): Promise<string | null> {
+  if (Platform.OS === "web") return null;
+  const N = await getNotifications();
+  if (!N) return null;
+  try {
+    const result = await N.getExpoPushTokenAsync();
+    return result.data;
+  } catch {
+    return null;
+  }
+}
+
+export async function syncPushTokenToServer(enabled: boolean): Promise<void> {
+  try {
+    const token = enabled ? await getExpoPushToken() : null;
+    await apiFetch("/push-token", {
+      method: "POST",
+      body: JSON.stringify({ token, enabled }),
+    });
+  } catch {
+  }
 }

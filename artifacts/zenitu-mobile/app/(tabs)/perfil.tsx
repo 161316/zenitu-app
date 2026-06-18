@@ -22,6 +22,7 @@ import { apiFetch } from "@/lib/api";
 import {
   requestNotificationPermissions,
   rescheduleAllNotifications,
+  syncPushTokenToServer,
 } from "@/lib/notifications";
 
 interface LeaderboardEntry {
@@ -83,10 +84,14 @@ export default function PerfilScreen() {
       if (!granted) {
         setNotificationsEnabled(false);
         await AsyncStorage.setItem("zenitu-notifications", "false");
+        syncPushTokenToServer(false).catch(() => {});
         return;
       }
     }
-    await rescheduleAllNotifications(value, progress.streak, progress.reviewSchedule);
+    await Promise.all([
+      rescheduleAllNotifications(value, progress.streak, progress.reviewSchedule),
+      syncPushTokenToServer(value),
+    ]);
   }
 
   async function handleLogout() {

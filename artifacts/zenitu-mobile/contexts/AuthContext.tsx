@@ -1,5 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { apiFetch } from "@/lib/api";
+import { syncPushTokenToServer } from "@/lib/notifications";
 
 export interface AuthUser {
   id: number;
@@ -36,6 +38,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!cancelled) {
           setUser(data ?? null);
           setLoading(false);
+          if (data) {
+            AsyncStorage.getItem("zenitu-notifications").then((val) => {
+              syncPushTokenToServer(val === "true").catch(() => {});
+            }).catch(() => {});
+          }
         }
       })
       .catch(() => {
@@ -53,6 +60,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (!res.ok) return { error: data.error ?? "Erro ao entrar" };
       setUser(data as AuthUser);
+      AsyncStorage.getItem("zenitu-notifications").then((val) => {
+        syncPushTokenToServer(val === "true").catch(() => {});
+      }).catch(() => {});
       return {};
     } catch {
       return { error: "Erro de conexão" };
@@ -68,6 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (!res.ok) return { error: data.error ?? "Erro ao criar conta" };
       setUser(data as AuthUser);
+      AsyncStorage.getItem("zenitu-notifications").then((val) => {
+        syncPushTokenToServer(val === "true").catch(() => {});
+      }).catch(() => {});
       return {};
     } catch {
       return { error: "Erro de conexão" };

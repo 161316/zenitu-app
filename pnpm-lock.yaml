@@ -200,6 +200,9 @@ importers:
       helmet:
         specifier: ^8.2.0
         version: 8.2.0
+      node-cron:
+        specifier: ^4.3.0
+        version: 4.3.0
       nodemailer:
         specifier: ^8.0.10
         version: 8.0.10
@@ -231,6 +234,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.6.2
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
       '@types/nodemailer':
         specifier: ^8.0.0
         version: 8.0.0
@@ -2748,6 +2754,9 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
+  '@types/node-cron@3.0.11':
+    resolution: {integrity: sha512-0ikrnug3/IyneSHqCBeslAhlK2aBfYek1fGo4bP4QnZPmiqSGRK+Oy7ZMisLWkesffJvQ1cqAcBnJC+8+nxIAg==}
+
   '@types/node@25.6.2':
     resolution: {integrity: sha512-sokuT28dxf9JT5Kady1fsXOvI4HVpjZa95NKT5y9PNTIrs2AsobR4GFAA90ZG8M+nxVRLysCXsVj6eGC7Vbrlw==}
 
@@ -4782,6 +4791,10 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
       react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+
+  node-cron@4.3.0:
+    resolution: {integrity: sha512-NeTIPjUfndOkKQnWCBJIfx44BZX7GiXe7KJq7Y2bwc96v/4+CMwuzwOLkAk+4nu6eSNcatoLFCDXcn4QNph/Rw==}
+    engines: {node: '>=20'}
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -8912,6 +8925,8 @@ snapshots:
     dependencies:
       '@types/node': 25.6.2
 
+  '@types/node-cron@3.0.11': {}
+
   '@types/node@25.6.2':
     dependencies:
       undici-types: 7.19.2
@@ -11171,6 +11186,8 @@ snapshots:
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
+
+  node-cron@4.3.0: {}
 
   node-fetch@2.7.0:
     dependencies:

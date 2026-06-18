@@ -5,6 +5,7 @@ import progressRouter from "./progress";
 import correctionRouter from "./correction";
 import adminRouter from "./admin";
 import passwordResetRouter from "./password-reset";
+import pushTokenRouter from "./push-token";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use("/auth", passwordResetRouter);
 router.use("/progress", progressRouter);
 router.use("/correction", correctionRouter);
 router.use("/admin", adminRouter);
+router.use(pushTokenRouter);
 
 export default router;

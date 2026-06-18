@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { pool } from "@workspace/db";
+import { startCronJobs } from "./cron.js";
 
 const rawPort = process.env["PORT"];
 
@@ -80,6 +81,9 @@ async function initDb(): Promise<void> {
         updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
         UNIQUE(user_id, module_id, lesson_id, question_index)
       );
+
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS push_token TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS push_notifications_enabled BOOLEAN NOT NULL DEFAULT TRUE;
     `);
     logger.info("Database schema ready");
   } catch (err) {
@@ -100,6 +104,7 @@ async function main(): Promise<void> {
     }
 
     logger.info({ port }, "Server listening");
+    startCronJobs();
   });
 }
 
