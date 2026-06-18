@@ -1,20 +1,89 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useParams } from "wouter";
+import { useLocation, useParams, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronRight, CheckCircle, Star, Share2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, CheckCircle, Star, Share2, RotateCcw } from "lucide-react";
 import { getLessonById, getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
 import { useTone } from "@/hooks/useTone";
-import { useQuestionProgress } from "@/hooks/useQuestionProgress";
+import { useQuestionProgress, type QuestionResult } from "@/hooks/useQuestionProgress";
 import { WordPopup, HighlightedText } from "@/components/WordPopup";
 import { XPAnimation } from "@/components/XPAnimation";
 import { LessonResumeDialog } from "@/components/LessonResumeDialog";
 import { ThemeBackground } from "@/components/ThemeBackground";
 import { ShareCardModal } from "@/components/ShareCard";
 
+interface LessonHistoryPanelProps {
+  results: QuestionResult[];
+  totalParagraphs: number;
+  color: string;
+  onRetryWrong: () => void;
+}
+
+function LessonHistoryPanel({ results, totalParagraphs, color, onRetryWrong }: LessonHistoryPanelProps) {
+  const byIndex = new Map(results.map(r => [r.questionIndex, r.isCorrect]));
+  const wrongCount = results.filter(r => !r.isCorrect).length;
+  const readCount = results.length;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl p-4 mb-6"
+      style={{ background: `${color}12`, border: `1.5px solid ${color}33` }}
+    >
+      <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color }}>
+        Histórico desta aula
+      </p>
+      <p className="text-xs text-muted-foreground mb-3">
+        {readCount} de {totalParagraphs} partes lidas
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {Array.from({ length: totalParagraphs }, (_, i) => {
+          const answered = byIndex.has(i);
+          const correct = byIndex.get(i);
+          return (
+            <div
+              key={i}
+              title={
+                answered
+                  ? correct
+                    ? `Parte ${i + 1}: Lida`
+                    : `Parte ${i + 1}: Não concluída`
+                  : `Parte ${i + 1}: Não lida`
+              }
+              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold"
+              style={
+                !answered
+                  ? { background: "color-mix(in srgb, currentColor 10%, transparent)", color: "var(--muted-foreground)", border: "1.5px solid currentColor" }
+                  : correct
+                  ? { background: "#4ade8088", color: "#15803d" }
+                  : { background: "#f87171aa", color: "#b91c1c" }
+              }
+            >
+              {!answered ? "?" : correct ? "✓" : "✗"}
+            </div>
+          );
+        })}
+      </div>
+      {wrongCount > 0 && (
+        <button
+          onClick={onRetryWrong}
+          className="mt-3 flex items-center gap-1.5 text-xs font-bold transition-colors hover:opacity-80"
+          style={{ color }}
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Refazer {wrongCount} não concluíd{wrongCount === 1 ? "a" : "as"}
+        </button>
+      )}
+    </motion.div>
+  );
+}
+
 export default function Lesson() {
   const params = useParams<{ moduleId: string; lessonId: string }>();
   const [, setLocation] = useLocation();
+  const search = useSearch();
+  const isRetryWrong = new URLSearchParams(search).get("retryWrong") === "1";
   const { completeLesson, isLessonComplete } = useProgress();
   const { tone } = useTone();
 
@@ -25,11 +94,13 @@ export default function Lesson() {
   // totalParagraphs is 0 when lesson is null — hook still runs safely.
   const totalParagraphs = lesson?.content.length ?? 0;
   const {
+    results,
     loading: qLoading,
     hasProgress,
     answeredCount,
     saveResult,
     getLastUnansweredIndex,
+    getWrongIndexes,
   } = useQuestionProgress(params.moduleId, params.lessonId, totalParagraphs);
 
   const [currentParagraph, setCurrentParagraph] = useState(0);
@@ -40,6 +111,7 @@ export default function Lesson() {
   const [showResumeDialog, setShowResumeDialog] = useState(false);
 
   const dialogShownRef = useRef(false);
+  const retryWrongHandledRef = useRef(false);
   const alreadyDone = isLessonComplete(params.moduleId, params.lessonId);
 
   useEffect(() => {
@@ -51,6 +123,19 @@ export default function Lesson() {
     return () => window.removeEventListener('open-word', handler);
   }, []);
 
+  // Handle ?retryWrong=1: jump to first wrong or unanswered paragraph
+  useEffect(() => {
+    if (!isRetryWrong || qLoading || retryWrongHandledRef.current) return;
+    retryWrongHandledRef.current = true;
+    const wrongs = getWrongIndexes();
+    if (wrongs.length > 0) {
+      setCurrentParagraph(wrongs[0]);
+    } else {
+      const firstUnanswered = getLastUnansweredIndex();
+      setCurrentParagraph(Math.min(firstUnanswered, totalParagraphs - 1));
+    }
+  }, [isRetryWrong, qLoading, getWrongIndexes, getLastUnansweredIndex, totalParagraphs]);
+
   // Show resume dialog once when loading finishes and there's saved paragraph progress
   useEffect(() => {
     if (
@@ -59,12 +144,13 @@ export default function Lesson() {
       !alreadyDone &&
       !completed &&
       !dialogShownRef.current &&
+      !isRetryWrong &&
       currentParagraph === 0
     ) {
       dialogShownRef.current = true;
       setShowResumeDialog(true);
     }
-  }, [qLoading, hasProgress, alreadyDone, completed, currentParagraph]);
+  }, [qLoading, hasProgress, alreadyDone, completed, isRetryWrong, currentParagraph]);
 
   if (!mod || !lesson) {
     return (
@@ -178,6 +264,18 @@ export default function Lesson() {
 
       {/* Content */}
       <div className="max-w-2xl mx-auto px-4 py-8">
+        {/* History panel — shown when the lesson was already completed */}
+        {alreadyDone && !completed && !qLoading && results.length > 0 && (
+          <LessonHistoryPanel
+            results={results}
+            totalParagraphs={totalParagraphs}
+            color={mod.color}
+            onRetryWrong={() =>
+              setLocation(`/aula/${params.moduleId}/${params.lessonId}?retryWrong=1`)
+            }
+          />
+        )}
+
         <AnimatePresence mode="wait">
           <motion.div
             key={currentParagraph}
