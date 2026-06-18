@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { useLocation, useParams, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle, ChevronRight, Lightbulb, Send, Loader2, RotateCcw } from "lucide-react";
@@ -326,7 +326,9 @@ function WrittenQuestion({ practice, color, moduleTitle, lessonTitle, onAnswer, 
 export default function PracticePage() {
   const params = useParams<{ moduleId: string }>();
   const search = useSearch();
-  const isReview = new URLSearchParams(search).get("review") === "1";
+  const searchParams = new URLSearchParams(search);
+  const isReview = searchParams.get("review") === "1";
+  const isRetryWrong = searchParams.get("retryWrong") === "1";
   const [, setLocation] = useLocation();
   const mod = getModuleById(params.moduleId);
   const practices = getPracticesByModule(params.moduleId);
@@ -362,7 +364,24 @@ export default function PracticePage() {
   const [showResumeDialog, setShowResumeDialog] = useState(false);
 
   const dialogShownRef = useRef(false);
+  const retryWrongHandledRef = useRef(false);
   const alreadyDone = isLessonComplete(params.moduleId ?? "", PRACTICE_LESSON_ID);
+
+  // Auto-start retry-wrong mode when ?retryWrong=1 is in the URL
+  useEffect(() => {
+    if (!isRetryWrong || qLoading || retryWrongHandledRef.current) return;
+    retryWrongHandledRef.current = true;
+    const wrong = getWrongIndexes();
+    if (wrong.length === 0) {
+      setPhase("question");
+      return;
+    }
+    setQuestionIndices(wrong);
+    setCurrent(0);
+    setCorrectCount2(0);
+    setTotalXP(0);
+    setPhase("question");
+  }, [isRetryWrong, qLoading, getWrongIndexes]);
 
   // Show resume dialog when entering intro and there's saved progress
   const handleStartPractice = () => {

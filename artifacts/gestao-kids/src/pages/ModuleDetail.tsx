@@ -1,10 +1,69 @@
 import { useLocation, useParams } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle, Zap, Lock, ChevronRight, Brain } from "lucide-react";
+import { ArrowLeft, CheckCircle, Zap, Lock, ChevronRight, Brain, RotateCcw } from "lucide-react";
 import { getModuleById } from "@/data/modules";
 import { useProgress } from "@/hooks/useProgress";
 import { getPracticesByModule } from "@/data/practices";
+import { getChallengeByModule } from "@/data/challenges";
+import { useQuestionProgress } from "@/hooks/useQuestionProgress";
 import { ThemeBackground } from "@/components/ThemeBackground";
+
+const PRACTICE_LESSON_ID = "praticas";
+const CHALLENGE_LESSON_ID = "desafio";
+
+interface QuestionHistoryGridProps {
+  results: Array<{ questionIndex: number; isCorrect: boolean }>;
+  totalQuestions: number;
+  loading: boolean;
+  onRetryWrong: () => void;
+}
+
+function QuestionHistoryGrid({ results, totalQuestions, loading, onRetryWrong }: QuestionHistoryGridProps) {
+  if (loading || results.length === 0) return null;
+
+  const byIndex = new Map(results.map(r => [r.questionIndex, r.isCorrect]));
+  const wrongCount = results.filter(r => !r.isCorrect).length;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      className="mt-2 bg-white/10 rounded-xl px-4 pt-3 pb-3"
+    >
+      <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-2">Seu histórico</p>
+      <div className="flex flex-wrap gap-1.5">
+        {Array.from({ length: totalQuestions }, (_, i) => {
+          const answered = byIndex.has(i);
+          const correct = byIndex.get(i);
+          return (
+            <div
+              key={i}
+              title={answered ? (correct ? `Q${i + 1}: Correto` : `Q${i + 1}: Errado`) : `Q${i + 1}: Não respondido`}
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold transition-all ${
+                !answered
+                  ? "bg-white/20 text-white/50"
+                  : correct
+                  ? "bg-green-400 text-white"
+                  : "bg-red-400 text-white"
+              }`}
+            >
+              {!answered ? "?" : correct ? "✓" : "✗"}
+            </div>
+          );
+        })}
+      </div>
+      {wrongCount > 0 && (
+        <button
+          onClick={onRetryWrong}
+          className="mt-2.5 flex items-center gap-1.5 text-xs font-bold text-white/90 hover:text-white transition-colors"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Refazer {wrongCount} errad{wrongCount === 1 ? "a" : "as"}
+        </button>
+      )}
+    </motion.div>
+  );
+}
 
 export default function ModuleDetail() {
   const params = useParams<{ id: string }>();
@@ -12,8 +71,20 @@ export default function ModuleDetail() {
   const mod = getModuleById(params.id);
   const { progress, isLessonComplete, isChallengeComplete, getModuleProgress } = useProgress();
   const practices = getPracticesByModule(params.id);
+  const challenge = getChallengeByModule(params.id);
   const hasPractices = practices.length > 0;
-  const practicesDone = isLessonComplete(params.id, "praticas");
+  const practicesDone = isLessonComplete(params.id, PRACTICE_LESSON_ID);
+
+  const {
+    results: practiceResults,
+    loading: practiceLoading,
+  } = useQuestionProgress(params.id ?? "", PRACTICE_LESSON_ID, practices.length);
+
+  const challengeTotalQuestions = challenge?.questions.length ?? 0;
+  const {
+    results: challengeResults,
+    loading: challengeLoading,
+  } = useQuestionProgress(params.id ?? "", CHALLENGE_LESSON_ID, challengeTotalQuestions);
 
   if (!mod) {
     return (
@@ -145,11 +216,7 @@ export default function ModuleDetail() {
           >
             <button
               onClick={() => setLocation(`/pratica/${mod.id}`)}
-              className={`w-full rounded-2xl p-5 flex items-center gap-4 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 ${
-                practicesDone
-                  ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white"
-                  : "bg-gradient-to-r from-violet-500 to-purple-600 text-white"
-              }`}
+              className="w-full rounded-2xl p-5 flex items-center gap-4 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 bg-gradient-to-r from-violet-500 to-purple-600 text-white"
             >
               <div className="text-4xl">{practicesDone ? "🧠✅" : "🧠"}</div>
               <div className="text-left flex-1">
@@ -164,6 +231,16 @@ export default function ModuleDetail() {
               </div>
               <Brain className="w-5 h-5 text-white/70" />
             </button>
+
+            {/* Practice question history */}
+            <div className={`rounded-b-2xl -mt-1 pt-1 px-1 pb-1 bg-gradient-to-r from-violet-500 to-purple-600`}>
+              <QuestionHistoryGrid
+                results={practiceResults}
+                totalQuestions={practices.length}
+                loading={practiceLoading}
+                onRetryWrong={() => setLocation(`/pratica/${mod.id}?retryWrong=1`)}
+              />
+            </div>
           </motion.div>
         )}
 
@@ -205,6 +282,24 @@ export default function ModuleDetail() {
               <ChevronRight className="w-5 h-5 text-white/70" />
             )}
           </button>
+
+          {/* Challenge question history */}
+          {allLessonsDone && challengeTotalQuestions > 0 && (
+            <div
+              className={`rounded-b-2xl -mt-1 pt-1 px-1 pb-1 ${
+                challengeDone
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600"
+                  : `bg-gradient-to-r ${mod.bgGradient}`
+              }`}
+            >
+              <QuestionHistoryGrid
+                results={challengeResults}
+                totalQuestions={challengeTotalQuestions}
+                loading={challengeLoading}
+                onRetryWrong={() => setLocation(`/desafio/${mod.id}?retryWrong=1`)}
+              />
+            </div>
+          )}
         </motion.div>
 
         {/* XP Summary */}

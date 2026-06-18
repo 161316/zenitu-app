@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useLocation, useParams } from "wouter";
+import { useLocation, useParams, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CheckCircle, XCircle, Trophy, Zap, ChevronRight } from "lucide-react";
 import { getModuleById, MODULES } from "@/data/modules";
@@ -46,6 +46,8 @@ function TimerBar({ timeLeft, total }: { timeLeft: number; total: number }) {
 
 export default function Challenge() {
   const params = useParams<{ moduleId: string }>();
+  const search = useSearch();
+  const isRetryWrong = new URLSearchParams(search).get("retryWrong") === "1";
   const [, setLocation] = useLocation();
   const { completeChallenge, isChallengeComplete } = useProgress();
 
@@ -83,14 +85,39 @@ export default function Challenge() {
   const livesRef = useRef(3);
   const alreadyDone = isChallengeComplete(params.moduleId);
   const dialogShownRef = useRef(false);
+  const retryWrongHandledRef = useRef(false);
 
   // Show resume dialog once loaded if there's saved progress
   useEffect(() => {
+    if (isRetryWrong) return;
     if (!qLoading && hasProgress && !dialogShownRef.current && phase === "quiz" && current === 0) {
       dialogShownRef.current = true;
       setShowResumeDialog(true);
     }
-  }, [qLoading, hasProgress, phase, current]);
+  }, [isRetryWrong, qLoading, hasProgress, phase, current]);
+
+  // Auto-start retry-wrong mode when ?retryWrong=1 is in the URL
+  useEffect(() => {
+    if (!isRetryWrong || qLoading || retryWrongHandledRef.current) return;
+    retryWrongHandledRef.current = true;
+    const wrong = getWrongIndexes();
+    if (wrong.length === 0) return;
+    setQuestionIndices(wrong);
+    setCurrent(0);
+    setSelected(null);
+    setConfirmed(false);
+    setScore(0);
+    setPhase("quiz");
+    setTimeLeft(MAX_TIME);
+    setCombo(0);
+    setLives(3);
+    livesRef.current = 3;
+    setTotalXP(0);
+    setXpBreakdown([]);
+    setLastXP(null);
+    setShowComboAnim(false);
+    setShake(false);
+  }, [isRetryWrong, qLoading, getWrongIndexes]);
 
   useEffect(() => {
     setQuestionIndices(defaultIndices);
