@@ -3,8 +3,17 @@ import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  Users, Zap, BookOpen, Trophy, TrendingUp, ArrowLeft, Activity,
+  Users, Zap, BookOpen, Trophy, TrendingUp, ArrowLeft, Activity, Medal,
 } from "lucide-react";
+
+interface LeaderboardEntry {
+  rank: number;
+  name: string;
+  email: string;
+  xp: number;
+  badgeCount: number;
+  streak: number;
+}
 
 interface AdminStats {
   totalUsers: number;
@@ -14,6 +23,7 @@ interface AdminStats {
   totalCompletedLessons: number;
   totalCompletedChallenges: number;
   topXpUsers: { xp: string; badges: string[] }[];
+  leaderboard: LeaderboardEntry[];
 }
 
 function StatCard({
@@ -201,11 +211,50 @@ export default function Admin() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
+              className="bg-card border border-card-border rounded-2xl p-5 shadow-sm"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Medal className="w-5 h-5 text-violet-500" />
+                <p className="font-extrabold text-foreground">Ranking de Alunos</p>
+                <span className="ml-auto text-xs text-muted-foreground font-semibold">Top {stats.leaderboard.length}</span>
+              </div>
+              {stats.leaderboard.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Nenhum aluno com XP ainda.</p>
+              ) : (
+                <div className="space-y-2">
+                  {stats.leaderboard.map((entry) => (
+                    <div key={entry.rank} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold shrink-0 ${
+                        entry.rank === 1 ? "bg-amber-100 text-amber-700" :
+                        entry.rank === 2 ? "bg-slate-100 text-slate-600" :
+                        entry.rank === 3 ? "bg-orange-100 text-orange-700" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {entry.rank === 1 ? "🥇" : entry.rank === 2 ? "🥈" : entry.rank === 3 ? "🥉" : `#${entry.rank}`}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-foreground text-sm truncate">{entry.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{entry.email}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="font-extrabold text-foreground text-sm">{entry.xp.toLocaleString("pt-BR")} XP</p>
+                        <p className="text-xs text-muted-foreground">{entry.badgeCount} badge{entry.badgeCount !== 1 ? "s" : ""} · {entry.streak}🔥</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
               className="bg-amber-50 border border-amber-200 rounded-2xl p-4"
             >
               <p className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-1">Privacidade LGPD</p>
               <p className="text-xs text-amber-600">
-                Este painel exibe apenas dados agregados e anônimos. Nenhum nome, e-mail ou dado pessoal é exibido aqui.
+                O ranking de alunos acima é visível apenas para administradores. O painel de distribuição de XP acima exibe dados anônimos.
               </p>
             </motion.div>
           </>

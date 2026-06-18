@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Platform,
   Pressable,
@@ -17,10 +18,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProgress, getLevel } from "@/contexts/ProgressContext";
 import { XPBar } from "@/components/XPBar";
 import { ALL_BADGES } from "@/data/badges";
+import { apiFetch } from "@/lib/api";
 import {
   requestNotificationPermissions,
   rescheduleAllNotifications,
 } from "@/lib/notifications";
+
+interface LeaderboardEntry {
+  rank: number;
+  name: string;
+  xp: number;
+  badgeCount: number;
+  streak: number;
+  isCurrentUser: boolean;
+}
 
 export default function PerfilScreen() {
   const colors = useColors();
@@ -29,8 +40,29 @@ export default function PerfilScreen() {
   const { progress } = useProgress();
   const { level, title } = getLevel(progress.xp);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(false);
   const topPad = Platform.OS === "web" ? 67 : insets.top;
   const bottomPad = Platform.OS === "web" ? 34 : insets.bottom;
+
+  const fetchLeaderboard = useCallback(async () => {
+    if (!user) return;
+    setLeaderboardLoading(true);
+    try {
+      const res = await apiFetch("/progress/leaderboard");
+      if (res.ok) {
+        const data = await res.json();
+        setLeaderboard(data as LeaderboardEntry[]);
+      }
+    } catch {
+    } finally {
+      setLeaderboardLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
 
   useEffect(() => {
     AsyncStorage.getItem("zenitu-notifications").then((val) => {
@@ -151,6 +183,57 @@ export default function PerfilScreen() {
                 </View>
               ))}
             </ScrollView>
+          </>
+        )}
+
+        {user && (
+          <>
+            <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: "SpaceGrotesk_700Bold" }]}>
+              Ranking
+            </Text>
+            <View style={[styles.rankingCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              {leaderboardLoading ? (
+                <ActivityIndicator size="small" color={colors.primary} style={{ padding: 20 }} />
+              ) : leaderboard.length === 0 ? (
+                <Text style={[styles.rankingEmpty, { color: colors.mutedForeground, fontFamily: "SpaceGrotesk_400Regular" }]}>
+                  Nenhum aluno com XP ainda.
+                </Text>
+              ) : (
+                leaderboard.map((entry, idx) => {
+                  const medalLabel = entry.rank === 1 ? "🥇" : entry.rank === 2 ? "🥈" : entry.rank === 3 ? "🥉" : `#${entry.rank}`;
+                  const isMe = entry.isCurrentUser;
+                  return (
+                    <View
+                      key={entry.rank}
+                      style={[
+                        styles.rankingRow,
+                        idx < leaderboard.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.border },
+                        isMe && { backgroundColor: "#A78BFA12" },
+                      ]}
+                    >
+                      <View style={[styles.rankBadge, {
+                        backgroundColor: entry.rank === 1 ? "#FEF3C720" : entry.rank === 2 ? "#F1F5F920" : entry.rank === 3 ? "#FEF08A20" : colors.muted,
+                      }]}>
+                        <Text style={[styles.rankBadgeText, { fontFamily: "SpaceGrotesk_700Bold", color: colors.foreground }]}>
+                          {medalLabel}
+                        </Text>
+                      </View>
+                      <View style={styles.rankingInfo}>
+                        <Text style={[styles.rankingName, { color: colors.foreground, fontFamily: isMe ? "SpaceGrotesk_700Bold" : "SpaceGrotesk_500Medium" }]}>
+                          {entry.name}{isMe ? " (você)" : ""}
+                        </Text>
+                        <Text style={[styles.rankingSub, { color: colors.mutedForeground, fontFamily: "SpaceGrotesk_400Regular" }]}>
+                          {entry.badgeCount} badge{entry.badgeCount !== 1 ? "s" : ""} · {entry.streak}🔥
+                        </Text>
+                      </View>
+                      <Text style={[styles.rankingXP, { color: "#A78BFA", fontFamily: "SpaceGrotesk_700Bold" }]}>
+                        {entry.xp.toLocaleString("pt-BR")} XP
+                      </Text>
+                    </View>
+                  );
+                })
+              )}
+            </View>
           </>
         )}
 
@@ -277,4 +360,35 @@ const styles = StyleSheet.create({
   settingTitle: { fontSize: 15 },
   settingDesc: { fontSize: 12 },
   divider: { height: 1, marginHorizontal: 16 },
+  rankingCard: {
+    marginHorizontal: 20,
+    borderRadius: 14,
+    borderWidth: 1,
+    overflow: "hidden",
+    marginBottom: 24,
+  },
+  rankingEmpty: {
+    textAlign: "center",
+    padding: 20,
+    fontSize: 13,
+  },
+  rankingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    gap: 10,
+  },
+  rankBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rankBadgeText: { fontSize: 14 },
+  rankingInfo: { flex: 1, gap: 2 },
+  rankingName: { fontSize: 14 },
+  rankingSub: { fontSize: 11 },
+  rankingXP: { fontSize: 13, textAlign: "right" },
 });

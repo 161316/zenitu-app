@@ -2,8 +2,8 @@ import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { z } from "zod/v4";
 import { db } from "@workspace/db";
-import { progressTable, lessonQuestionResultsTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { progressTable, lessonQuestionResultsTable, usersTable } from "@workspace/db";
+import { eq, and, sql } from "drizzle-orm";
 import { CATALOG, MODULE_ORDER, MAX_XP_PER_CHALLENGE_QUESTION } from "../data/catalog.js";
 
 const router = Router();
@@ -345,6 +345,39 @@ router.get("/module-stats", requireAuth, async (req, res) => {
   }
 
   res.json(stats);
+});
+
+// ── GET /api/progress/leaderboard ────────────────────────────────────────────
+// Returns the top 10 users by XP. Exposes first name only for privacy.
+// Marks the requesting user's own entry with isCurrentUser: true.
+
+router.get("/leaderboard", requireAuth, async (req, res) => {
+  const userId = req.session.userId!;
+
+  const rows = await db
+    .select({
+      userId: progressTable.userId,
+      name: usersTable.name,
+      xp: progressTable.xp,
+      badges: progressTable.badges,
+      streak: progressTable.streak,
+    })
+    .from(progressTable)
+    .innerJoin(usersTable, eq(progressTable.userId, usersTable.id))
+    .where(sql`${progressTable.xp} ~ '^[0-9]+$'`)
+    .orderBy(sql`cast(${progressTable.xp} as integer) desc`)
+    .limit(10);
+
+  const leaderboard = rows.map((row, i) => ({
+    rank: i + 1,
+    name: (row.name.split(" ")[0] ?? row.name),
+    xp: Number(row.xp),
+    badgeCount: (row.badges ?? []).length,
+    streak: Number(row.streak),
+    isCurrentUser: row.userId === userId,
+  }));
+
+  res.json(leaderboard);
 });
 
 // ── GET /api/progress/lesson-results ─────────────────────────────────────────

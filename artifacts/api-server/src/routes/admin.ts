@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { usersTable, progressTable } from "@workspace/db";
-import { count, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 
 const router = Router();
 
@@ -54,6 +54,20 @@ router.get("/stats", async (_req, res) => {
     .orderBy(sql`cast(${progressTable.xp} as integer) desc`)
     .limit(5);
 
+  const leaderboard = await db
+    .select({
+      name: usersTable.name,
+      email: usersTable.email,
+      xp: progressTable.xp,
+      badges: progressTable.badges,
+      streak: progressTable.streak,
+    })
+    .from(progressTable)
+    .innerJoin(usersTable, eq(progressTable.userId, usersTable.id))
+    .where(sql`${progressTable.xp} ~ '^[0-9]+$'`)
+    .orderBy(sql`cast(${progressTable.xp} as integer) desc`)
+    .limit(10);
+
   res.json({
     totalUsers: totals?.total ?? 0,
     activeUsersLast7Days: activeUsers?.total ?? 0,
@@ -62,6 +76,14 @@ router.get("/stats", async (_req, res) => {
     totalCompletedLessons: Number(lessonsResult?.totalLessons ?? 0),
     totalCompletedChallenges: Number(lessonsResult?.totalChallenges ?? 0),
     topXpUsers,
+    leaderboard: leaderboard.map((row, i) => ({
+      rank: i + 1,
+      name: row.name,
+      email: row.email,
+      xp: Number(row.xp),
+      badgeCount: (row.badges ?? []).length,
+      streak: Number(row.streak),
+    })),
   });
 });
 
